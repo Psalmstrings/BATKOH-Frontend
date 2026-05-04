@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BKSA | Student Registration Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f9 100%);
+            color: #1e1e2f;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        :root {
+            --primary-dark: #0A2647;
+            --accent-orange: #E67E22;
+            --text-muted: #4b5563;
+            --border-light: #e2e8f0;
+            --shadow-card: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            --error-red: #dc2626;
+            --success-green: #10b981;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .logo-badge {
+            display: inline-block;
+            background: var(--primary-dark);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .logo-badge span {
+            color: var(--accent-orange);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        .subhead {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            padding: 2rem 2rem 2.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        label i {
+            color: var(--accent-orange);
+            font-size: 0.8rem;
+        }
+        .required-star {
+            color: var(--accent-orange);
+            margin-left: 4px;
+        }
+
+        input, select, textarea {
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background-color: #fff;
+            outline: none;
+            width: 100%;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(230,126,34,0.15);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .error-message {
+            font-size: 0.7rem;
+            color: var(--error-red);
+            margin-top: 4px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+        input.error, select.error, textarea.error {
+            border-color: var(--error-red);
+            background-color: #fff5f5;
+        }
+
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            margin: 0.5rem 0;
+        }
+        .checkbox-group label {
+            font-weight: 500;
+        }
+        .checkbox-group input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-orange);
+        }
+
+        .btn-submit {
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.25s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+        .btn-submit:hover {
+            background: var(--accent-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -8px rgba(230,126,34,0.4);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-msg {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        .status-msg.success {
+            background: #d1fae5;
+            color: #065f46;
+            display: block;
+        }
+        .status-msg.error {
+            background: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            border-top: 1px solid var(--border-light);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .form-card {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+        }
+        .back-link:hover {
+            color: var(--accent-orange);
+        }
+        small.hint {
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .home-link {
+            background: var(--primary-dark);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .home-link:hover {
+            background: var(--accent-orange);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-buttons">
+        <a href="index.html" class="home-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+    <div class="form-header">
+        <div class="logo-badge">
+            <i class="fas fa-graduation-cap"></i> <span>BKSA</span> | STUDENTS ALLIANCE
+        </div>
+        <h1>Student Registration Form</h1>
+        <p class="subhead">Please fill in all required details accurately. All fields marked with <span class="required-star">*</span> are mandatory.</p>
+    </div>
+
+    <div class="form-card">
+        <form id="studentForm">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label><i class="fas fa-user"></i> Full Name <span class="required-star">*</span></label>
+                    <input type="text" id="fullName" name="fullName" placeholder="e.g., John Okafor" autocomplete="name">
+                    <div class="error-message" id="fullNameError">Full name should only contain letters and spaces.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Date of Birth <span class="required-star">*</span></label>
+                    <input type="text" id="dob" name="dob" placeholder="Select date of birth" autocomplete="off">
+                    <div class="error-message" id="dobError">Please select a valid date of birth.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Gender <span class="required-star">*</span></label>
+                    <select id="gender" name="gender">
+                        <option value="">-- Select Gender --</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="error-message" id="genderError">Please select a gender.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address <span class="required-star">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="student@example.com" autocomplete="email">
+                    <div class="error-message" id="emailError">Please provide a valid email address.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-phone-alt"></i> Phone Number <span class="required-star">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="10-15 digits, numbers only" autocomplete="tel">
+                    <div class="error-message" id="phoneError">Phone number must contain 10-15 digits.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> LGA of Origin <span class="required-star">*</span></label>
+                    <input type="text" id="lgaOrigin" name="lgaOrigin" placeholder="Local Government Area">
+                    <div class="error-message" id="lgaOriginError">LGA of Origin is required.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-flag"></i> State of Origin <span class="required-star">*</span></label>
+                    <input type="text" id="stateOrigin" name="stateOrigin" placeholder="e.g., Lagos, Kano">
+                    <div class="error-message" id="stateOriginError">State of Origin is required.</div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fas fa-home"></i> Residential Address <span class="required-star">*</span></label>
+                    <textarea id="address" name="address" placeholder="Street, city, apartment number..."></textarea>
+                    <div class="error-message" id="addressError">Address is required.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-city"></i> State of Residence <span class="required-star">*</span></label>
+                    <input type="text" id="stateResidence" name="stateResidence" placeholder="Current state of residence">
+                    <div class="error-message" id="stateResidenceError">State of Residence is required.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-university"></i> Institution <span class="required-star">*</span></label>
+                    <input type="text" id="institution" name="institution" placeholder="University / Polytechnic / College">
+                    <div class="error-message" id="institutionError">Institution name is required.</div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-book-open"></i> Course of Study <span class="required-star">*</span></label>
+                    <input type="text" id="course" name="course" placeholder="e.g., Computer Science">
+                    <div class="error-message" id="courseError">Course is required.</div>
+                </div>
+
+                <div class="form-group full-width checkbox-group">
+                    <input type="checkbox" id="receivedBursary" name="receivedBursary" value="true">
+                    <label for="receivedBursary">Have you previously received a bursary award from any organization?</label>
+                    <small class="hint">(Check if yes, leave unchecked for No)</small>
+                </div>
+            </div>
+
+            <hr>
+            <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit Registration</button>
+            <div id="statusMessage" class="status-msg"></div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#dob", {
+        dateFormat: "Y-m-d",
+        maxDate: "today",
+        minDate: "1920-01-01",
+        altInput: true,
+        altFormat: "F j, Y",
+        allowInput: true,
+        onChange: function() {
+            document.getElementById('dobError').classList.remove('show');
+            document.getElementById('dob').classList.remove('error');
+        }
+    });
+
+    function validateEmail(email) {
+        return /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email);
+    }
+
+    function validateFullName(name) {
+        return /^[A-Za-z\s]+$/.test(name.trim());
+    }
+
+    function validatePhone(phone) {
+        return /^\d{10,15}$/.test(phone.trim());
+    }
+
+    function showError(elementId, isError) {
+        const errorDiv = document.getElementById(elementId);
+        if (errorDiv) {
+            if (isError) errorDiv.classList.add('show');
+            else errorDiv.classList.remove('show');
+        }
+    }
+
+    function markError(fieldId, isError) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            if (isError) field.classList.add('error');
+            else field.classList.remove('error');
+        }
+    }
+
+    function validateForm(data) {
+        let isValid = true;
+        
+        if (!data.fullName || !validateFullName(data.fullName)) {
+            showError('fullNameError', true);
+            markError('fullName', true);
+            isValid = false;
+        } else {
+            showError('fullNameError', false);
+            markError('fullName', false);
+        }
+
+        if (!data.dob || isNaN(Date.parse(data.dob))) {
+            showError('dobError', true);
+            markError('dob', true);
+            isValid = false;
+        } else {
+            showError('dobError', false);
+            markError('dob', false);
+        }
+
+        if (!data.gender || !['Male', 'Female', 'Other'].includes(data.gender)) {
+            showError('genderError', true);
+            markError('gender', true);
+            isValid = false;
+        } else {
+            showError('genderError', false);
+            markError('gender', false);
+        }
+
+        if (!data.email || !validateEmail(data.email)) {
+            showError('emailError', true);
+            markError('email', true);
+            isValid = false;
+        } else {
+            showError('emailError', false);
+            markError('email', false);
+        }
+
+        if (!data.phone || !validatePhone(data.phone)) {
+            showError('phoneError', true);
+            markError('phone', true);
+            isValid = false;
+        } else {
+            showError('phoneError', false);
+            markError('phone', false);
+        }
+
+        if (!data.lgaOrigin || data.lgaOrigin.trim() === "") {
+            showError('lgaOriginError', true);
+            markError('lgaOrigin', true);
+            isValid = false;
+        } else {
+            showError('lgaOriginError', false);
+            markError('lgaOrigin', false);
+        }
+
+        if (!data.stateOrigin || data.stateOrigin.trim() === "") {
+            showError('stateOriginError', true);
+            markError('stateOrigin', true);
+            isValid = false;
+        } else {
+            showError('stateOriginError', false);
+            markError('stateOrigin', false);
+        }
+
+        if (!data.address || data.address.trim() === "") {
+            showError('addressError', true);
+            markError('address', true);
+            isValid = false;
+        } else {
+            showError('addressError', false);
+            markError('address', false);
+        }
+
+        if (!data.stateResidence || data.stateResidence.trim() === "") {
+            showError('stateResidenceError', true);
+            markError('stateResidence', true);
+            isValid = false;
+        } else {
+            showError('stateResidenceError', false);
+            markError('stateResidence', false);
+        }
+
+        if (!data.institution || data.institution.trim() === "") {
+            showError('institutionError', true);
+            markError('institution', true);
+            isValid = false;
+        } else {
+            showError('institutionError', false);
+            markError('institution', false);
+        }
+
+        if (!data.course || data.course.trim() === "") {
+            showError('courseError', true);
+            markError('course', true);
+            isValid = false;
+        } else {
+            showError('courseError', false);
+            markError('course', false);
+        }
+
+        return isValid;
+    }
+
+    function gatherFormData() {
+        return {
+            fullName: document.getElementById('fullName').value.trim(),
+            dob: document.getElementById('dob').value,
+            email: document.getElementById('email').value.trim().toLowerCase(),
+            gender: document.getElementById('gender').value,
+            phone: document.getElementById('phone').value.trim(),
+            lgaOrigin: document.getElementById('lgaOrigin').value.trim(),
+            stateOrigin: document.getElementById('stateOrigin').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            stateResidence: document.getElementById('stateResidence').value.trim(),
+            institution: document.getElementById('institution').value.trim(),
+            course: document.getElementById('course').value.trim(),
+            receivedBursary: document.getElementById('receivedBursary').checked
+        };
+    }
+
+    const form = document.getElementById('studentForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusDiv = document.getElementById('statusMessage');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusDiv.className = 'status-msg';
+        statusDiv.style.display = 'none';
+        
+        const formData = gatherFormData();
+
+        if (!validateForm(formData)) {
+            statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please correct the errors highlighted above.';
+            statusDiv.className = 'status-msg error';
+            statusDiv.style.display = 'block';
+            document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Submitting...';
+
+        try {
+            const response = await fetch('https://kys-backend-1.onrender.com/api/students', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Registration successful! Your data has been saved.';
+                statusDiv.className = 'status-msg success';
+                statusDiv.style.display = 'block';
+                form.reset();
+                document.getElementById('dob').value = '';
+                document.getElementById('receivedBursary').checked = false;
+                document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+                document.querySelectorAll('input, select, textarea').forEach(el => el.classList.remove('error'));
+            } else {
+                let errMsg = result.message || 'Submission failed. Please check your details.';
+                if (result.errors && Array.isArray(result.errors)) {
+                    errMsg = result.errors.map(e => e.msg || e.message).join(', ');
+                }
+                statusDiv.innerHTML = `<i class="fas fa-times-circle"></i> Error: ${errMsg}`;
+                statusDiv.className = 'status-msg error';
+                statusDiv.style.display = 'block';
+            }
+        } catch (err) {
+            statusDiv.innerHTML = '<i class="fas fa-plug"></i> Network error: Could not connect to server. Make sure the backend is running at http://localhost:5000';
+            statusDiv.className = 'status-msg error';
+            statusDiv.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Registration';
+        }
+    });
+
+    const inputFields = ['fullName', 'email', 'phone', 'lgaOrigin', 'stateOrigin', 'address', 'stateResidence', 'institution', 'course'];
+    inputFields.forEach(field => {
+        const el = document.getElementById(field);
+        if (el) {
+            el.addEventListener('input', function() {
+                document.getElementById(field + 'Error')?.classList.remove('show');
+                el.classList.remove('error');
+            });
+        }
+    });
+    
+    const genderSelect = document.getElementById('gender');
+    if(genderSelect) {
+        genderSelect.addEventListener('change', () => {
+            document.getElementById('genderError')?.classList.remove('show');
+            genderSelect.classList.remove('error');
+        });
+    }
+</script>
+</body>
+</html>

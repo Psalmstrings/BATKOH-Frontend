@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BKSA Admin | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fc;
+            color: #1e1e2f;
+        }
+
+        :root {
+            --primary-dark: #0A2647;
+            --accent-orange: #E67E22;
+            --text-muted: #4b5563;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 10px 30px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo h2 {
+            font-size: 1.5rem;
+        }
+        .logo span {
+            color: var(--accent-orange);
+        }
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logout-btn {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--accent-orange);
+        }
+        .welcome-card h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+        }
+        .stat-label {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+        }
+        .card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .student-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+        .badge {
+            background: #e6f7e6;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+        .error-msg {
+            color: #dc2626;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            th, td {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <h2><span>BKSA</span> Admin Portal</h2>
+        </div>
+        <div class="admin-info">
+            <span id="adminName">Admin</span>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1 id="welcomeMsg">Welcome to Admin Dashboard</h1>
+            <p>Manage student registrations and monitor system activity.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Registered Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="bursaryCount">0</div>
+                <div class="stat-label">PVC?</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="maleCount">0</div>
+                <div class="stat-label">Male Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="femaleCount">0</div>
+                <div class="stat-label">Female Students</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-users"></i> Recent Student Registrations</h3>
+            <div class="student-table">
+                <table id="studentTable">
+                    <thead>
+                        <tr><th>Full Name</th><th>Email</th><th>Institution</th><th>Gender</th><th>PVC?</th></tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <tr><td colspan="5" class="loading">Loading students...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://kys-backend-1.onrender.com/api';
+        let studentsData = [];
+
+        function getToken() {
+            return localStorage.getItem('adminToken');
+        }
+
+        function checkAuth() {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch(`${API_BASE}/students`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                if (response.ok) {
+                    studentsData = await response.json();
+                    updateStats();
+                    renderTable();
+                } else {
+                    document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="5" class="error-msg">Failed to load students</td></tr>';
+                }
+            } catch (err) {
+                document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="5" class="error-msg">Network error: Make sure backend is running</td></tr>';
+            }
+        }
+
+        function updateStats() {
+            const total = studentsData.length;
+            const bursary = studentsData.filter(s => s.receivedBursary === true).length;
+            const male = studentsData.filter(s => s.gender === 'Male').length;
+            const female = studentsData.filter(s => s.gender === 'Female').length;
+            
+            document.getElementById('totalStudents').textContent = total;
+            document.getElementById('bursaryCount').textContent = bursary;
+            document.getElementById('maleCount').textContent = male;
+            document.getElementById('femaleCount').textContent = female;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('studentTableBody');
+            if (studentsData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading">No students registered yet</td></tr>';
+                return;
+            }
+            tbody.innerHTML = studentsData.slice(0, 20).map(student => `
+                <tr>
+                    <td>${escapeHtml(student.fullName || 'N/A')}</td>
+                    <td>${escapeHtml(student.email || 'N/A')}</td>
+                    <td>${escapeHtml(student.institution || 'N/A')}</td>
+                    <td>${escapeHtml(student.gender || 'N/A')}</td>
+                    <td>${student.receivedBursary ? '<span class="badge">Yes</span>' : '<span class="badge" style="background:#e2e3e5;color:#6c757d;">No</span>'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function loadAdminInfo() {
+            const adminData = localStorage.getItem('adminData');
+            if (adminData) {
+                try {
+                    const admin = JSON.parse(adminData);
+                    document.getElementById('adminName').textContent = admin.fullName || 'Admin';
+                    document.getElementById('welcomeMsg').textContent = `Welcome back, ${admin.fullName || 'Admin'}!`;
+                } catch(e) {}
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminData');
+            window.location.href = 'login.html';
+        });
+
+        if (checkAuth()) {
+            loadAdminInfo();
+            fetchStudents();
+        }
+    </script>
+</body>
+</html>
