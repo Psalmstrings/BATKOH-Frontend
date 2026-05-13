@@ -263,6 +263,15 @@
         .home-link:hover {
             background: var(--accent-orange);
         }
+        .info-badge {
+            background: #fef9e6;
+            border-left: 4px solid var(--accent-orange);
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #5a4a2e;
+        }
     </style>
 </head>
 <body>
@@ -353,6 +362,22 @@
                     <div class="error-message" id="courseError">Course is required.</div>
                 </div>
 
+                <!-- NEW VOLUNTEER POST FIELD (based on mongoose enum) -->
+                <div class="form-group">
+                    <label><i class="fas fa-user-tag"></i> Volunteer Position <span class="required-star">*</span></label>
+                    <select id="volunteerPost" name="volunteerPost">
+                        <option value="">-- Select Volunteer Position --</option>
+                        <option value="Director">Director</option>
+                        <option value="State Coordinator">State Coordinator</option>
+                        <option value="Deputy Coordinator">Deputy Coordinator</option>
+                        <option value="State Working Committee">State Working Committee</option>
+                        <option value="Campus Coordinators">Campus Coordinators</option>
+                        <option value="Campus Captains">Campus Captains</option>
+                        <option value="Members">Members</option>
+                    </select>
+                    <div class="error-message" id="volunteerPostError">Please select a valid volunteer position.</div>
+                </div>
+
                 <div class="form-group full-width checkbox-group">
                     <input type="checkbox" id="receivedBursary" name="receivedBursary" value="true">
                     <label for="receivedBursary">Do you have Permanent Voter's Card?</label>
@@ -369,6 +394,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // Flatpickr for DOB
     flatpickr("#dob", {
         dateFormat: "Y-m-d",
         maxDate: "today",
@@ -382,6 +408,7 @@
         }
     });
 
+    // Validation helpers
     function validateEmail(email) {
         return /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email);
     }
@@ -410,9 +437,11 @@
         }
     }
 
+    // Full validation including volunteerPost enum
     function validateForm(data) {
         let isValid = true;
         
+        // Full Name
         if (!data.fullName || !validateFullName(data.fullName)) {
             showError('fullNameError', true);
             markError('fullName', true);
@@ -422,6 +451,7 @@
             markError('fullName', false);
         }
 
+        // DOB
         if (!data.dob || isNaN(Date.parse(data.dob))) {
             showError('dobError', true);
             markError('dob', true);
@@ -431,6 +461,7 @@
             markError('dob', false);
         }
 
+        // Gender
         if (!data.gender || !['Male', 'Female', 'Other'].includes(data.gender)) {
             showError('genderError', true);
             markError('gender', true);
@@ -440,6 +471,7 @@
             markError('gender', false);
         }
 
+        // Email
         if (!data.email || !validateEmail(data.email)) {
             showError('emailError', true);
             markError('email', true);
@@ -449,6 +481,7 @@
             markError('email', false);
         }
 
+        // Phone
         if (!data.phone || !validatePhone(data.phone)) {
             showError('phoneError', true);
             markError('phone', true);
@@ -458,6 +491,7 @@
             markError('phone', false);
         }
 
+        // LGA Origin
         if (!data.lgaOrigin || data.lgaOrigin.trim() === "") {
             showError('lgaOriginError', true);
             markError('lgaOrigin', true);
@@ -467,6 +501,7 @@
             markError('lgaOrigin', false);
         }
 
+        // State Origin
         if (!data.stateOrigin || data.stateOrigin.trim() === "") {
             showError('stateOriginError', true);
             markError('stateOrigin', true);
@@ -476,6 +511,7 @@
             markError('stateOrigin', false);
         }
 
+        // Address
         if (!data.address || data.address.trim() === "") {
             showError('addressError', true);
             markError('address', true);
@@ -485,6 +521,7 @@
             markError('address', false);
         }
 
+        // State Residence
         if (!data.stateResidence || data.stateResidence.trim() === "") {
             showError('stateResidenceError', true);
             markError('stateResidence', true);
@@ -494,6 +531,7 @@
             markError('stateResidence', false);
         }
 
+        // Institution
         if (!data.institution || data.institution.trim() === "") {
             showError('institutionError', true);
             markError('institution', true);
@@ -503,6 +541,7 @@
             markError('institution', false);
         }
 
+        // Course
         if (!data.course || data.course.trim() === "") {
             showError('courseError', true);
             markError('course', true);
@@ -510,6 +549,25 @@
         } else {
             showError('courseError', false);
             markError('course', false);
+        }
+
+        // VOLUNTEER POST - required, must match exact enum values from schema
+        const allowedVolunteerPosts = [
+            "Director",
+            "State Coordinator",
+            "Deputy Coordinator",
+            "State Working Committee",
+            "Campus Coordinators",
+            "Campus Captains",
+            "Members"
+        ];
+        if (!data.volunteerPost || !allowedVolunteerPosts.includes(data.volunteerPost)) {
+            showError('volunteerPostError', true);
+            markError('volunteerPost', true);
+            isValid = false;
+        } else {
+            showError('volunteerPostError', false);
+            markError('volunteerPost', false);
         }
 
         return isValid;
@@ -528,6 +586,7 @@
             stateResidence: document.getElementById('stateResidence').value.trim(),
             institution: document.getElementById('institution').value.trim(),
             course: document.getElementById('course').value.trim(),
+            volunteerPost: document.getElementById('volunteerPost').value,
             receivedBursary: document.getElementById('receivedBursary').checked
         };
     }
@@ -555,6 +614,7 @@
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Submitting...';
 
         try {
+            // Sending to the same backend endpoint (matches the original API schema which now expects volunteerPost)
             const response = await fetch('https://batkoh-backend.onrender.com/api/students/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -572,19 +632,31 @@
                 form.reset();
                 document.getElementById('dob').value = '';
                 document.getElementById('receivedBursary').checked = false;
+                // Reset the volunteerPost select to default
+                const volunteerSelect = document.getElementById('volunteerPost');
+                if(volunteerSelect) volunteerSelect.value = "";
                 document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
                 document.querySelectorAll('input, select, textarea').forEach(el => el.classList.remove('error'));
+                // Optional auto-scroll to success message
+                statusDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
                 let errMsg = result.message || 'Submission failed. Please check your details.';
                 if (result.errors && Array.isArray(result.errors)) {
                     errMsg = result.errors.map(e => e.msg || e.message).join(', ');
+                } else if (typeof result === 'object' && result.error) {
+                    errMsg = result.error;
+                }
+                // Check for duplicate email error (MongoDB unique constraint)
+                if (errMsg.toLowerCase().includes('duplicate') || errMsg.toLowerCase().includes('email already exists')) {
+                    errMsg = 'This email address is already registered. Please use a different email.';
                 }
                 statusDiv.innerHTML = `<i class="fas fa-times-circle"></i> Error: ${errMsg}`;
                 statusDiv.className = 'status-msg error';
                 statusDiv.style.display = 'block';
             }
         } catch (err) {
-            statusDiv.innerHTML = '<i class="fas fa-plug"></i> Network error';
+            console.error('Network/API error:', err);
+            statusDiv.innerHTML = '<i class="fas fa-plug"></i> Network error: Unable to reach server. Please check your connection and try again.';
             statusDiv.className = 'status-msg error';
             statusDiv.style.display = 'block';
         } finally {
@@ -593,6 +665,7 @@
         }
     });
 
+    // Real-time error clearing for interactive fields
     const inputFields = ['fullName', 'email', 'phone', 'lgaOrigin', 'stateOrigin', 'address', 'stateResidence', 'institution', 'course'];
     inputFields.forEach(field => {
         const el = document.getElementById(field);
@@ -609,6 +682,24 @@
         genderSelect.addEventListener('change', () => {
             document.getElementById('genderError')?.classList.remove('show');
             genderSelect.classList.remove('error');
+        });
+    }
+    
+    // Volunteer post live error clearing
+    const volunteerPostSelect = document.getElementById('volunteerPost');
+    if(volunteerPostSelect) {
+        volunteerPostSelect.addEventListener('change', () => {
+            document.getElementById('volunteerPostError')?.classList.remove('show');
+            volunteerPostSelect.classList.remove('error');
+        });
+    }
+    
+    // dob manual clear on change
+    const dobInput = document.getElementById('dob');
+    if(dobInput) {
+        dobInput.addEventListener('change', () => {
+            document.getElementById('dobError')?.classList.remove('show');
+            dobInput.classList.remove('error');
         });
     }
 </script>
