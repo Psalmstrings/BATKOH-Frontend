@@ -698,7 +698,7 @@
                 // Check if user registered as Campus Captains and has couponCode
                 if (formData.volunteerPost === "Campus Captains" && result.data && result.data.couponCode) {
                     const couponCode = result.data.couponCode;
-                    statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> You've successfully registered as a Campus Coordinator!<br><strong>Your coupon code is: ${couponCode}</strong><br>Share this code with members who register under you.`;
+                    statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> You've successfully registered as a Campus Captain!<br><strong>Your coupon code is: ${couponCode}</strong><br>Share this code with members who register under you.`;
                     statusDiv.className = 'status-msg success';
                 } 
                 // Check if registered as Member (with coupon)
