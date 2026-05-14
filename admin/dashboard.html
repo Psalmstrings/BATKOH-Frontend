@@ -123,7 +123,6 @@
             color: var(--primary-dark);
         }
 
-        /* Search Section Styles */
         .search-section {
             background: white;
             border-radius: 1rem;
@@ -136,25 +135,33 @@
             color: var(--primary-dark);
             margin-bottom: 1rem;
             font-size: 1rem;
-        }
-        .search-bar {
             display: flex;
-            gap: 12px;
-            align-items: flex-end;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-title i {
+            color: var(--accent-orange);
+        }
+        .search-filters {
+            display: flex;
+            gap: 20px;
             flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
         }
-        .search-group {
+        .filter-group {
             flex: 1;
-            min-width: 200px;
+            min-width: 250px;
         }
-        .search-group label {
+        .filter-group label {
             display: block;
             font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-muted);
             margin-bottom: 5px;
         }
-        .search-select {
+        .search-select, .search-input {
             width: 100%;
             padding: 12px 16px;
             border: 1.5px solid var(--border-light);
@@ -163,17 +170,18 @@
             font-size: 0.95rem;
             outline: none;
             background: white;
-            cursor: pointer;
             transition: all 0.2s;
         }
-        .search-select:focus {
+        .search-select:focus, .search-input:focus {
             border-color: var(--accent-orange);
             box-shadow: 0 0 0 3px rgba(230,126,34,0.1);
         }
-        .search-btn {
-            background: var(--primary-dark);
-            color: white;
-            border: none;
+        .search-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .search-btn, .reset-btn {
             padding: 12px 28px;
             border-radius: 12px;
             font-weight: 600;
@@ -182,7 +190,11 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            height: 48px;
+            border: none;
+        }
+        .search-btn {
+            background: var(--primary-dark);
+            color: white;
         }
         .search-btn:hover {
             background: var(--accent-orange);
@@ -190,17 +202,7 @@
         }
         .reset-btn {
             background: #e2e8f0;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s;
             color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            height: 48px;
         }
         .reset-btn:hover {
             background: var(--accent-orange);
@@ -216,6 +218,26 @@
         }
         .search-info i {
             margin-right: 6px;
+        }
+        .coupon-badge {
+            background: #fef9e6;
+            color: #e67e22;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            font-family: monospace;
+        }
+        .coordinator-card {
+            background: linear-gradient(135deg, #fef9e6 0%, #fff5e6 100%);
+            border-left: 4px solid var(--accent-orange);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+        }
+        .coordinator-card h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
         }
 
         .student-table {
@@ -277,11 +299,15 @@
                 font-size: 0.8rem;
                 padding: 0.5rem;
             }
-            .search-bar {
+            .search-filters {
                 flex-direction: column;
             }
-            .search-group, .search-btn, .reset-btn {
+            .filter-group, .search-actions {
                 width: 100%;
+            }
+            .search-btn, .reset-btn {
+                flex: 1;
+                justify-content: center;
             }
         }
     </style>
@@ -300,7 +326,7 @@
     <div class="container">
         <div class="welcome-card">
             <h1 id="welcomeMsg">Welcome to Admin Dashboard</h1>
-            <p>Manage student registrations and filter by volunteer position.</p>
+            <p>Manage student registrations, filter by volunteer position or search by coupon code.</p>
         </div>
 
         <div class="stats-grid">
@@ -322,14 +348,14 @@
             </div>
         </div>
 
-        <!-- Search Section - Sends volunteerPost as query parameter -->
+        <!-- Search Section with both filters -->
         <div class="search-section">
             <div class="search-title">
-                <i class="fas fa-filter"></i> Filter by Volunteer Position
+                <i class="fas fa-filter"></i> Search & Filter Students
             </div>
-            <div class="search-bar">
-                <div class="search-group">
-                    <label><i class="fas fa-user-tag"></i> Volunteer Post</label>
+            <div class="search-filters">
+                <div class="filter-group">
+                    <label><i class="fas fa-user-tag"></i> Filter by Volunteer Position</label>
                     <select id="volunteerPostSelect" class="search-select">
                         <option value="">-- Select Volunteer Position --</option>
                         <option value="Director">Director</option>
@@ -341,15 +367,24 @@
                         <option value="Members">Members</option>
                     </select>
                 </div>
-                <button class="search-btn" id="searchBtn">
-                    <i class="fas fa-search"></i> Search
+                <div class="filter-group">
+                    <label><i class="fas fa-qrcode"></i> Search by Coupon Code</label>
+                    <input type="text" id="couponCodeSearch" class="search-input" placeholder="Enter coupon code (e.g., CC-6C1254)">
+                </div>
+            </div>
+            <div class="search-actions">
+                <button class="search-btn" id="searchByVolunteerBtn">
+                    <i class="fas fa-users"></i> Search by Position
+                </button>
+                <button class="search-btn" id="searchByCouponBtn">
+                    <i class="fas fa-qrcode"></i> Search by Coupon
                 </button>
                 <button class="reset-btn" id="resetBtn">
                     <i class="fas fa-sync-alt"></i> Show All
                 </button>
             </div>
             <div class="search-info" id="searchInfo">
-                <i class="fas fa-info-circle"></i> Select a volunteer position and click Search to filter students
+                <i class="fas fa-info-circle"></i> Use filters above to search students by volunteer position or coupon code
             </div>
         </div>
 
@@ -368,11 +403,12 @@
                             <th>Gender</th>
                             <th>PVC?</th>
                             <th>Volunteer Post</th>
+                            <th>Coupon Code / Referred By</th>
                             <th>State of Origin</th>
                         </tr>
                     </thead>
                     <tbody id="studentTableBody">
-                        <tr><td colspan="7" class="loading">Loading students...</td></tr>
+                        <tr><td colspan="8" class="loading">Loading students...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -384,14 +420,13 @@
         // CONFIGURATION
         // ========================
         const API_BASE = 'https://batkoh-backend.onrender.com/api';
-        // Search endpoint that expects volunteerPost query parameter
-        const SEARCH_ENDPOINT = 'https://batkoh-backend.onrender.com/api/students/search';
+        const SEARCH_BY_VOLUNTEER_ENDPOINT = 'https://batkoh-backend.onrender.com/api/students/search';
+        const SEARCH_BY_COUPON_ENDPOINT = 'https://batkoh-backend.onrender.com/api/students/members';
         
-        let allStudentsData = [];      // Full list from main API
-        let currentDisplayData = [];   // Currently displayed data
+        let allStudentsData = [];
+        let currentDisplayData = [];
         let isSearchResult = false;
 
-        // Allowed volunteer posts (matching backend)
         const ALLOWED_POSTS = [
             "Director",
             "State Coordinator",
@@ -431,10 +466,31 @@
         // ========================
         // RENDER TABLE
         // ========================
-        function renderTable(students) {
+        function renderTable(students, coordinatorInfo = null) {
             const tbody = document.getElementById('studentTableBody');
+            
+            // If we have coordinator info, show it above the table
+            if (coordinatorInfo) {
+                const existingCard = document.querySelector('.coordinator-card');
+                if (existingCard) existingCard.remove();
+                
+                const card = document.createElement('div');
+                card.className = 'coordinator-card';
+                card.innerHTML = `
+                    <h4><i class="fas fa-user-check"></i> Campus Coordinator Information</h4>
+                    <p><strong>Name:</strong> ${escapeHtml(coordinatorInfo.name)}</p>
+                    <p><strong>Coupon Code:</strong> <span class="coupon-badge">${escapeHtml(coordinatorInfo.couponCode)}</span></p>
+                    <p><strong>Total Members Referred:</strong> ${coordinatorInfo.totalMembers || 0}</p>
+                `;
+                const tableContainer = document.querySelector('.student-table');
+                tableContainer.insertBefore(card, tableContainer.firstChild);
+            } else {
+                const existingCard = document.querySelector('.coordinator-card');
+                if (existingCard) existingCard.remove();
+            }
+            
             if (!students || students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="empty-msg"><i class="fas fa-inbox"></i> No students found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-msg"><i class="fas fa-inbox"></i> No students found</td></tr>';
                 return;
             }
             
@@ -446,13 +502,14 @@
                     <td>${escapeHtml(student.gender)}</td>
                     <td>${student.receivedBursary ? '<span class="badge">Yes</span>' : '<span class="badge badge-no">No</span>'}</td>
                     <td><span class="badge success-badge">${escapeHtml(student.volunteerPost)}</span></td>
+                    <td>${student.couponCode ? `<span class="coupon-badge"><i class="fas fa-tag"></i> ${escapeHtml(student.couponCode)}</span>` : (student.usedCouponCode ? `<span class="coupon-badge"><i class="fas fa-link"></i> Used: ${escapeHtml(student.usedCouponCode)}</span>` : '<span style="color:#999;">—</span>')}</td>
                     <td>${escapeHtml(student.stateOrigin)}</td>
                 </tr>
             `).join('');
         }
 
         // ========================
-        // UPDATE STATS (from full dataset)
+        // UPDATE STATS
         // ========================
         function updateStats() {
             const total = allStudentsData.length;
@@ -467,7 +524,7 @@
         }
 
         // ========================
-        // FETCH ALL STUDENTS (initial load & reset)
+        // FETCH ALL STUDENTS
         // ========================
         async function fetchAllStudents() {
             try {
@@ -488,32 +545,120 @@
                     currentDisplayData = [...allStudentsData];
                     isSearchResult = false;
                     updateStats();
-                    renderTable(currentDisplayData);
+                    renderTable(currentDisplayData, null);
                     updateSearchInfo(false, null);
                     return true;
                 } else {
-                    document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="7" class="error-msg">Failed to load students</td></tr>';
+                    document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="8" class="error-msg">Failed to load students</td></tr>';
                     return false;
                 }
             } catch (err) {
                 console.error('Fetch error:', err);
-                document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="7" class="error-msg">Network error: Cannot connect to backend</td></tr>';
+                document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="8" class="error-msg">Network error: Cannot connect to backend</td></tr>';
                 return false;
             }
         }
 
         // ========================
-        // SEARCH FUNCTION - Sends volunteerPost as query param
-        // Endpoint: /api/students/search?volunteerPost=Members
+        // SEARCH BY COUPON CODE
+        // Endpoint: http://localhost:3000/api/students/members?couponCode=CC-6C1254
+        // Expected response: { success, coordinator, count, members }
         // ========================
-        async function searchByVolunteerPost(volunteerPost) {
-            if (!volunteerPost || volunteerPost.trim() === '') {
-                // If no post selected, show all students
-                resetToAllStudents();
+        async function searchByCouponCode(couponCode) {
+            if (!couponCode || couponCode.trim() === '') {
+                updateSearchInfoError('Please enter a coupon code to search');
                 return false;
             }
 
-            // Validate against allowed posts (matches backend validation)
+            const searchInfoDiv = document.getElementById('searchInfo');
+            searchInfoDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Searching for members with coupon code: ' + couponCode + '...';
+            
+            try {
+                const url = `${SEARCH_BY_COUPON_ENDPOINT}?couponCode=${encodeURIComponent(couponCode.trim())}`;
+                const token = getToken();
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+                
+                const result = await response.json();
+                console.log('Coupon search response:', result);
+                
+                if (response.ok && result.success === true) {
+                    // Extract members from response
+                    let members = [];
+                    let coordinatorInfo = null;
+                    
+                    if (result.members && Array.isArray(result.members)) {
+                        members = result.members;
+                    }
+                    
+                    if (result.coordinator) {
+                        coordinatorInfo = {
+                            name: result.coordinator.name,
+                            couponCode: result.coordinator.couponCode,
+                            totalMembers: result.count || members.length
+                        };
+                    }
+                    
+                    if (members.length > 0) {
+                        currentDisplayData = members;
+                        isSearchResult = true;
+                        renderTable(currentDisplayData, coordinatorInfo);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${members.length} member(s) referred by coordinator with coupon code: <strong>${couponCode}</strong>
+                            <button id="clearSearchBtn" style="background:none; border:none; color:var(--accent-orange); cursor:pointer; text-decoration:underline; margin-left:8px;">
+                            <i class="fas fa-times"></i> Clear</button>`;
+                        
+                        const clearBtn = document.getElementById('clearSearchBtn');
+                        if (clearBtn) {
+                            clearBtn.addEventListener('click', () => {
+                                resetToAllStudents();
+                                document.getElementById('couponCodeSearch').value = '';
+                            });
+                        }
+                        return true;
+                    } else {
+                        currentDisplayData = [];
+                        isSearchResult = true;
+                        renderTable([], coordinatorInfo);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> No members found with coupon code: ${couponCode}`;
+                        return false;
+                    }
+                } else {
+                    if (response.status === 404) {
+                        currentDisplayData = [];
+                        isSearchResult = true;
+                        renderTable([], null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${result.message || `No members found with coupon code: ${couponCode}`}`;
+                        return false;
+                    } else {
+                        searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> ${result.message || 'Search failed. Please try again.'}`;
+                        return false;
+                    }
+                }
+            } catch (err) {
+                console.error('Coupon search error:', err);
+                updateSearchInfoError('Cannot connect to coupon search endpoint. Make sure backend is running on localhost:3000');
+                return false;
+            }
+        }
+
+        // ========================
+        // SEARCH BY VOLUNTEER POST
+        // ========================
+        async function searchByVolunteerPost(volunteerPost) {
+            if (!volunteerPost || volunteerPost.trim() === '') {
+                updateSearchInfoError('Please select a volunteer position');
+                return false;
+            }
+
             if (!ALLOWED_POSTS.includes(volunteerPost)) {
                 updateSearchInfoError(`Invalid volunteer post. Allowed: ${ALLOWED_POSTS.join(", ")}`);
                 return false;
@@ -523,8 +668,7 @@
             searchInfoDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Searching for students with volunteer post: ' + volunteerPost + '...';
             
             try {
-                // Build URL with volunteerPost query parameter (exactly as controller expects)
-                const url = `${SEARCH_ENDPOINT}?volunteerPost=${encodeURIComponent(volunteerPost)}`;
+                const url = `${SEARCH_BY_VOLUNTEER_ENDPOINT}?volunteerPost=${encodeURIComponent(volunteerPost)}`;
                 const token = getToken();
                 
                 const response = await fetch(url, {
@@ -532,51 +676,42 @@
                     headers: token ? { 'Authorization': `Bearer ${token}` } : {}
                 });
                 
-                // Handle 401 unauthorized
                 if (response.status === 401) {
                     localStorage.removeItem('adminToken');
                     window.location.href = 'login.html';
                     return false;
                 }
                 
-                // Parse response
                 const result = await response.json();
                 
-                // Handle 404 - No users found (controller returns 404 with success:false)
                 if (response.status === 404) {
-                    searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${result.message || `No students found with volunteer post: ${volunteerPost}`}`;
-                    // Clear the table or show empty
                     currentDisplayData = [];
                     isSearchResult = true;
-                    renderTable([]);
+                    renderTable([], null);
+                    searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${result.message || `No students found with volunteer post: ${volunteerPost}`}`;
                     return false;
                 }
                 
-                // Handle 400 - Invalid volunteerPost
                 if (response.status === 400) {
                     searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> ${result.message || 'Invalid request'}`;
                     return false;
                 }
                 
-                // Handle 500 server error
                 if (!response.ok) {
                     searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> Server error (${response.status}). Please try again.`;
                     return false;
                 }
                 
-                // Success response format from controller:
-                // { success: true, count: number, data: [students] }
                 if (result.success === true && result.data && Array.isArray(result.data)) {
                     currentDisplayData = result.data;
                     isSearchResult = true;
-                    renderTable(currentDisplayData);
+                    renderTable(currentDisplayData, null);
                     
                     const count = result.count || result.data.length;
                     searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${count} student(s) with volunteer post: <strong>${volunteerPost}</strong> 
                         <button id="clearSearchBtn" style="background:none; border:none; color:var(--accent-orange); cursor:pointer; text-decoration:underline; margin-left:8px;">
                         <i class="fas fa-times"></i> Clear</button>`;
                     
-                    // Add clear button event listener
                     const clearBtn = document.getElementById('clearSearchBtn');
                     if (clearBtn) {
                         clearBtn.addEventListener('click', () => {
@@ -585,35 +720,27 @@
                         });
                     }
                     return true;
+                } else if (result.data && Array.isArray(result.data)) {
+                    currentDisplayData = result.data;
+                    isSearchResult = true;
+                    renderTable(currentDisplayData, null);
+                    searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${result.data.length} student(s) with volunteer post: ${volunteerPost}`;
+                    return true;
                 } else {
-                    // Handle unexpected response format
-                    if (result.data && Array.isArray(result.data)) {
-                        currentDisplayData = result.data;
-                        isSearchResult = true;
-                        renderTable(currentDisplayData);
-                        searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${result.data.length} student(s) with volunteer post: ${volunteerPost}`;
-                        return true;
-                    } else {
-                        searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> Unexpected response format from server`;
-                        return false;
-                    }
+                    searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> Unexpected response format from server`;
+                    return false;
                 }
-                
             } catch (err) {
                 console.error('Search error:', err);
-                let errorMsg = 'Server error: Unable to perform search';
-                updateSearchInfoError(errorMsg);
+                updateSearchInfoError('Server error: Unable to perform search');
                 return false;
             }
         }
 
-        // Helper functions for search info
-        function updateSearchInfo(isSearchMode, searchPost) {
+        function updateSearchInfo(isSearchMode, searchType) {
             const infoDiv = document.getElementById('searchInfo');
             if (!isSearchMode) {
                 infoDiv.innerHTML = `<i class="fas fa-database"></i> Showing all ${allStudentsData.length} registered students`;
-            } else if (searchPost) {
-                infoDiv.innerHTML = `<i class="fas fa-search"></i> Showing results for volunteer post: ${searchPost} (${currentDisplayData.length} found)`;
             }
         }
         
@@ -630,30 +757,17 @@
                 fetchAllStudents().then(() => {
                     currentDisplayData = [...allStudentsData];
                     isSearchResult = false;
-                    renderTable(currentDisplayData);
+                    renderTable(currentDisplayData, null);
                     updateSearchInfo(false, null);
                 });
             } else {
                 currentDisplayData = [...allStudentsData];
                 isSearchResult = false;
-                renderTable(currentDisplayData);
+                renderTable(currentDisplayData, null);
                 updateSearchInfo(false, null);
             }
-            // Reset select dropdown
-            const selectEl = document.getElementById('volunteerPostSelect');
-            if (selectEl) selectEl.value = '';
-        }
-
-        // ========================
-        // HANDLE SEARCH BUTTON CLICK
-        // ========================
-        async function handleSearch() {
-            const selectedPost = document.getElementById('volunteerPostSelect').value;
-            if (!selectedPost) {
-                updateSearchInfoError('Please select a volunteer position from the dropdown');
-                return;
-            }
-            await searchByVolunteerPost(selectedPost);
+            document.getElementById('volunteerPostSelect').value = '';
+            document.getElementById('couponCodeSearch').value = '';
         }
 
         // ========================
@@ -674,25 +788,34 @@
         // EVENT LISTENERS
         // ========================
         function bindEvents() {
-            const searchBtn = document.getElementById('searchBtn');
+            const searchByVolunteerBtn = document.getElementById('searchByVolunteerBtn');
+            const searchByCouponBtn = document.getElementById('searchByCouponBtn');
             const resetBtn = document.getElementById('resetBtn');
-            const selectEl = document.getElementById('volunteerPostSelect');
+            const couponInput = document.getElementById('couponCodeSearch');
             
-            if (searchBtn) {
-                searchBtn.addEventListener('click', handleSearch);
-            }
-            if (resetBtn) {
-                resetBtn.addEventListener('click', () => {
-                    resetToAllStudents();
+            if (searchByVolunteerBtn) {
+                searchByVolunteerBtn.addEventListener('click', () => {
+                    const selectedPost = document.getElementById('volunteerPostSelect').value;
+                    searchByVolunteerPost(selectedPost);
                 });
             }
-            // Allow Enter key on select? Not typical, but we can trigger search on select change if desired
-            // But keep explicit search button as requested
-            if (selectEl) {
-                selectEl.addEventListener('keypress', (e) => {
+            
+            if (searchByCouponBtn) {
+                searchByCouponBtn.addEventListener('click', () => {
+                    const couponCode = document.getElementById('couponCodeSearch').value;
+                    searchByCouponCode(couponCode);
+                });
+            }
+            
+            if (resetBtn) {
+                resetBtn.addEventListener('click', resetToAllStudents);
+            }
+            
+            if (couponInput) {
+                couponInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        handleSearch();
+                        searchByCouponCode(couponInput.value);
                     }
                 });
             }

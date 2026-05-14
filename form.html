@@ -203,6 +203,11 @@
             color: #991b1b;
             display: block;
         }
+        .status-msg.info {
+            background: #e0f2fe;
+            color: #0369a1;
+            display: block;
+        }
 
         hr {
             margin: 1.5rem 0;
@@ -271,6 +276,18 @@
             margin-bottom: 1rem;
             font-size: 0.85rem;
             color: #5a4a2e;
+        }
+        
+        /* Special styling for conditional fields */
+        .conditional-field {
+            margin-top: 0.5rem;
+            padding: 0.8rem;
+            background: #fef9e6;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent-orange);
+        }
+        .conditional-field label {
+            margin-bottom: 0.3rem;
         }
     </style>
 </head>
@@ -362,7 +379,7 @@
                     <div class="error-message" id="courseError">Course is required.</div>
                 </div>
 
-                <!-- NEW VOLUNTEER POST FIELD (based on mongoose enum) -->
+                <!-- VOLUNTEER POST FIELD -->
                 <div class="form-group">
                     <label><i class="fas fa-user-tag"></i> Volunteer Position <span class="required-star">*</span></label>
                     <select id="volunteerPost" name="volunteerPost">
@@ -376,6 +393,16 @@
                         <option value="Members">Members</option>
                     </select>
                     <div class="error-message" id="volunteerPostError">Please select a valid volunteer position.</div>
+                </div>
+
+                <!-- Conditional Field for Members: usedCouponCode -->
+                <div id="couponSection" class="full-width conditional-field" style="display: none;">
+                    <label><i class="fas fa-user-friends"></i> Coupon Code <span class="required-star">*</span></label>
+                    <input type="text" id="usedCouponCode" name="usedCouponCode" placeholder="Enter Campus Coordinator coupon code">
+                    <div class="error-message" id="usedCouponCodeError">Coupon code is required for Members.</div>
+                    <small class="hint">
+                        <i class="fas fa-info-circle"></i> Enter the coupon code shared by your Campus Coordinator
+                    </small>
                 </div>
 
                 <div class="form-group full-width checkbox-group">
@@ -394,6 +421,30 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+    // ========================
+    // DOM Elements
+    // ========================
+    const volunteerPostSelect = document.getElementById("volunteerPost");
+    const couponSection = document.getElementById("couponSection");
+    const usedCouponCodeInput = document.getElementById("usedCouponCode");
+    
+    // Show/hide coupon section based on volunteer post selection
+    volunteerPostSelect.addEventListener("change", function () {
+        if (this.value === "Members") {
+            couponSection.style.display = "block";
+            usedCouponCodeInput.required = true;
+            usedCouponCodeInput.setAttribute("required", "required");
+        } else {
+            couponSection.style.display = "none";
+            usedCouponCodeInput.required = false;
+            usedCouponCodeInput.removeAttribute("required");
+            // Clear error and value when hidden
+            document.getElementById('usedCouponCodeError')?.classList.remove('show');
+            usedCouponCodeInput.classList.remove('error');
+            usedCouponCodeInput.value = '';
+        }
+    });
+    
     // Flatpickr for DOB
     flatpickr("#dob", {
         dateFormat: "Y-m-d",
@@ -437,7 +488,7 @@
         }
     }
 
-    // Full validation including volunteerPost enum
+    // Full validation including volunteerPost enum and coupon code for Members
     function validateForm(data) {
         let isValid = true;
         
@@ -551,7 +602,7 @@
             markError('course', false);
         }
 
-        // VOLUNTEER POST - required, must match exact enum values from schema
+        // VOLUNTEER POST validation
         const allowedVolunteerPosts = [
             "Director",
             "State Coordinator",
@@ -570,11 +621,23 @@
             markError('volunteerPost', false);
         }
 
+        // COUPON CODE validation for Members
+        if (data.volunteerPost === "Members") {
+            if (!data.usedCouponCode || data.usedCouponCode.trim() === "") {
+                showError('usedCouponCodeError', true);
+                markError('usedCouponCode', true);
+                isValid = false;
+            } else {
+                showError('usedCouponCodeError', false);
+                markError('usedCouponCode', false);
+            }
+        }
+
         return isValid;
     }
 
     function gatherFormData() {
-        return {
+        const formData = {
             fullName: document.getElementById('fullName').value.trim(),
             dob: document.getElementById('dob').value,
             email: document.getElementById('email').value.trim().toLowerCase(),
@@ -589,6 +652,13 @@
             volunteerPost: document.getElementById('volunteerPost').value,
             receivedBursary: document.getElementById('receivedBursary').checked
         };
+        
+        // Add coupon code only if volunteerPost is Members
+        if (formData.volunteerPost === "Members") {
+            formData.usedCouponCode = document.getElementById('usedCouponCode').value.trim();
+        }
+        
+        return formData;
     }
 
     const form = document.getElementById('studentForm');
@@ -614,7 +684,6 @@
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Submitting...';
 
         try {
-            // Sending to the same backend endpoint (matches the original API schema which now expects volunteerPost)
             const response = await fetch('https://batkoh-backend.onrender.com/api/students/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -626,18 +695,36 @@
             console.log('API Response:', result);
 
             if (response.ok) {
-                statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Registration successful! Your data has been saved.';
-                statusDiv.className = 'status-msg success';
+                // Check if user registered as Campus Coordinator and has couponCode
+                if (formData.volunteerPost === "Campus Coordinators" && result.data && result.data.couponCode) {
+                    const couponCode = result.data.couponCode;
+                    statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> You've successfully registered as a Campus Coordinator!<br><strong>Your coupon code is: ${couponCode}</strong><br>Share this code with members who register under you.`;
+                    statusDiv.className = 'status-msg success';
+                } 
+                // Check if registered as Member (with coupon)
+                else if (formData.volunteerPost === "Members") {
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Registration successful! You have been registered as a Member. Thank you for joining BKSA!';
+                    statusDiv.className = 'status-msg success';
+                }
+                else {
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Registration successful! Your data has been saved.';
+                    statusDiv.className = 'status-msg success';
+                }
+                
                 statusDiv.style.display = 'block';
+                
+                // Reset form
                 form.reset();
                 document.getElementById('dob').value = '';
                 document.getElementById('receivedBursary').checked = false;
-                // Reset the volunteerPost select to default
                 const volunteerSelect = document.getElementById('volunteerPost');
                 if(volunteerSelect) volunteerSelect.value = "";
+                // Hide coupon section and clear value
+                couponSection.style.display = "none";
+                if(usedCouponCodeInput) usedCouponCodeInput.value = "";
+                
                 document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
                 document.querySelectorAll('input, select, textarea').forEach(el => el.classList.remove('error'));
-                // Optional auto-scroll to success message
                 statusDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
                 let errMsg = result.message || 'Submission failed. Please check your details.';
@@ -646,7 +733,7 @@
                 } else if (typeof result === 'object' && result.error) {
                     errMsg = result.error;
                 }
-                // Check for duplicate email error (MongoDB unique constraint)
+                // Check for duplicate email error
                 if (errMsg.toLowerCase().includes('duplicate') || errMsg.toLowerCase().includes('email already exists')) {
                     errMsg = 'This email address is already registered. Please use a different email.';
                 }
@@ -686,11 +773,23 @@
     }
     
     // Volunteer post live error clearing
-    const volunteerPostSelect = document.getElementById('volunteerPost');
     if(volunteerPostSelect) {
         volunteerPostSelect.addEventListener('change', () => {
             document.getElementById('volunteerPostError')?.classList.remove('show');
             volunteerPostSelect.classList.remove('error');
+            // Also clear coupon code error if switching away from Members
+            if (volunteerPostSelect.value !== "Members") {
+                document.getElementById('usedCouponCodeError')?.classList.remove('show');
+                if(usedCouponCodeInput) usedCouponCodeInput.classList.remove('error');
+            }
+        });
+    }
+    
+    // Coupon code live error clearing
+    if(usedCouponCodeInput) {
+        usedCouponCodeInput.addEventListener('input', function() {
+            document.getElementById('usedCouponCodeError')?.classList.remove('show');
+            usedCouponCodeInput.classList.remove('error');
         });
     }
     
