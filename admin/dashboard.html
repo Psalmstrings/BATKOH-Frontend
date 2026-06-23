@@ -26,6 +26,8 @@
             --text-muted: #4b5563;
             --border-light: #e2e8f0;
             --shadow-sm: 0 10px 30px -12px rgba(0, 0, 0, 0.08);
+            --delete-red: #dc2626;
+            --delete-hover: #b91c1c;
         }
 
         .navbar {
@@ -64,7 +66,7 @@
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -83,7 +85,7 @@
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -143,26 +145,24 @@
             color: var(--accent-orange);
         }
         .search-filters {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
-            flex-wrap: wrap;
             margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border-light);
         }
         .filter-group {
-            flex: 1;
-            min-width: 250px;
+            display: flex;
+            flex-direction: column;
         }
         .filter-group label {
-            display: block;
             font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-muted);
             margin-bottom: 5px;
         }
         .search-select, .search-input {
-            width: 100%;
             padding: 12px 16px;
             border: 1.5px solid var(--border-light);
             border-radius: 12px;
@@ -171,6 +171,7 @@
             outline: none;
             background: white;
             transition: all 0.2s;
+            width: 100%;
         }
         .search-select:focus, .search-input:focus {
             border-color: var(--accent-orange);
@@ -219,6 +220,7 @@
         .search-info i {
             margin-right: 6px;
         }
+
         .coupon-badge {
             background: #fef9e6;
             color: #e67e22;
@@ -228,6 +230,7 @@
             font-weight: 600;
             font-family: monospace;
         }
+
         .coordinator-card {
             background: linear-gradient(135deg, #fef9e6 0%, #fff5e6 100%);
             border-left: 4px solid var(--accent-orange);
@@ -257,6 +260,10 @@
             background: #f8fafc;
             font-weight: 600;
             color: var(--primary-dark);
+            white-space: nowrap;
+        }
+        td {
+            vertical-align: middle;
         }
         .badge {
             background: #e6f7e6;
@@ -291,23 +298,128 @@
             color: #2e7d32;
         }
 
+        .delete-btn {
+            background: var(--delete-red);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .delete-btn:hover {
+            background: var(--delete-hover);
+            transform: scale(1.05);
+        }
+        .delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 1.5rem;
+            max-width: 450px;
+            width: 90%;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: fadeInUp 0.2s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-box h3 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal-box h3 i {
+            color: var(--delete-red);
+        }
+        .modal-box p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal-actions button {
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+        .modal-cancel {
+            background: #e2e8f0;
+            color: var(--primary-dark);
+        }
+        .modal-cancel:hover {
+            background: #cbd5e1;
+        }
+        .modal-confirm {
+            background: var(--delete-red);
+            color: white;
+        }
+        .modal-confirm:hover {
+            background: var(--delete-hover);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
             th, td {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
                 padding: 0.5rem;
             }
             .search-filters {
+                grid-template-columns: 1fr;
+            }
+            .search-actions {
                 flex-direction: column;
             }
-            .filter-group, .search-actions {
-                width: 100%;
-            }
             .search-btn, .reset-btn {
-                flex: 1;
+                width: 100%;
                 justify-content: center;
+            }
+            .delete-btn {
+                font-size: 0.65rem;
+                padding: 4px 10px;
             }
         }
     </style>
@@ -326,7 +438,7 @@
     <div class="container">
         <div class="welcome-card">
             <h1 id="welcomeMsg">Welcome to Admin Dashboard</h1>
-            <p>Manage student registrations, filter by volunteer position or search by coupon code.</p>
+            <p>Manage student registrations, search by name, volunteer position, institution, or coupon code.</p>
         </div>
 
         <div class="stats-grid">
@@ -348,16 +460,20 @@
             </div>
         </div>
 
-        <!-- Search Section with both filters -->
+        <!-- Search Section with filters -->
         <div class="search-section">
             <div class="search-title">
                 <i class="fas fa-filter"></i> Search & Filter Students
             </div>
             <div class="search-filters">
                 <div class="filter-group">
-                    <label><i class="fas fa-user-tag"></i> Filter by Volunteer Position</label>
+                    <label><i class="fas fa-user"></i> Student Name</label>
+                    <input type="text" id="nameSearch" class="search-input" placeholder="Enter student name">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-user-tag"></i> Volunteer Position</label>
                     <select id="volunteerPostSelect" class="search-select">
-                        <option value="">-- Select Volunteer Position --</option>
+                        <option value="">-- Select Position --</option>
                         <option value="Director">Director</option>
                         <option value="State Coordinator">State Coordinator</option>
                         <option value="Deputy Coordinator">Deputy Coordinator</option>
@@ -368,13 +484,23 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label><i class="fas fa-qrcode"></i> Search by Coupon Code</label>
+                    <label><i class="fas fa-university"></i> Institution</label>
+                    <input type="text" id="institutionSearch" class="search-input" placeholder="Enter institution name">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-qrcode"></i> Coupon Code</label>
                     <input type="text" id="couponCodeSearch" class="search-input" placeholder="Enter coupon code (e.g., CC-6C1254)">
                 </div>
             </div>
             <div class="search-actions">
+                <button class="search-btn" id="searchByNameBtn">
+                    <i class="fas fa-user"></i> Search by Name
+                </button>
                 <button class="search-btn" id="searchByVolunteerBtn">
                     <i class="fas fa-users"></i> Search by Position
+                </button>
+                <button class="search-btn" id="searchByInstitutionBtn">
+                    <i class="fas fa-university"></i> Search by Institution
                 </button>
                 <button class="search-btn" id="searchByCouponBtn">
                     <i class="fas fa-qrcode"></i> Search by Coupon
@@ -384,7 +510,7 @@
                 </button>
             </div>
             <div class="search-info" id="searchInfo">
-                <i class="fas fa-info-circle"></i> Use filters above to search students by volunteer position or coupon code
+                <i class="fas fa-info-circle"></i> Use filters above to search students by name, volunteer position, institution, or coupon code
             </div>
         </div>
 
@@ -392,6 +518,7 @@
         <div class="card">
             <div class="card-header">
                 <h3><i class="fas fa-users"></i> Student Records</h3>
+                <span id="recordCount" style="font-size:0.8rem; color:var(--text-muted);"></span>
             </div>
             <div class="student-table">
                 <table id="studentTable">
@@ -403,14 +530,27 @@
                             <th>Gender</th>
                             <th>PVC?</th>
                             <th>Volunteer Post</th>
-                            <th>Coupon Code / Referred By</th>
-                            <th>State of Origin</th>
+                            <th>Coupon / Referred</th>
+                            <th>State</th>
+                            <th style="text-align:center;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="studentTableBody">
-                        <tr><td colspan="8" class="loading">Loading students...</td></tr>
+                        <tr><td colspan="9" class="loading">Loading students...</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
+            <p id="deleteModalMessage">Are you sure you want to delete this student? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="modal-cancel" id="cancelDeleteBtn">Cancel</button>
+                <button class="modal-confirm" id="confirmDeleteBtn">Delete</button>
             </div>
         </div>
     </div>
@@ -419,13 +559,23 @@
         // ========================
         // CONFIGURATION
         // ========================
+        // const API_BASE = 'http://localhost:3000/api';
+        // const SEARCH_BY_NAME_ENDPOINT = 'http://localhost:3000/api/students/search/name';
+        // const SEARCH_BY_VOLUNTEER_ENDPOINT = 'http://localhost:3000/api/students/search';
+        // const SEARCH_BY_COUPON_ENDPOINT = 'http://localhost:3000/api/students/members';
+        // const SEARCH_BY_INSTITUTION_ENDPOINT = 'http://localhost:3000/api/students/school';
+
+
         const API_BASE = 'https://batkoh-backend.onrender.com/api';
+        const SEARCH_BY_NAME_ENDPOINT = 'https://batkoh-backend.onrender.com/api/students/search/name';
         const SEARCH_BY_VOLUNTEER_ENDPOINT = 'https://batkoh-backend.onrender.com/api/students/search';
         const SEARCH_BY_COUPON_ENDPOINT = 'https://batkoh-backend.onrender.com/api/students/members';
+        const SEARCH_BY_INSTITUTION_ENDPOINT = 'https://batkoh-backend.onrender.com/api/students/school';
         
         let allStudentsData = [];
         let currentDisplayData = [];
         let isSearchResult = false;
+        let studentToDelete = null;
 
         const ALLOWED_POSTS = [
             "Director",
@@ -468,8 +618,8 @@
         // ========================
         function renderTable(students, coordinatorInfo = null) {
             const tbody = document.getElementById('studentTableBody');
+            const recordCount = document.getElementById('recordCount');
             
-            // If we have coordinator info, show it above the table
             if (coordinatorInfo) {
                 const existingCard = document.querySelector('.coordinator-card');
                 if (existingCard) existingCard.remove();
@@ -490,22 +640,38 @@
             }
             
             if (!students || students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="empty-msg"><i class="fas fa-inbox"></i> No students found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-msg"><i class="fas fa-inbox"></i> No students found</td></tr>';
+                recordCount.textContent = '0 students';
                 return;
             }
             
+            recordCount.textContent = `${students.length} student${students.length > 1 ? 's' : ''}`;
+            
             tbody.innerHTML = students.map(student => `
                 <tr>
-                    <td>${escapeHtml(student.fullName)}</td>
-                    <td>${escapeHtml(student.email)}</td>
+                    <td><strong>${escapeHtml(student.fullName)}</strong></td>
+                    <td style="font-size:0.85rem;">${escapeHtml(student.email)}</td>
                     <td>${escapeHtml(student.institution)}</td>
                     <td>${escapeHtml(student.gender)}</td>
                     <td>${student.receivedBursary ? '<span class="badge">Yes</span>' : '<span class="badge badge-no">No</span>'}</td>
                     <td><span class="badge success-badge">${escapeHtml(student.volunteerPost)}</span></td>
-                    <td>${student.couponCode ? `<span class="coupon-badge"><i class="fas fa-tag"></i> ${escapeHtml(student.couponCode)}</span>` : (student.usedCouponCode ? `<span class="coupon-badge"><i class="fas fa-link"></i> Used: ${escapeHtml(student.usedCouponCode)}</span>` : '<span style="color:#999;">—</span>')}</td>
+                    <td>${student.couponCode ? `<span class="coupon-badge"><i class="fas fa-tag"></i> ${escapeHtml(student.couponCode)}</span>` : (student.usedCouponCode ? `<span class="coupon-badge"><i class="fas fa-link"></i> ${escapeHtml(student.usedCouponCode)}</span>` : '<span style="color:#999;">—</span>')}</td>
                     <td>${escapeHtml(student.stateOrigin)}</td>
+                    <td style="text-align:center;">
+                        <button class="delete-btn" data-id="${student._id}" data-name="${escapeHtml(student.fullName)}">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </td>
                 </tr>
             `).join('');
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    openDeleteModal(id, name);
+                });
+            });
         }
 
         // ========================
@@ -549,20 +715,206 @@
                     updateSearchInfo(false, null);
                     return true;
                 } else {
-                    document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="8" class="error-msg">Failed to load students</td></tr>';
+                    document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="9" class="error-msg">Failed to load students</td></tr>';
                     return false;
                 }
             } catch (err) {
                 console.error('Fetch error:', err);
-                document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="8" class="error-msg">Network error: Cannot connect to backend</td></tr>';
+                document.getElementById('studentTableBody').innerHTML = '<tr><td colspan="9" class="error-msg">Network error: Cannot connect to backend</td></tr>';
+                return false;
+            }
+        }
+
+        // ========================
+        // SEARCH BY NAME
+        // Endpoint: /api/students/search/name?name=John
+        // ========================
+        async function searchByName(name) {
+            if (!name || name.trim() === '') {
+                updateSearchInfoError('Please enter a name to search');
+                return false;
+            }
+
+            const searchInfoDiv = document.getElementById('searchInfo');
+            searchInfoDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Searching for students with name: ' + name + '...';
+            
+            try {
+                const url = `${SEARCH_BY_NAME_ENDPOINT}?name=${encodeURIComponent(name.trim())}`;
+                const token = getToken();
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+                
+                if (response.status === 404) {
+                    currentDisplayData = [];
+                    isSearchResult = true;
+                    renderTable([], null);
+                    searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> No students found with name containing: ${name}`;
+                    return false;
+                }
+                
+                if (!response.ok) {
+                    searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> Server error (${response.status}). Please try again.`;
+                    return false;
+                }
+                
+                const result = await response.json();
+                console.log('Name search response:', result);
+                
+                // Expected response: { success: true, count: number, data: [students] }
+                if (result.success === true && result.data && Array.isArray(result.data)) {
+                    const students = result.data;
+                    if (students.length > 0) {
+                        currentDisplayData = students;
+                        isSearchResult = true;
+                        renderTable(currentDisplayData, null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${students.length} student(s) with name containing: <strong>${name}</strong>
+                            <button id="clearSearchBtn" style="background:none; border:none; color:var(--accent-orange); cursor:pointer; text-decoration:underline; margin-left:8px;">
+                            <i class="fas fa-times"></i> Clear</button>`;
+                        
+                        const clearBtn = document.getElementById('clearSearchBtn');
+                        if (clearBtn) {
+                            clearBtn.addEventListener('click', () => {
+                                resetToAllStudents();
+                                document.getElementById('nameSearch').value = '';
+                            });
+                        }
+                        return true;
+                    } else {
+                        currentDisplayData = [];
+                        isSearchResult = true;
+                        renderTable([], null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> No students found with name containing: ${name}`;
+                        return false;
+                    }
+                } else if (Array.isArray(result)) {
+                    // Fallback: if response is just an array
+                    if (result.length > 0) {
+                        currentDisplayData = result;
+                        isSearchResult = true;
+                        renderTable(currentDisplayData, null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${result.length} student(s) with name containing: <strong>${name}</strong>`;
+                        return true;
+                    } else {
+                        currentDisplayData = [];
+                        isSearchResult = true;
+                        renderTable([], null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> No students found with name containing: ${name}`;
+                        return false;
+                    }
+                } else {
+                    searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> Unexpected response format from server`;
+                    return false;
+                }
+            } catch (err) {
+                console.error('Name search error:', err);
+                updateSearchInfoError('Server error: Unable to perform name search');
+                return false;
+            }
+        }
+
+        // ========================
+        // SEARCH BY INSTITUTION
+        // ========================
+        async function searchByInstitution(institution) {
+            if (!institution || institution.trim() === '') {
+                updateSearchInfoError('Please enter an institution name');
+                return false;
+            }
+
+            const searchInfoDiv = document.getElementById('searchInfo');
+            searchInfoDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Searching for students in institution: ' + institution + '...';
+            
+            try {
+                const url = `${SEARCH_BY_INSTITUTION_ENDPOINT}/${encodeURIComponent(institution.trim())}`;
+                const token = getToken();
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+                
+                if (response.status === 404) {
+                    currentDisplayData = [];
+                    isSearchResult = true;
+                    renderTable([], null);
+                    searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> No students found in institution: ${institution}`;
+                    return false;
+                }
+                
+                if (!response.ok) {
+                    searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> Server error (${response.status}). Please try again.`;
+                    return false;
+                }
+                
+                const result = await response.json();
+                
+                if (Array.isArray(result)) {
+                    if (result.length > 0) {
+                        currentDisplayData = result;
+                        isSearchResult = true;
+                        renderTable(currentDisplayData, null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${result.length} student(s) in institution: <strong>${institution}</strong>
+                            <button id="clearSearchBtn" style="background:none; border:none; color:var(--accent-orange); cursor:pointer; text-decoration:underline; margin-left:8px;">
+                            <i class="fas fa-times"></i> Clear</button>`;
+                        
+                        const clearBtn = document.getElementById('clearSearchBtn');
+                        if (clearBtn) {
+                            clearBtn.addEventListener('click', () => {
+                                resetToAllStudents();
+                                document.getElementById('institutionSearch').value = '';
+                            });
+                        }
+                        return true;
+                    } else {
+                        currentDisplayData = [];
+                        isSearchResult = true;
+                        renderTable([], null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> No students found in institution: ${institution}`;
+                        return false;
+                    }
+                } else if (result && Array.isArray(result.data)) {
+                    const students = result.data;
+                    if (students.length > 0) {
+                        currentDisplayData = students;
+                        isSearchResult = true;
+                        renderTable(currentDisplayData, null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Found ${students.length} student(s) in institution: <strong>${institution}</strong>`;
+                        return true;
+                    } else {
+                        currentDisplayData = [];
+                        isSearchResult = true;
+                        renderTable([], null);
+                        searchInfoDiv.innerHTML = `<i class="fas fa-info-circle"></i> No students found in institution: ${institution}`;
+                        return false;
+                    }
+                } else {
+                    searchInfoDiv.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i> Unexpected response format from server`;
+                    return false;
+                }
+            } catch (err) {
+                console.error('Institution search error:', err);
+                updateSearchInfoError('Server error: Unable to perform institution search');
                 return false;
             }
         }
 
         // ========================
         // SEARCH BY COUPON CODE
-        // Endpoint: http://localhost:3000/api/students/members?couponCode=CC-6C1254
-        // Expected response: { success, coordinator, count, members }
         // ========================
         async function searchByCouponCode(couponCode) {
             if (!couponCode || couponCode.trim() === '') {
@@ -589,10 +941,8 @@
                 }
                 
                 const result = await response.json();
-                console.log('Coupon search response:', result);
                 
                 if (response.ok && result.success === true) {
-                    // Extract members from response
                     let members = [];
                     let coordinatorInfo = null;
                     
@@ -645,7 +995,7 @@
                 }
             } catch (err) {
                 console.error('Coupon search error:', err);
-                updateSearchInfoError('Cannot connect to coupon search endpoint. Make sure backend is running on localhost:3000');
+                updateSearchInfoError('Server error: Unable to perform coupon search');
                 return false;
             }
         }
@@ -737,6 +1087,72 @@
             }
         }
 
+        // ========================
+        // DELETE STUDENT
+        // ========================
+        async function deleteStudent(studentId) {
+            try {
+                const token = getToken();
+                const response = await fetch(`${API_BASE}/students/${studentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    allStudentsData = allStudentsData.filter(s => s._id !== studentId);
+                    currentDisplayData = currentDisplayData.filter(s => s._id !== studentId);
+                    
+                    if (isSearchResult && currentDisplayData.length === 0) {
+                        isSearchResult = false;
+                        currentDisplayData = [...allStudentsData];
+                    }
+                    
+                    updateStats();
+                    renderTable(currentDisplayData, null);
+                    
+                    const searchInfoDiv = document.getElementById('searchInfo');
+                    searchInfoDiv.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Student deleted successfully!`;
+                    
+                    closeDeleteModal();
+                    return true;
+                } else {
+                    alert(`Failed to delete student: ${result.message || 'Unknown error'}`);
+                    closeDeleteModal();
+                    return false;
+                }
+            } catch (err) {
+                console.error('Delete error:', err);
+                alert('Network error: Unable to delete student');
+                closeDeleteModal();
+                return false;
+            }
+        }
+
+        // ========================
+        // DELETE MODAL
+        // ========================
+        function openDeleteModal(id, name) {
+            studentToDelete = id;
+            document.getElementById('deleteModalMessage').textContent = 
+                `Are you sure you want to delete "${name}"? This action cannot be undone.`;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            studentToDelete = null;
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
         function updateSearchInfo(isSearchMode, searchType) {
             const infoDiv = document.getElementById('searchInfo');
             if (!isSearchMode) {
@@ -766,7 +1182,9 @@
                 renderTable(currentDisplayData, null);
                 updateSearchInfo(false, null);
             }
+            document.getElementById('nameSearch').value = '';
             document.getElementById('volunteerPostSelect').value = '';
+            document.getElementById('institutionSearch').value = '';
             document.getElementById('couponCodeSearch').value = '';
         }
 
@@ -788,15 +1206,36 @@
         // EVENT LISTENERS
         // ========================
         function bindEvents() {
+            const searchByNameBtn = document.getElementById('searchByNameBtn');
             const searchByVolunteerBtn = document.getElementById('searchByVolunteerBtn');
+            const searchByInstitutionBtn = document.getElementById('searchByInstitutionBtn');
             const searchByCouponBtn = document.getElementById('searchByCouponBtn');
             const resetBtn = document.getElementById('resetBtn');
+            const nameInput = document.getElementById('nameSearch');
             const couponInput = document.getElementById('couponCodeSearch');
+            const institutionInput = document.getElementById('institutionSearch');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const modalOverlay = document.getElementById('deleteModal');
+            
+            if (searchByNameBtn) {
+                searchByNameBtn.addEventListener('click', () => {
+                    const name = document.getElementById('nameSearch').value;
+                    searchByName(name);
+                });
+            }
             
             if (searchByVolunteerBtn) {
                 searchByVolunteerBtn.addEventListener('click', () => {
                     const selectedPost = document.getElementById('volunteerPostSelect').value;
                     searchByVolunteerPost(selectedPost);
+                });
+            }
+            
+            if (searchByInstitutionBtn) {
+                searchByInstitutionBtn.addEventListener('click', () => {
+                    const institution = document.getElementById('institutionSearch').value;
+                    searchByInstitution(institution);
                 });
             }
             
@@ -811,11 +1250,49 @@
                 resetBtn.addEventListener('click', resetToAllStudents);
             }
             
+            if (nameInput) {
+                nameInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        searchByName(nameInput.value);
+                    }
+                });
+            }
+            
             if (couponInput) {
                 couponInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         searchByCouponCode(couponInput.value);
+                    }
+                });
+            }
+            
+            if (institutionInput) {
+                institutionInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        searchByInstitution(institutionInput.value);
+                    }
+                });
+            }
+            
+            if (cancelDeleteBtn) {
+                cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+            }
+            
+            if (confirmDeleteBtn) {
+                confirmDeleteBtn.addEventListener('click', () => {
+                    if (studentToDelete) {
+                        deleteStudent(studentToDelete);
+                    }
+                });
+            }
+            
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        closeDeleteModal();
                     }
                 });
             }
