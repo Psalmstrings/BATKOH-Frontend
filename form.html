@@ -2,29 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    >
 
-    <title>RHSA| Student Registration Form</title>
+    <title>RHASW | Student Registration Form</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+        rel="stylesheet"
+    >
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    >
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    >
 
-    <link rel="shortcut icon"
-          href="./media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg"
-          type="image/x-icon">
+    <!-- Favicon -->
+    <link
+        rel="shortcut icon"
+        href="./media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg"
+        type="image/x-icon"
+    >
 
     <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+
+        /* =========================================================
+           ROOT VARIABLES
+        ========================================================= */
+
         :root {
+
             --primary-dark: #089546;
             --accent-green: #067A3A;
             --accent-lime: #9CC833;
@@ -33,316 +61,658 @@
             --text-muted: #5F6F64;
 
             --border-light: #DCE9DF;
+
             --light-green: #F1F8F3;
             --lighter-green: #F7FBF8;
 
             --error-red: #dc2626;
             --success-green: #059669;
 
-            --shadow-card: 0 20px 35px -12px rgba(0, 90, 45, 0.12);
+            --white: #ffffff;
+
+            --shadow-card:
+                0 20px 35px -12px rgba(0, 90, 45, 0.12);
+
+            --accent-orange: #9CC833;
         }
 
-        /* :root {
-            --primary-green: #089546;
-            --dark-green: #067A3A;
-            --lime-green: #9CC833;
-            --light-green: #F1F8F3;
-            --lighter-green: #F7FBF8;
-            --text-dark: #16351F;
-            --text-muted: #5F6F64;
-            --border: #DCE9DF;
-            --white: #FFFFFF;
-            --error: #DC2626;
-            --success: #059669;
-        } */
+
+        /* =========================================================
+           BODY
+        ========================================================= */
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f9 100%);
-            color: #1e1e2f;
+
+            font-family: "Inter", sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f7fc 0%,
+                    #eef2f9 100%
+                );
+
+            color: var(--text-dark);
+
             line-height: 1.5;
+
             min-height: 100vh;
         }
 
+
+        /* =========================================================
+           MAIN CONTAINER
+        ========================================================= */
+
         .container {
+
+            width: 100%;
+
             max-width: 1000px;
-            margin: auto;
+
+            margin: 0 auto;
+
             padding: 2rem 1.5rem;
         }
 
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
+
         .nav-buttons {
+
             margin-bottom: 1.5rem;
         }
 
         .home-link {
+
             background: var(--primary-dark);
+
             color: white;
+
             padding: 9px 20px;
+
             border-radius: 40px;
+
             text-decoration: none;
-            font-weight: 500;
+
+            font-weight: 600;
+
             display: inline-flex;
+
             align-items: center;
+
             gap: 8px;
-            transition: .2s;
+
+            transition: all 0.25s ease;
         }
 
         .home-link:hover {
-            background: var(--accent-orange);
+
+            background: var(--accent-green);
+
+            transform: translateY(-2px);
         }
 
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
         .form-header {
+
             text-align: center;
+
             margin-bottom: 2rem;
         }
 
         .logo-badge {
-            display: inline-block;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
             background: var(--primary-dark);
+
             color: white;
-            padding: .35rem 1rem;
+
+            padding: 0.45rem 1rem;
+
             border-radius: 40px;
-            font-size: .8rem;
-            font-weight: 600;
+
+            font-size: 0.8rem;
+
+            font-weight: 700;
+
             margin-bottom: 1rem;
         }
 
         .logo-badge span {
-            color: var(--accent-orange);
+
+            color: var(--accent-lime);
         }
 
         h1 {
+
             font-size: 2rem;
+
             color: var(--primary-dark);
-            margin-bottom: .5rem;
+
+            margin-bottom: 0.5rem;
+
+            font-weight: 800;
         }
 
         .subhead {
+
             color: var(--text-muted);
-            max-width: 600px;
+
+            max-width: 650px;
+
             margin: auto;
+
+            font-size: 0.95rem;
         }
+
+        .required-star {
+
+            color: var(--error-red);
+
+            margin-left: 3px;
+
+            font-weight: 800;
+        }
+
+
+        /* =========================================================
+           FORM CARD
+        ========================================================= */
 
         .form-card {
-            background: white;
+
+            background: var(--white);
+
             border-radius: 1.5rem;
+
             box-shadow: var(--shadow-card);
+
             padding: 2rem 2rem 2.5rem;
+
+            border: 1px solid rgba(8, 149, 70, 0.05);
         }
 
+
+        /* =========================================================
+           FORM GRID
+        ========================================================= */
+
         .form-grid {
+
             display: grid;
+
             grid-template-columns: repeat(2, 1fr);
+
             gap: 1.5rem;
         }
 
         .full-width {
+
             grid-column: span 2;
         }
 
+
+        /* =========================================================
+           FORM GROUP
+        ========================================================= */
+
         .form-group {
+
             display: flex;
+
             flex-direction: column;
-            gap: .5rem;
+
+            gap: 0.5rem;
         }
 
         label {
+
             font-weight: 600;
-            font-size: .85rem;
+
+            font-size: 0.85rem;
+
             color: var(--primary-dark);
+
             display: flex;
+
             align-items: center;
+
             gap: 6px;
         }
 
         label i {
-            color: var(--accent-orange);
+
+            color: var(--accent-lime);
         }
 
-        .required-star {
-            color: var(--accent-orange);
-            margin-left: 4px;
-        }
+
+        /* =========================================================
+           INPUTS / SELECT / TEXTAREA
+        ========================================================= */
 
         input,
         select,
         textarea {
+
             width: 100%;
+
             padding: 12px 16px;
+
             border: 1.5px solid var(--border-light);
+
             border-radius: 12px;
+
             font-family: inherit;
-            font-size: .95rem;
+
+            font-size: 0.95rem;
+
             outline: none;
-            transition: .2s;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+
             background: white;
+
+            color: var(--text-dark);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+
+            color: #9aa79e;
         }
 
         input:focus,
         select:focus,
         textarea:focus {
-            border-color: var(--accent-orange);
-            box-shadow: 0 0 0 3px rgba(230,126,34,.15);
+
+            border-color: var(--primary-dark);
+
+            box-shadow:
+                0 0 0 3px rgba(8, 149, 70, 0.12);
+        }
+
+        select {
+
+            cursor: pointer;
+
+            appearance: auto;
         }
 
         textarea {
+
             resize: vertical;
-            min-height: 90px;
+
+            min-height: 100px;
         }
+
+
+        /* =========================================================
+           ERROR STATES
+        ========================================================= */
 
         input.error,
         select.error,
         textarea.error {
+
             border-color: var(--error-red);
+
             background: #fff5f5;
         }
 
         .error-message {
+
             display: none;
-            font-size: .7rem;
+
+            font-size: 0.72rem;
+
             color: var(--error-red);
+
+            font-weight: 500;
         }
 
         .error-message.show {
+
             display: block;
         }
 
+
+        /* =========================================================
+           CONDITIONAL COUPON SECTION
+        ========================================================= */
+
         .conditional-field {
-            padding: 1rem;
-            background: #fef9e6;
-            border-left: 4px solid var(--accent-orange);
+
+            padding: 1rem 1.1rem;
+
+            background: #f8fce9;
+
+            border-left: 4px solid var(--accent-lime);
+
             border-radius: 12px;
         }
 
-        .conditional-field small {
-            color: #6c757d;
-            font-size: .72rem;
+        .coupon-title {
+
+            font-weight: 700;
+
+            color: var(--primary-dark);
+
+            margin-bottom: 0.35rem;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
         }
 
-        .coupon-title {
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: .3rem;
+        .coupon-title i {
+
+            color: var(--accent-lime);
         }
 
         .coupon-info {
-            font-size: .78rem;
-            color: #5a4a2e;
-            margin-bottom: .8rem;
+
+            font-size: 0.78rem;
+
+            color: #5a633e;
+
+            margin-bottom: 0.8rem;
         }
 
+
+        /* =========================================================
+           CHECKBOX
+        ========================================================= */
+
         .checkbox-group {
+
             display: flex;
+
             flex-direction: row;
+
             align-items: center;
+
             gap: 10px;
+
+            flex-wrap: wrap;
         }
 
         .checkbox-group input {
+
             width: 20px;
+
             height: 20px;
-            accent-color: var(--accent-orange);
+
+            min-width: 20px;
+
+            accent-color: var(--primary-dark);
+
+            cursor: pointer;
         }
 
         .checkbox-group label {
+
             font-weight: 500;
+
+            cursor: pointer;
         }
 
+        .checkbox-group small {
+
+            color: var(--text-muted);
+
+            font-size: 0.72rem;
+        }
+
+
+        /* =========================================================
+           DIVIDER
+        ========================================================= */
+
         hr {
+
             margin: 1.5rem 0;
+
             border: none;
+
             border-top: 1px solid var(--border-light);
         }
 
+
+        /* =========================================================
+           SUBMIT BUTTON
+        ========================================================= */
+
         .btn-submit {
+
             width: 100%;
+
             padding: 14px 28px;
+
             border: none;
+
             border-radius: 40px;
+
             background: var(--primary-dark);
+
             color: white;
+
             font-size: 1rem;
+
             font-weight: 700;
+
             cursor: pointer;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             gap: 10px;
-            transition: .25s;
+
+            transition: all 0.25s ease;
         }
 
         .btn-submit:hover {
-            background: var(--accent-orange);
+
+            background: var(--accent-green);
+
             transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 20px rgba(8, 149, 70, 0.18);
         }
 
         .btn-submit:disabled {
-            opacity: .6;
+
+            opacity: 0.6;
+
             cursor: not-allowed;
+
             transform: none;
+
+            box-shadow: none;
         }
 
+
+        /* =========================================================
+           STATUS MESSAGE
+        ========================================================= */
+
         .status-msg {
+
             margin-top: 1.5rem;
+
             padding: 1rem;
+
             border-radius: 1rem;
+
             text-align: center;
+
             font-weight: 500;
+
             display: none;
         }
 
         .status-msg.success {
+
             display: block;
+
             background: #d1fae5;
+
             color: #065f46;
         }
 
         .status-msg.error {
+
             display: block;
+
             background: #fee2e2;
+
             color: #991b1b;
         }
 
         .status-msg.info {
+
             display: block;
+
             background: #e0f2fe;
+
             color: #0369a1;
         }
 
+
+        /* =========================================================
+           GENERATED COUPON CODE
+        ========================================================= */
+
         .generated-code {
+
             display: inline-block;
+
             margin-top: 10px;
+
             padding: 10px 18px;
+
             background: white;
+
             border-radius: 10px;
+
             font-size: 1.2rem;
+
             font-weight: 800;
+
             letter-spacing: 1px;
+
             color: var(--primary-dark);
-            border: 2px dashed var(--accent-orange);
+
+            border: 2px dashed var(--accent-lime);
         }
 
-        @media(max-width:768px) {
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 768px) {
+
             .container {
+
                 padding: 1.2rem;
             }
 
             .form-card {
+
                 padding: 1.3rem;
+
+                border-radius: 1.2rem;
             }
 
             .form-grid {
+
                 grid-template-columns: 1fr;
+
                 gap: 1.2rem;
             }
 
             .full-width {
+
                 grid-column: span 1;
             }
 
             h1 {
+
                 font-size: 1.6rem;
             }
+
+            .subhead {
+
+                font-size: 0.85rem;
+            }
+
+            .checkbox-group {
+
+                align-items: flex-start;
+            }
         }
+
+
+        @media (max-width: 480px) {
+
+            .container {
+
+                padding: 1rem 0.8rem;
+            }
+
+            .form-card {
+
+                padding: 1rem;
+            }
+
+            h1 {
+
+                font-size: 1.4rem;
+            }
+
+            input,
+            select,
+            textarea {
+
+                padding: 11px 13px;
+
+                font-size: 0.9rem;
+            }
+
+            .home-link {
+
+                padding: 8px 15px;
+
+                font-size: 0.85rem;
+            }
+
+            .logo-badge {
+
+                font-size: 0.7rem;
+            }
+        }
+
     </style>
 </head>
 
@@ -350,30 +720,62 @@
 
 <div class="container">
 
+    <!-- =========================================================
+         BACK TO HOME
+    ========================================================== -->
+
     <div class="nav-buttons">
-        <a href="index.html" class="home-link">
+
+        <a
+            href="index.html"
+            class="home-link"
+        >
             <i class="fas fa-arrow-left"></i>
+
             Back to Home
         </a>
+
     </div>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
 
     <div class="form-header">
 
         <div class="logo-badge">
+
             <i class="fas fa-graduation-cap"></i>
-            <span>RHSA</span> | STUDENTS ALLIANCE
+
+            <span>RHASW</span>
+
+            | STUDENTS WING
+
         </div>
 
-        <h1>Student Registration Form</h1>
+        <h1>
+            Student Registration Form
+        </h1>
 
         <p class="subhead">
+
             Please fill in all required details accurately.
+
             All fields marked with
+
             <span class="required-star">*</span>
+
             are mandatory.
+
         </p>
 
     </div>
+
+
+    <!-- =========================================================
+         FORM CARD
+    ========================================================== -->
 
     <div class="form-card">
 
@@ -381,13 +783,21 @@
 
             <div class="form-grid">
 
-                <!-- FULL NAME -->
+
+                <!-- =================================================
+                     FULL NAME
+                ================================================== -->
+
                 <div class="form-group full-width">
 
-                    <label>
+                    <label for="fullName">
+
                         <i class="fas fa-user"></i>
+
                         Full Name
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -398,20 +808,31 @@
                         autocomplete="name"
                     >
 
-                    <div class="error-message" id="fullNameError">
-                        Full name should only contain letters and spaces.
+                    <div
+                        class="error-message"
+                        id="fullNameError"
+                    >
+                        Full name should only contain letters,
+                        spaces, apostrophes or hyphens.
                     </div>
 
                 </div>
 
 
-                <!-- DOB -->
+                <!-- =================================================
+                     DOB
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="dob">
+
                         <i class="fas fa-calendar-alt"></i>
+
                         Date of Birth
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -422,23 +843,36 @@
                         autocomplete="off"
                     >
 
-                    <div class="error-message" id="dobError">
+                    <div
+                        class="error-message"
+                        id="dobError"
+                    >
                         Please select a valid date of birth.
                     </div>
 
                 </div>
 
 
-                <!-- GENDER -->
+                <!-- =================================================
+                     GENDER
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="gender">
+
                         <i class="fas fa-venus-mars"></i>
+
                         Gender
+
                         <span class="required-star">*</span>
+
                     </label>
 
-                    <select id="gender" name="gender">
+                    <select
+                        id="gender"
+                        name="gender"
+                    >
 
                         <option value="">
                             -- Select Gender --
@@ -458,20 +892,30 @@
 
                     </select>
 
-                    <div class="error-message" id="genderError">
+                    <div
+                        class="error-message"
+                        id="genderError"
+                    >
                         Please select a gender.
                     </div>
 
                 </div>
 
 
-                <!-- EMAIL -->
+                <!-- =================================================
+                     EMAIL
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="email">
+
                         <i class="fas fa-envelope"></i>
+
                         Email Address
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -482,20 +926,30 @@
                         autocomplete="email"
                     >
 
-                    <div class="error-message" id="emailError">
+                    <div
+                        class="error-message"
+                        id="emailError"
+                    >
                         Please provide a valid email address.
                     </div>
 
                 </div>
 
 
-                <!-- PHONE -->
+                <!-- =================================================
+                     PHONE
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="phone">
+
                         <i class="fas fa-phone-alt"></i>
+
                         Phone Number
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -506,20 +960,30 @@
                         autocomplete="tel"
                     >
 
-                    <div class="error-message" id="phoneError">
+                    <div
+                        class="error-message"
+                        id="phoneError"
+                    >
                         Phone number must contain 10-15 digits.
                     </div>
 
                 </div>
 
 
-                <!-- LGA -->
+                <!-- =================================================
+                     LGA
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="lgaOrigin">
+
                         <i class="fas fa-map-marker-alt"></i>
+
                         LGA of Origin
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -529,20 +993,30 @@
                         placeholder="Local Government Area"
                     >
 
-                    <div class="error-message" id="lgaOriginError">
+                    <div
+                        class="error-message"
+                        id="lgaOriginError"
+                    >
                         LGA of Origin is required.
                     </div>
 
                 </div>
 
 
-                <!-- STATE ORIGIN -->
+                <!-- =================================================
+                     STATE OF ORIGIN
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="stateOrigin">
+
                         <i class="fas fa-flag"></i>
+
                         State of Origin
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -552,20 +1026,30 @@
                         placeholder="e.g., Lagos"
                     >
 
-                    <div class="error-message" id="stateOriginError">
+                    <div
+                        class="error-message"
+                        id="stateOriginError"
+                    >
                         State of Origin is required.
                     </div>
 
                 </div>
 
 
-                <!-- ADDRESS -->
+                <!-- =================================================
+                     ADDRESS
+                ================================================== -->
+
                 <div class="form-group full-width">
 
-                    <label>
+                    <label for="address">
+
                         <i class="fas fa-home"></i>
+
                         Residential Address
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <textarea
@@ -574,20 +1058,30 @@
                         placeholder="Street, city, apartment number..."
                     ></textarea>
 
-                    <div class="error-message" id="addressError">
+                    <div
+                        class="error-message"
+                        id="addressError"
+                    >
                         Address is required.
                     </div>
 
                 </div>
 
 
-                <!-- STATE RESIDENCE -->
+                <!-- =================================================
+                     STATE OF RESIDENCE
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="stateResidence">
+
                         <i class="fas fa-city"></i>
+
                         State of Residence
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -597,43 +1091,107 @@
                         placeholder="Current state of residence"
                     >
 
-                    <div class="error-message" id="stateResidenceError">
+                    <div
+                        class="error-message"
+                        id="stateResidenceError"
+                    >
                         State of Residence is required.
                     </div>
 
                 </div>
 
 
-                <!-- INSTITUTION -->
+                <!-- =================================================
+                     INSTITUTION
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="institution">
+
                         <i class="fas fa-university"></i>
+
                         Institution
+
                         <span class="required-star">*</span>
+
                     </label>
 
-                    <input
-                        type="text"
+                    <select
                         id="institution"
                         name="institution"
-                        placeholder="University / Polytechnic / College"
                     >
 
-                    <div class="error-message" id="institutionError">
-                        Institution name is required.
+                        <option value="">
+                            -- Select Institution --
+                        </option>
+
+                        <option value="UNILAG">
+                            UNILAG
+                        </option>
+
+                        <option value="YABATECH">
+                            YABATECH
+                        </option>
+
+                        <option value="LASU">
+                            LASU
+                        </option>
+
+                        <option value="FCE">
+                            FCE
+                        </option>
+
+                        <option value="OCEANOGRAPHY">
+                            OCEANOGRAPHY
+                        </option>
+
+                        <option value="SACOED">
+                            SACOED
+                        </option>
+
+                        <option value="LASCON">
+                            LASCON
+                        </option>
+
+                        <option value="LASCOETH">
+                            LASCOETH
+                        </option>
+
+                        <option value="LASUSTECH">
+                            LASUSTECH
+                        </option>
+
+                        <option value="LASUED">
+                            LASUED
+                        </option>
+
+                    </select>
+
+                    <div
+                        class="error-message"
+                        id="institutionError"
+                    >
+                        Please select your institution.
                     </div>
 
                 </div>
 
 
-                <!-- COURSE -->
+                <!-- =================================================
+                     COURSE
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="course">
+
                         <i class="fas fa-book-open"></i>
+
                         Course of Study
+
                         <span class="required-star">*</span>
+
                     </label>
 
                     <input
@@ -643,23 +1201,36 @@
                         placeholder="e.g., Computer Science"
                     >
 
-                    <div class="error-message" id="courseError">
+                    <div
+                        class="error-message"
+                        id="courseError"
+                    >
                         Course is required.
                     </div>
 
                 </div>
 
 
-                <!-- VOLUNTEER POST -->
+                <!-- =================================================
+                     VOLUNTEER POSITION
+                ================================================== -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="volunteerPost">
+
                         <i class="fas fa-user-tag"></i>
+
                         Volunteer Position
+
                         <span class="required-star">*</span>
+
                     </label>
 
-                    <select id="volunteerPost" name="volunteerPost">
+                    <select
+                        id="volunteerPost"
+                        name="volunteerPost"
+                    >
 
                         <option value="">
                             -- Select Volunteer Position --
@@ -689,9 +1260,9 @@
                             Campus Captain
                         </option>
 
-                        <option value="NFSAN Coordinator">
+                        <!-- <option value="NFSAN Coordinator">
                             NFSAN Coordinator
-                        </option>
+                        </option> -->
 
                         <option value="Members">
                             Member
@@ -703,26 +1274,36 @@
 
                     </select>
 
-                    <div class="error-message" id="volunteerPostError">
+                    <div
+                        class="error-message"
+                        id="volunteerPostError"
+                    >
                         Please select a valid volunteer position.
                     </div>
 
                 </div>
 
 
-                <!-- DYNAMIC COUPON FIELD -->
+                <!-- =================================================
+                     DYNAMIC COUPON FIELD
+                ================================================== -->
+
                 <div
                     id="couponSection"
                     class="full-width conditional-field"
-                    style="display:none;"
+                    style="display: none;"
                 >
 
                     <div class="coupon-title">
+
                         <i class="fas fa-ticket-alt"></i>
+
                         <span id="couponLabel">
                             Registration Code
                         </span>
+
                         <span class="required-star">*</span>
+
                     </div>
 
                     <div
@@ -748,8 +1329,13 @@
                 </div>
 
 
-                <!-- PVC -->
-                <div class="form-group full-width checkbox-group">
+                <!-- =================================================
+                     PVC / BURSARY FIELD
+                ================================================== -->
+
+                <div
+                    class="form-group full-width checkbox-group"
+                >
 
                     <input
                         type="checkbox"
@@ -758,7 +1344,9 @@
                     >
 
                     <label for="receivedBursary">
+
                         Do you have Permanent Voter's Card?
+
                     </label>
 
                     <small>
@@ -769,16 +1357,30 @@
 
             </div>
 
+
             <hr>
+
+
+            <!-- =================================================
+                 SUBMIT BUTTON
+            ================================================== -->
 
             <button
                 type="submit"
                 class="btn-submit"
                 id="submitBtn"
             >
+
                 <i class="fas fa-paper-plane"></i>
+
                 Submit Registration
+
             </button>
+
+
+            <!-- =================================================
+                 STATUS MESSAGE
+            ================================================== -->
 
             <div
                 id="statusMessage"
@@ -792,7 +1394,12 @@
 </div>
 
 
+<!-- =============================================================
+     FLATPICKR
+============================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 
 <script>
 
@@ -800,11 +1407,14 @@
        ELEMENTS
     ========================================================= */
 
-    const form = document.getElementById("studentForm");
+    const form =
+        document.getElementById("studentForm");
 
-    const submitBtn = document.getElementById("submitBtn");
+    const submitBtn =
+        document.getElementById("submitBtn");
 
-    const statusDiv = document.getElementById("statusMessage");
+    const statusDiv =
+        document.getElementById("statusMessage");
 
     const volunteerPost =
         document.getElementById("volunteerPost");
@@ -823,7 +1433,7 @@
 
 
     /* =========================================================
-       VOLUNTEER POSITIONS
+       ALLOWED VOLUNTEER POSITIONS
     ========================================================= */
 
     const allowedVolunteerPosts = [
@@ -840,8 +1450,6 @@
 
         "Campus Captains",
 
-        "NFSAN Coordinator",
-
         "Members",
 
         "NFSAN Member"
@@ -850,138 +1458,182 @@
 
 
     /* =========================================================
-       CONDITIONAL COUPON FIELD
+       ALLOWED INSTITUTIONS
     ========================================================= */
 
-    volunteerPost.addEventListener("change", function () {
+    const allowedInstitutions = [
 
-        const position = this.value;
+        "UNILAG",
 
-        couponSection.style.display = "none";
+        "YABATECH",
 
-        usedCouponCode.required = false;
+        "LASU",
 
-        usedCouponCode.value = "";
+        "FCE",
 
-        couponLabel.textContent = "Registration Code";
+        "OCEANOGRAPHY",
 
-        couponInfo.textContent = "";
+        "SACOED",
 
-        clearError("usedCouponCode");
+        "LASCON",
 
+        "LASCOETH",
 
-        /*
-         * CAMPUS CAPTAIN
-         *
-         * Requires Campus Coordinator coupon
-         */
+        "LASUSTECH",
 
-        if (position === "Campus Captains") {
+        "LASUED"
 
-            couponSection.style.display = "block";
-
-            usedCouponCode.required = true;
-
-            couponLabel.textContent =
-                "Campus Coordinator Coupon Code";
-
-            couponInfo.textContent =
-                "Enter the coupon code provided by the Campus Coordinator who is registering you.";
-
-            usedCouponCode.placeholder =
-                "Example: CC-John4821";
-
-        }
+    ];
 
 
-        /*
-         * MEMBER / NFSAN MEMBER
-         *
-         * Requires either:
-         * - NFSAN Coordinator code
-         * - Campus Captain code
-         */
+    /* =========================================================
+       COUPON FIELD
+    ========================================================= */
 
-        else if (
-            position === "Members" ||
-            position === "NFSAN Member"
-        ) {
+    volunteerPost.addEventListener(
+        "change",
+        function () {
 
-            couponSection.style.display = "block";
+            const position = this.value;
 
-            usedCouponCode.required = true;
+            couponSection.style.display = "none";
+
+            usedCouponCode.required = false;
+
+            usedCouponCode.value = "";
 
             couponLabel.textContent =
-                "Coordinator / Captain Code";
+                "Registration Code";
 
-            couponInfo.textContent =
-                "Enter either an NFSAN Coordinator code or a Campus Captain code.";
+            couponInfo.textContent = "";
 
             usedCouponCode.placeholder =
-                "Example: FemaleWing763 or John4821";
+                "Enter registration code";
+
+            clearError("usedCouponCode");
+
+
+            /* -------------------------------------------------
+               CAMPUS CAPTAIN
+            ------------------------------------------------- */
+
+            if (
+                position === "Campus Captains"
+            ) {
+
+                couponSection.style.display =
+                    "block";
+
+                usedCouponCode.required =
+                    true;
+
+                couponLabel.textContent =
+                    "Campus Coordinator Coupon Code";
+
+                couponInfo.textContent =
+                    "Enter the coupon code provided by the Campus Coordinator who is registering you.";
+
+                usedCouponCode.placeholder =
+                    "Example: CC-John4821";
+
+            }
+
+
+            /* -------------------------------------------------
+               MEMBERS / NFSAN MEMBERS
+            ------------------------------------------------- */
+
+            else if (
+
+                position === "Members" ||
+
+                position === "NFSAN Member"
+
+            ) {
+
+                couponSection.style.display =
+                    "block";
+
+                usedCouponCode.required =
+                    true;
+
+                couponLabel.textContent =
+                    "Coordinator / Captain Code";
+
+                couponInfo.textContent =
+                    "Enter either an NFSAN Coordinator code or a Campus Captain code.";
+
+                usedCouponCode.placeholder =
+                    "Example: FemaleWing763 or John4821";
+
+            }
 
         }
-
-    });
+    );
 
 
     /* =========================================================
        DATE PICKER
     ========================================================= */
 
-    flatpickr("#dob", {
+    flatpickr(
+        "#dob",
+        {
 
-        dateFormat: "Y-m-d",
+            dateFormat: "Y-m-d",
 
-        altInput: true,
+            altInput: true,
 
-        altFormat: "F j, Y",
+            altFormat: "F j, Y",
 
-        maxDate: "today",
+            maxDate: "today",
 
-        minDate: "1920-01-01",
+            minDate: "1920-01-01",
 
-        allowInput: true,
+            allowInput: true,
 
-        onChange: function () {
+            onChange: function () {
 
-            clearError("dob");
+                clearError("dob");
+
+            }
 
         }
-
-    });
+    );
 
 
     /* =========================================================
-       VALIDATION FUNCTIONS
+       VALIDATION HELPERS
     ========================================================= */
 
     function validateEmail(email) {
 
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            .test(email);
 
     }
 
 
     function validateFullName(name) {
 
-        return /^[A-Za-z\s'-]+$/.test(
-            name.trim()
-        );
+        return /^[A-Za-z\s'-]+$/
+            .test(name.trim());
 
     }
 
 
     function validatePhone(phone) {
 
-        return /^\d{10,15}$/.test(
-            phone.trim()
-        );
+        return /^\d{10,15}$/
+            .test(phone.trim());
 
     }
 
 
-    function showError(errorId, show) {
+    function showError(
+        errorId,
+        show
+    ) {
 
         const error =
             document.getElementById(errorId);
@@ -996,7 +1648,10 @@
     }
 
 
-    function markError(fieldId, error) {
+    function markError(
+        fieldId,
+        error
+    ) {
 
         const field =
             document.getElementById(fieldId);
@@ -1035,102 +1690,188 @@
         let valid = true;
 
 
-        /* FULL NAME */
+        /* -----------------------------------------------------
+           FULL NAME
+        ----------------------------------------------------- */
 
         if (
+
             !data.fullName ||
-            !validateFullName(data.fullName)
+
+            !validateFullName(
+                data.fullName
+            )
+
         ) {
 
-            showError("fullNameError", true);
-            markError("fullName", true);
+            showError(
+                "fullNameError",
+                true
+            );
+
+            markError(
+                "fullName",
+                true
+            );
 
             valid = false;
 
         } else {
 
-            clearError("fullName");
+            clearError(
+                "fullName"
+            );
 
         }
 
 
-        /* DOB */
+        /* -----------------------------------------------------
+           DOB
+        ----------------------------------------------------- */
 
         if (
+
             !data.dob ||
-            isNaN(Date.parse(data.dob))
+
+            isNaN(
+                Date.parse(
+                    data.dob
+                )
+            )
+
         ) {
 
-            showError("dobError", true);
-            markError("dob", true);
+            showError(
+                "dobError",
+                true
+            );
+
+            markError(
+                "dob",
+                true
+            );
 
             valid = false;
 
         } else {
 
-            clearError("dob");
+            clearError(
+                "dob"
+            );
 
         }
 
 
-        /* GENDER */
+        /* -----------------------------------------------------
+           GENDER
+        ----------------------------------------------------- */
 
         if (
-            !["Male", "Female", "Other"]
-                .includes(data.gender)
+
+            ![
+                "Male",
+                "Female",
+                "Other"
+            ].includes(
+                data.gender
+            )
+
         ) {
 
-            showError("genderError", true);
-            markError("gender", true);
+            showError(
+                "genderError",
+                true
+            );
+
+            markError(
+                "gender",
+                true
+            );
 
             valid = false;
 
         } else {
 
-            clearError("gender");
+            clearError(
+                "gender"
+            );
 
         }
 
 
-        /* EMAIL */
+        /* -----------------------------------------------------
+           EMAIL
+        ----------------------------------------------------- */
 
         if (
+
             !data.email ||
-            !validateEmail(data.email)
+
+            !validateEmail(
+                data.email
+            )
+
         ) {
 
-            showError("emailError", true);
-            markError("email", true);
+            showError(
+                "emailError",
+                true
+            );
+
+            markError(
+                "email",
+                true
+            );
 
             valid = false;
 
         } else {
 
-            clearError("email");
+            clearError(
+                "email"
+            );
 
         }
 
 
-        /* PHONE */
+        /* -----------------------------------------------------
+           PHONE
+        ----------------------------------------------------- */
 
         if (
+
             !data.phone ||
-            !validatePhone(data.phone)
+
+            !validatePhone(
+                data.phone
+            )
+
         ) {
 
-            showError("phoneError", true);
-            markError("phone", true);
+            showError(
+                "phoneError",
+                true
+            );
+
+            markError(
+                "phone",
+                true
+            );
 
             valid = false;
 
         } else {
 
-            clearError("phone");
+            clearError(
+                "phone"
+            );
 
         }
 
 
-        /* SIMPLE REQUIRED FIELDS */
+        /* -----------------------------------------------------
+           REQUIRED TEXT FIELDS
+        ----------------------------------------------------- */
 
         const requiredFields = [
 
@@ -1142,47 +1883,90 @@
 
             "stateResidence",
 
-            "institution",
-
             "course"
 
         ];
 
 
-        requiredFields.forEach(field => {
+        requiredFields.forEach(
+            field => {
 
-            if (
-                !data[field] ||
-                data[field].trim() === ""
-            ) {
+                if (
 
-                showError(
-                    field + "Error",
-                    true
-                );
+                    !data[field] ||
 
-                markError(
-                    field,
-                    true
-                );
+                    data[field]
+                        .trim() === ""
 
-                valid = false;
+                ) {
 
-            } else {
+                    showError(
+                        field + "Error",
+                        true
+                    );
 
-                clearError(field);
+                    markError(
+                        field,
+                        true
+                    );
+
+                    valid = false;
+
+                } else {
+
+                    clearError(
+                        field
+                    );
+
+                }
 
             }
+        );
 
-        });
 
-
-        /* VOLUNTEER POST */
+        /* -----------------------------------------------------
+           INSTITUTION
+        ----------------------------------------------------- */
 
         if (
+
+            !allowedInstitutions.includes(
+                data.institution
+            )
+
+        ) {
+
+            showError(
+                "institutionError",
+                true
+            );
+
+            markError(
+                "institution",
+                true
+            );
+
+            valid = false;
+
+        } else {
+
+            clearError(
+                "institution"
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           VOLUNTEER POSITION
+        ----------------------------------------------------- */
+
+        if (
+
             !allowedVolunteerPosts.includes(
                 data.volunteerPost
             )
+
         ) {
 
             showError(
@@ -1206,9 +1990,9 @@
         }
 
 
-        /* =====================================================
+        /* -----------------------------------------------------
            COUPON VALIDATION
-        ===================================================== */
+        ----------------------------------------------------- */
 
         const needsCoupon = [
 
@@ -1226,8 +2010,12 @@
         if (needsCoupon) {
 
             if (
+
                 !data.usedCouponCode ||
-                data.usedCouponCode.trim() === ""
+
+                data.usedCouponCode
+                    .trim() === ""
+
             ) {
 
                 showError(
@@ -1268,86 +2056,110 @@
 
             fullName:
                 document
-                    .getElementById("fullName")
+                    .getElementById(
+                        "fullName"
+                    )
                     .value
                     .trim(),
 
             dob:
                 document
-                    .getElementById("dob")
+                    .getElementById(
+                        "dob"
+                    )
                     .value,
 
             email:
                 document
-                    .getElementById("email")
+                    .getElementById(
+                        "email"
+                    )
                     .value
                     .trim()
                     .toLowerCase(),
 
             gender:
                 document
-                    .getElementById("gender")
+                    .getElementById(
+                        "gender"
+                    )
                     .value,
 
             phone:
                 document
-                    .getElementById("phone")
+                    .getElementById(
+                        "phone"
+                    )
                     .value
                     .trim(),
 
             lgaOrigin:
                 document
-                    .getElementById("lgaOrigin")
+                    .getElementById(
+                        "lgaOrigin"
+                    )
                     .value
                     .trim(),
 
             stateOrigin:
                 document
-                    .getElementById("stateOrigin")
+                    .getElementById(
+                        "stateOrigin"
+                    )
                     .value
                     .trim(),
 
             address:
                 document
-                    .getElementById("address")
+                    .getElementById(
+                        "address"
+                    )
                     .value
                     .trim(),
 
             stateResidence:
                 document
-                    .getElementById("stateResidence")
+                    .getElementById(
+                        "stateResidence"
+                    )
                     .value
                     .trim(),
 
             institution:
                 document
-                    .getElementById("institution")
-                    .value
-                    .trim(),
+                    .getElementById(
+                        "institution"
+                    )
+                    .value,
 
             course:
                 document
-                    .getElementById("course")
+                    .getElementById(
+                        "course"
+                    )
                     .value
                     .trim(),
 
             volunteerPost:
                 document
-                    .getElementById("volunteerPost")
+                    .getElementById(
+                        "volunteerPost"
+                    )
                     .value,
 
             receivedBursary:
                 document
-                    .getElementById("receivedBursary")
+                    .getElementById(
+                        "receivedBursary"
+                    )
                     .checked
 
         };
 
 
-        /*
-         * ONLY SEND usedCouponCode
-         * WHEN THE SELECTED POSITION REQUIRES IT
-         */
+        /* -----------------------------------------------------
+           COUPON
+        ----------------------------------------------------- */
 
         if (
 
@@ -1380,7 +2192,7 @@
 
 
     /* =========================================================
-       SUBMIT
+       FORM SUBMISSION
     ========================================================= */
 
     form.addEventListener(
@@ -1390,6 +2202,10 @@
             e.preventDefault();
 
 
+            /* -------------------------------------------------
+               RESET STATUS
+            ------------------------------------------------- */
+
             statusDiv.className =
                 "status-msg";
 
@@ -1397,17 +2213,32 @@
                 "none";
 
 
+            /* -------------------------------------------------
+               COLLECT DATA
+            ------------------------------------------------- */
+
             const formData =
                 gatherFormData();
 
 
+            /* -------------------------------------------------
+               VALIDATE
+            ------------------------------------------------- */
+
             if (
-                !validateForm(formData)
+                !validateForm(
+                    formData
+                )
             ) {
 
-                statusDiv.innerHTML =
-                    `<i class="fas fa-exclamation-triangle"></i>
-                     Please correct the errors highlighted above.`;
+                statusDiv.innerHTML = `
+
+                    <i class="fas fa-exclamation-triangle"></i>
+
+                    Please correct the errors
+                    highlighted above.
+
+                `;
 
                 statusDiv.className =
                     "status-msg error";
@@ -1415,26 +2246,42 @@
                 statusDiv.style.display =
                     "block";
 
+
                 document
-                    .querySelector(".form-card")
+                    .querySelector(
+                        ".form-card"
+                    )
                     .scrollIntoView({
                         behavior: "smooth",
                         block: "start"
                     });
+
 
                 return;
 
             }
 
 
+            /* -------------------------------------------------
+               DISABLE BUTTON
+            ------------------------------------------------- */
+
             submitBtn.disabled = true;
 
-            submitBtn.innerHTML =
-                `<i class="fas fa-spinner fa-pulse"></i>
-                 Submitting...`;
+            submitBtn.innerHTML = `
+
+                <i class="fas fa-spinner fa-pulse"></i>
+
+                Submitting...
+
+            `;
 
 
             try {
+
+                /* -------------------------------------------------
+                   API REQUEST
+                ------------------------------------------------- */
 
                 const response =
                     await fetch(
@@ -1444,8 +2291,10 @@
                             method: "POST",
 
                             headers: {
+
                                 "Content-Type":
                                     "application/json"
+
                             },
 
                             body:
@@ -1467,52 +2316,61 @@
                 );
 
 
-                if (response.ok) {
+                /* -------------------------------------------------
+                   SUCCESS
+                ------------------------------------------------- */
+
+                if (
+                    response.ok
+                ) {
 
                     const registeredPosition =
                         formData.volunteerPost;
 
 
-                    /*
-                     * GENERATED CODE
-                     *
-                     * Campus Coordinator
-                     * NFSAN Coordinator
-                     * Campus Captain
-                     */
-
                     const generatedCode =
-                        result?.data?.couponCode;
+                        result
+                            ?.data
+                            ?.couponCode;
 
+
+                    /* -------------------------------------------------
+                       SHOW GENERATED COUPON
+                    ------------------------------------------------- */
 
                     if (
+
                         (
+
                             registeredPosition ===
                                 "Campus Coordinators" ||
 
-                            registeredPosition ===
-                                "NFSAN Coordinator" ||
 
                             registeredPosition ===
                                 "Campus Captains"
+
                         ) &&
+
                         generatedCode
+
                     ) {
 
                         statusDiv.innerHTML = `
 
                             <i class="fas fa-check-circle"></i>
 
-                            <br>
+                            <br><br>
 
                             <strong>
                                 Registration Successful!
                             </strong>
 
-                            <br>
+                            <br><br>
 
                             You have successfully registered as
-                            ${registeredPosition}.
+                            ${escapeHtml(
+                                registeredPosition
+                            )}.
 
                             <br><br>
 
@@ -1521,14 +2379,17 @@
                             <br>
 
                             <span class="generated-code">
-                                ${escapeHtml(generatedCode)}
+                                ${escapeHtml(
+                                    generatedCode
+                                )}
                             </span>
 
                             <br><br>
 
                             <small>
                                 Please save this code carefully.
-                                You may need it to register other members.
+                                You may need it to register
+                                other members.
                             </small>
 
                         `;
@@ -1539,16 +2400,16 @@
 
                             <i class="fas fa-check-circle"></i>
 
-                            <br>
+                            <br><br>
 
                             <strong>
                                 Registration Successful!
                             </strong>
 
-                            <br>
+                            <br><br>
 
-                            Your registration has been successfully
-                            submitted and saved.
+                            Your registration has been
+                            successfully submitted and saved.
 
                         `;
 
@@ -1571,62 +2432,87 @@
                     });
 
 
-                } else {
+                }
+
+                /* -------------------------------------------------
+                   ERROR RESPONSE
+                ------------------------------------------------- */
+
+                else {
 
                     let errorMessage =
+
                         result.message ||
+
                         result.error ||
+
                         "Registration failed. Please check your details.";
 
 
-                    /*
-                     * HANDLE DUPLICATE EMAIL
-                     */
+                    const lowerMessage =
+                        errorMessage.toLowerCase();
+
+
+                    /* -------------------------------------------------
+                       DUPLICATE EMAIL
+                    ------------------------------------------------- */
 
                     if (
-                        errorMessage
-                            .toLowerCase()
-                            .includes(
-                                "duplicate"
-                            ) ||
-                        errorMessage
-                            .toLowerCase()
-                            .includes(
-                                "email"
-                            )
+
+                        lowerMessage.includes(
+                            "duplicate"
+                        ) &&
+
+                        lowerMessage.includes(
+                            "email"
+                        )
+
                     ) {
 
-                        if (
-                            errorMessage
-                                .toLowerCase()
-                                .includes(
-                                    "email"
-                                )
-                        ) {
-
-                            errorMessage =
-                                "This email address is already registered.";
-
-                        }
+                        errorMessage =
+                            "This email address is already registered.";
 
                     }
 
 
-                    /*
-                     * HANDLE INVALID COUPON
-                     */
+                    /* -------------------------------------------------
+                       INVALID COUPON
+                    ------------------------------------------------- */
 
                     if (
-                        errorMessage
-                            .toLowerCase()
-                            .includes(
-                                "coupon"
-                            )
+
+                        lowerMessage.includes(
+                            "coupon"
+                        )
+
                     ) {
 
                         errorMessage =
                             result.message ||
+
                             "The registration code is invalid. Please check the code and try again.";
+
+                    }
+
+
+                    /* -------------------------------------------------
+                       MONGOOSE ENUM ERROR
+                    ------------------------------------------------- */
+
+                    if (
+
+                        lowerMessage.includes(
+                            "institution"
+                        ) &&
+
+                        lowerMessage.includes(
+                            "enum"
+                        )
+
+                    ) {
+
+                        errorMessage =
+                            "Please select a valid institution.";
 
                     }
 
@@ -1634,6 +2520,8 @@
                     statusDiv.innerHTML = `
 
                         <i class="fas fa-times-circle"></i>
+
+                        <br>
 
                         ${escapeHtml(
                             errorMessage
@@ -1649,7 +2537,9 @@
 
                 }
 
-            } catch (error) {
+            }
+
+            catch (error) {
 
                 console.error(
                     "Registration error:",
@@ -1661,12 +2551,14 @@
 
                     <i class="fas fa-plug"></i>
 
+                    <br><br>
+
                     Unable to connect to the server.
 
-                    <br>
+                    <br><br>
 
-                    Please check that your backend server
-                    is running and try again.
+                    Please check your internet connection
+                    and try again.
 
                 `;
 
@@ -1676,13 +2568,20 @@
                 statusDiv.style.display =
                     "block";
 
-            } finally {
+            }
 
-                submitBtn.disabled = false;
+            finally {
 
-                submitBtn.innerHTML =
-                    `<i class="fas fa-paper-plane"></i>
-                     Submit Registration`;
+                submitBtn.disabled =
+                    false;
+
+                submitBtn.innerHTML = `
+
+                    <i class="fas fa-paper-plane"></i>
+
+                    Submit Registration
+
+                `;
 
             }
 
@@ -1698,35 +2597,58 @@
 
         form.reset();
 
+
         couponSection.style.display =
             "none";
+
 
         usedCouponCode.required =
             false;
 
+
         usedCouponCode.value =
             "";
+
+
+        couponLabel.textContent =
+            "Registration Code";
+
+
+        couponInfo.textContent =
+            "";
+
+
+        usedCouponCode.placeholder =
+            "Enter registration code";
+
 
         document
             .querySelectorAll(
                 ".error-message"
             )
             .forEach(
-                element =>
+                element => {
+
                     element.classList.remove(
                         "show"
-                    )
+                    );
+
+                }
             );
+
 
         document
             .querySelectorAll(
                 "input, select, textarea"
             )
             .forEach(
-                element =>
+                element => {
+
                     element.classList.remove(
                         "error"
-                    )
+                    );
+
+                }
             );
 
     }
@@ -1734,8 +2656,6 @@
 
     /* =========================================================
        ESCAPE HTML
-       Prevents API-generated values from being
-       injected into the page.
     ========================================================= */
 
     function escapeHtml(value) {
@@ -1790,8 +2710,6 @@
 
         "stateResidence",
 
-        "institution",
-
         "course",
 
         "usedCouponCode"
@@ -1799,32 +2717,63 @@
     ];
 
 
-    fields.forEach(field => {
+    fields.forEach(
+        field => {
 
-        const element =
-            document.getElementById(field);
+            const element =
+                document.getElementById(
+                    field
+                );
 
-        if (!element) return;
+            if (!element) return;
 
-        element.addEventListener(
-            "input",
-            function () {
 
-                clearError(field);
+            element.addEventListener(
+                "input",
+                function () {
 
-            }
-        );
+                    clearError(
+                        field
+                    );
 
-    });
+                }
+            );
 
+        }
+    );
+
+
+    /* =========================================================
+       SELECT ERROR CLEARING
+    ========================================================= */
 
     document
-        .getElementById("gender")
+        .getElementById(
+            "gender"
+        )
         .addEventListener(
             "change",
             function () {
 
-                clearError("gender");
+                clearError(
+                    "gender"
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "institution"
+        )
+        .addEventListener(
+            "change",
+            function () {
+
+                clearError(
+                    "institution"
+                );
 
             }
         );
