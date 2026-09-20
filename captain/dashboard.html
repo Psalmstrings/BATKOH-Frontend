@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Campus Captain Portal | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="../media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg" type="image/x-icon">
+    <!-- SheetJS for Spreadsheet Download (.xlsx / .csv) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-dark: #089546;
+            --primary-deep: #056830;
+            --accent-green: #067A3A;
+            --accent-lime: #9CC833;
+            --text-dark: #16351F;
+            --text-muted: #5F6F64;
+            --border-light: #DCE9DF;
+            --light-green: #F1F8F3;
+            --lighter-green: #F7FBF8;
+            --error-red: #dc2626;
+            --warning-amber: #d97706;
+            --success-green: #059669;
+            --white: #ffffff;
+            --shadow-card: 0 8px 24px -6px rgba(0, 90, 45, 0.10);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f8f5;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        /* Sticky Navbar */
+        .navbar {
+            background: var(--primary-dark);
+            color: white;
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-area span {
+            color: var(--accent-lime);
+        }
+
+        .captain-chip {
+            background: rgba(255,255,255,0.18);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.25);
+            white-space: nowrap;
+            display: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .captain-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-logout {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        /* Welcome & Coupon Banner */
+        .welcome-banner {
+            background: white;
+            border-radius: 1.25rem;
+            padding: 1.4rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .banner-info {
+            flex: 1 1 280px;
+        }
+
+        .banner-info h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .banner-info p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .coupon-box {
+            background: var(--light-green);
+            border: 2px dashed var(--primary-dark);
+            border-radius: 1rem;
+            padding: 0.9rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .coupon-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .coupon-code-text {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: 1.5px;
+            font-family: monospace;
+        }
+
+        .coupon-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-copy {
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-copy:hover {
+            background: var(--accent-green);
+        }
+
+        .btn-copy-link {
+            background: var(--text-dark);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.85rem;
+            margin-bottom: 1.25rem;
+        }
+
+        @media (min-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.25rem;
+            }
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.1rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.total { background: #e0f2fe; color: #0284c7; }
+        .stat-icon.verified { background: #d1fae5; color: #059669; }
+        .stat-icon.missing { background: #fee2e2; color: #dc2626; }
+        .stat-icon.pvc { background: #fef3c7; color: #d97706; }
+
+        .stat-content h3 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .stat-content p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Main Card */
+        .card {
+            background: white;
+            border-radius: 1.25rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1.2rem 1.4rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .header-actions {
+                width: auto;
+            }
+        }
+
+        .search-input-wrap {
+            position: relative;
+            flex: 1 1 200px;
+        }
+
+        .search-input-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .search-input-wrap input {
+            width: 100%;
+            padding: 9px 12px 9px 34px;
+            border-radius: 30px;
+            border: 1.5px solid var(--border-light);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .search-input-wrap input:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+        }
+
+        .filter-select {
+            padding: 9px 12px;
+            border-radius: 30px;
+            border: 1.5px solid var(--border-light);
+            font-size: 0.85rem;
+            font-family: inherit;
+            background: white;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* Spreadsheet Download Buttons */
+        .btn-excel {
+            background: #107c41;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-excel:hover {
+            background: #0b582e;
+        }
+
+        .btn-csv {
+            background: #0369a1;
+            color: white;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        /* Desktop Table View */
+        .table-responsive {
+            display: none;
+            overflow-x: auto;
+        }
+
+        @media (min-width: 820px) {
+            .table-responsive {
+                display: block;
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        thead th {
+            background: var(--lighter-green);
+            color: var(--text-muted);
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1.5px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fafcfb;
+        }
+
+        /* Mobile Cards View (Active on mobile screens < 820px) */
+        .mobile-cards-view {
+            display: block;
+            padding: 1rem;
+        }
+
+        @media (min-width: 820px) {
+            .mobile-cards-view {
+                display: none;
+            }
+        }
+
+        .member-card {
+            background: white;
+            border: 1.5px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.85rem;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .member-card.missing-vin {
+            border-left: 4px solid var(--error-red);
+        }
+
+        .member-card.has-vin {
+            border-left: 4px solid var(--primary-dark);
+        }
+
+        .member-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            gap: 8px;
+        }
+
+        .member-card-name {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .member-card-school {
+            font-size: 0.78rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .member-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            font-size: 0.82rem;
+            margin: 0.6rem 0;
+            padding: 0.6rem 0;
+            border-top: 1px dashed var(--border-light);
+            border-bottom: 1px dashed var(--border-light);
+        }
+
+        .member-card-info-item {
+            color: var(--text-muted);
+        }
+
+        .member-card-info-item strong {
+            color: var(--text-dark);
+            display: block;
+            font-size: 0.82rem;
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .member-card-vin-box {
+            background: var(--light-green);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0.6rem 0;
+            font-size: 0.82rem;
+        }
+
+        .member-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 0.6rem;
+        }
+
+        .btn-call {
+            flex: 1;
+            background: #e0f2fe;
+            color: #0369a1;
+            text-decoration: none;
+            padding: 9px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-whatsapp {
+            flex: 1;
+            background: #dcfce7;
+            color: #15803d;
+            text-decoration: none;
+            padding: 9px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-card-edit-vin {
+            flex: 2;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 9px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .badge-verified {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-missing {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .badge-pvc-yes { background: #d1fae5; color: #065f46; }
+        .badge-pvc-no { background: #f3f4f6; color: #6b7280; }
+
+        .btn-update-vin-table {
+            background: var(--light-green);
+            color: var(--primary-dark);
+            border: 1.5px solid var(--primary-dark);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-update-vin-table:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        /* Modal: Mobile Bottom Sheet on Small Devices */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 1.25rem;
+            max-width: 580px;
+            width: 100%;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 600px) {
+            .modal-overlay {
+                padding: 0;
+                align-items: flex-end;
+            }
+            .modal-box {
+                border-radius: 1.5rem 1.5rem 0 0;
+                max-height: 88vh;
+                padding: 1.4rem;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.8rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.85rem;
+        }
+
+        @media (min-width: 550px) {
+            .modal-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .modal-grid .full-span {
+                grid-column: span 2;
+            }
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-dark);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 0.65rem;
+            border: 1.5px solid var(--border-light);
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+        }
+
+        .vin-input-highlight {
+            border: 2px solid var(--primary-dark) !important;
+            background: #f0fdf4 !important;
+            font-family: monospace;
+            font-size: 1.05rem !important;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 1.4rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .btn-cancel {
+            background: #f3f4f6;
+            color: var(--text-dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-save:hover {
+            background: var(--accent-green);
+        }
+
+        .modal-msg {
+            margin-top: 0.8rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.82rem;
+            display: none;
+        }
+
+        .modal-msg.error { display: block; background: #fee2e2; color: #991b1b; }
+        .modal-msg.success { display: block; background: #d1fae5; color: #065f46; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 11px 22px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            z-index: 2000;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="logo-area">
+        <h2>RHASLW | <span>Captains</span></h2>
+        <span class="captain-chip" id="institutionChip">Campus Captain</span>
+    </div>
+    <div class="nav-right">
+        <span class="captain-name" id="captainNameDisplay">Loading...</span>
+        <button class="btn-logout" id="logoutBtn" title="Logout">
+            <i class="fas fa-sign-out-alt"></i> <span style="display:none; @media(min-width:480px){display:inline;}">Logout</span>
+        </button>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Welcome & Coupon Banner -->
+    <div class="welcome-banner">
+        <div class="banner-info">
+            <h1 id="welcomeGreeting">Welcome, Campus Captain!</h1>
+            <p>Share your code to register students and verify member PVC/VINs.</p>
+        </div>
+        <div class="coupon-box">
+            <div>
+                <div class="coupon-label">Your Referral Code</div>
+                <div class="coupon-code-text" id="captainCouponDisplay">---</div>
+            </div>
+            <div class="coupon-actions">
+                <button class="btn-copy" id="copyCodeBtn">
+                    <i class="fas fa-copy"></i> Code
+                </button>
+                <button class="btn-copy btn-copy-link" id="copyLinkBtn">
+                    <i class="fas fa-link"></i> Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon total"><i class="fas fa-users"></i></div>
+            <div class="stat-content">
+                <h3 id="statTotalMembers">0</h3>
+                <p>Total Registered</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon verified"><i class="fas fa-id-card"></i></div>
+            <div class="stat-content">
+                <h3 id="statVerifiedVin">0</h3>
+                <p>VIN Verified</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon missing"><i class="fas fa-exclamation-circle"></i></div>
+            <div class="stat-content">
+                <h3 id="statMissingVin">0</h3>
+                <p>Missing VIN</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon pvc"><i class="fas fa-check-double"></i></div>
+            <div class="stat-content">
+                <h3 id="statPvcHolders">0</h3>
+                <p>PVC Holders</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Members Table & Card View -->
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-user-friends"></i> My Referred Members</h2>
+            <div class="header-actions">
+                <div class="search-input-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="memberSearch" placeholder="Search members...">
+                </div>
+                <select id="vinFilterSelect" class="filter-select">
+                    <option value="ALL">All Members</option>
+                    <option value="MISSING_VIN">Missing VIN</option>
+                    <option value="HAS_VIN">VIN Verified</option>
+                </select>
+                <!-- Spreadsheet Download Buttons for Campus Captain (Requirement 1) -->
+                <button class="btn-excel" id="btnDownloadExcel" title="Download Excel Spreadsheet">
+                    <i class="fas fa-file-excel"></i> Excel
+                </button>
+                <button class="btn-csv" id="btnDownloadCsv" title="Download CSV file">
+                    <i class="fas fa-file-csv"></i> CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Desktop Table (visible >= 820px) -->
+        <div class="table-responsive">
+            <table id="membersTable">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Institution</th>
+                        <th>Course</th>
+                        <th>PVC?</th>
+                        <th>Voter ID (VIN)</th>
+                        <th>Date</th>
+                        <th style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="membersTableBody">
+                    <tr>
+                        <td colspan="9" style="text-align:center; padding: 2rem;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading members...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Cards View (visible < 820px, highly comfortable on mobile) -->
+        <div class="mobile-cards-view" id="mobileCardsContainer">
+            <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+                <i class="fas fa-spinner fa-spin"></i> Loading members...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Member & Fill VIN Modal (Requirement 2 & 5) -->
+<div class="modal-overlay" id="editMemberModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-edit"></i> Edit Member & Fill VIN</h3>
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+        </div>
+
+        <form id="editMemberForm">
+            <input type="hidden" id="editMemberId">
+
+            <div class="modal-grid">
+                <div class="form-group full-span">
+                    <label for="editFullName">Full Name *</label>
+                    <input type="text" id="editFullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPhone">Phone Number *</label>
+                    <input type="tel" id="editPhone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editEmail">Email Address (Read-only)</label>
+                    <input type="email" id="editEmail" readonly style="background:#f3f4f6;">
+                </div>
+
+                <!-- ENUM DROPDOWN FOR INSTITUTIONS (Requirement 2) -->
+                <div class="form-group">
+                    <label for="editInstitution">Institution *</label>
+                    <select id="editInstitution" required>
+                        <option value="">-- Select Institution --</option>
+                        <option value="UNILAG">UNILAG</option>
+                        <option value="YABATECH">YABATECH</option>
+                        <option value="LASU">LASU</option>
+                        <option value="FCE">FCE</option>
+                        <option value="OCEANOGRAPHY">OCEANOGRAPHY</option>
+                        <option value="SACOED">SACOED</option>
+                        <option value="LASCON">LASCON</option>
+                        <option value="LASCOETH">LASCOETH</option>
+                        <option value="LASUSTECH">LASUSTECH</option>
+                        <option value="LASUED">LASUED</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCourse">Course of Study</label>
+                    <input type="text" id="editCourse" placeholder="e.g. Computer Science">
+                </div>
+
+                <div class="form-group">
+                    <label for="editHasPvc">Do they have PVC?</label>
+                    <select id="editHasPvc">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editGender">Gender</label>
+                    <select id="editGender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Strict VIN Input with Live Counter -->
+                <div class="form-group full-span">
+                    <label for="editVin">
+                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN)
+                        <span id="modalVinCharCount" style="color:var(--text-muted); font-weight:normal; margin-left:6px;">(0/19)</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="editVin"
+                        class="vin-input-highlight"
+                        maxlength="19"
+                        placeholder="19 uppercase alphanumeric chars (e.g. 90F5B08815295449831)"
+                        autocomplete="off"
+                    >
+                    <small style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:4px;">
+                        Must be exactly 19 uppercase alphanumeric characters (0-9, A-Z) as printed on PVC.
+                    </small>
+                </div>
+            </div>
+
+            <div id="modalStatusMsg" class="modal-msg"></div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" id="cancelModalBtn">Cancel</button>
+                <button type="submit" class="btn-save" id="saveMemberBtn">
+                    <i class="fas fa-check"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">
+    <i class="fas fa-info-circle"></i> <span id="toastMsg">Notification</span>
+</div>
+
+<script>
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000/api'
+        : 'https://batkoh-backend.onrender.com/api';
+
+    const STRICT_VIN_REGEX = /^[0-9]{2}[A-Z][0-9]B[0-9]{2}[A-Z]{2}[0-9]{9}$/;
+
+    let currentCaptain = null;
+    let membersList = [];
+    let displayedMembers = [];
+
+    function checkAuth() {
+        const token = localStorage.getItem('captainToken');
+        if (!token) {
+            window.location.href = 'login.html';
+            return false;
+        }
+        try {
+            currentCaptain = JSON.parse(localStorage.getItem('captainData'));
+        } catch(e) {}
+        return true;
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    function renderStats() {
+        const total = membersList.length;
+        const verifiedVin = membersList.filter(m => m.vin && STRICT_VIN_REGEX.test(m.vin.trim())).length;
+        const missingVin = total - verifiedVin;
+        const pvcHolders = membersList.filter(m => m.hasPvc || m.receivedBursary).length;
+
+        document.getElementById('statTotalMembers').textContent = total;
+        document.getElementById('statVerifiedVin').textContent = verifiedVin;
+        document.getElementById('statMissingVin').textContent = missingVin;
+        document.getElementById('statPvcHolders').textContent = pvcHolders;
+    }
+
+    function renderViews() {
+        renderDesktopTable();
+        renderMobileCards();
+    }
+
+    // 1. Desktop Table
+    function renderDesktopTable() {
+        const tbody = document.getElementById('membersTableBody');
+
+        if (displayedMembers.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No members found</h3>
+                        <p>No member records match your current search.</p>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = displayedMembers.map(m => {
+            const hasVin = m.vin && STRICT_VIN_REGEX.test(m.vin.trim());
+            const hasPvc = m.hasPvc || m.receivedBursary;
+            const dateStr = m.createdAt ? new Date(m.createdAt).toLocaleDateString() : '—';
+
+            return `
+                <tr>
+                    <td><strong>${escapeHtml(m.fullName)}</strong></td>
+                    <td>${escapeHtml(m.phone)}</td>
+                    <td style="font-size:0.82rem;">${escapeHtml(m.email)}</td>
+                    <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${escapeHtml(m.institution)}</span></td>
+                    <td>${escapeHtml(m.course || '—')}</td>
+                    <td>
+                        <span class="badge ${hasPvc ? 'badge-pvc-yes' : 'badge-pvc-no'}">
+                            ${hasPvc ? '<i class="fas fa-check"></i> Yes' : 'No'}
+                        </span>
+                    </td>
+                    <td>
+                        ${hasVin
+                            ? `<span class="badge badge-verified"><i class="fas fa-shield-alt"></i> ${escapeHtml(m.vin)}</span>`
+                            : `<span class="badge badge-missing"><i class="fas fa-times-circle"></i> Missing VIN</span>`
+                        }
+                    </td>
+                    <td>${dateStr}</td>
+                    <td style="text-align:center;">
+                        <button class="btn-update-vin-table" onclick="openEditModal('${m._id}')">
+                            <i class="fas fa-edit"></i> ${hasVin ? 'Edit' : 'Fill VIN'}
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 2. Mobile Cards (Convenient Mobile UX for Campus Captains)
+    function renderMobileCards() {
+        const container = document.getElementById('mobileCardsContainer');
+
+        if (displayedMembers.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No members found</h3>
+                    <p>No member records match your current search.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = displayedMembers.map(m => {
+            const hasVin = m.vin && STRICT_VIN_REGEX.test(m.vin.trim());
+            const hasPvc = m.hasPvc || m.receivedBursary;
+            const dateStr = m.createdAt ? new Date(m.createdAt).toLocaleDateString() : '—';
+            // Clean phone for WhatsApp / Tel
+            const cleanPhone = (m.phone || '').replace(/[^0-9]/g, '');
+            const waPhone = cleanPhone.startsWith('0') ? '234' + cleanPhone.slice(1) : cleanPhone;
+
+            return `
+                <div class="member-card ${hasVin ? 'has-vin' : 'missing-vin'}">
+                    <div class="member-card-header">
+                        <div>
+                            <div class="member-card-name">${escapeHtml(m.fullName)}</div>
+                            <div class="member-card-school"><i class="fas fa-university"></i> ${escapeHtml(m.institution)} ${m.course ? '• ' + escapeHtml(m.course) : ''}</div>
+                        </div>
+                        <span class="badge ${hasPvc ? 'badge-pvc-yes' : 'badge-pvc-no'}">
+                            ${hasPvc ? 'PVC: Yes' : 'No PVC'}
+                        </span>
+                    </div>
+
+                    <div class="member-card-body">
+                        <div class="member-card-info-item">
+                            Phone
+                            <strong>${escapeHtml(m.phone)}</strong>
+                        </div>
+                        <div class="member-card-info-item">
+                            Email
+                            <strong>${escapeHtml(m.email)}</strong>
+                        </div>
+                    </div>
+
+                    <div class="member-card-vin-box">
+                        <span style="font-weight:700; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Voter ID (VIN)</span>
+                        ${hasVin
+                            ? `<span class="badge badge-verified"><i class="fas fa-check-circle"></i> ${escapeHtml(m.vin)}</span>`
+                            : `<span class="badge badge-missing"><i class="fas fa-exclamation-triangle"></i> Missing VIN</span>`
+                        }
+                    </div>
+
+                    <div class="member-card-actions">
+                        <a href="tel:${cleanPhone}" class="btn-call" title="Call Member">
+                            <i class="fas fa-phone-alt"></i> Call
+                        </a>
+                        <a href="https://wa.me/${waPhone}" target="_blank" class="btn-whatsapp" title="WhatsApp Member">
+                            <i class="fab fa-whatsapp"></i> Chat
+                        </a>
+                        <button class="btn-card-edit-vin" onclick="openEditModal('${m._id}')">
+                            <i class="fas fa-id-card"></i> ${hasVin ? 'Edit VIN' : 'Fill VIN'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '—';
+        return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    }
+
+    function applyFilter() {
+        const query = document.getElementById('memberSearch').value.toLowerCase().trim();
+        const vinFilter = document.getElementById('vinFilterSelect').value;
+
+        displayedMembers = membersList.filter(m => {
+            const matchesQuery = !query ||
+                (m.fullName && m.fullName.toLowerCase().includes(query)) ||
+                (m.phone && m.phone.toLowerCase().includes(query)) ||
+                (m.email && m.email.toLowerCase().includes(query)) ||
+                (m.institution && m.institution.toLowerCase().includes(query));
+
+            const hasValidVin = m.vin && STRICT_VIN_REGEX.test(m.vin.trim());
+            let matchesVinFilter = true;
+            if (vinFilter === 'MISSING_VIN') {
+                matchesVinFilter = !hasValidVin;
+            } else if (vinFilter === 'HAS_VIN') {
+                matchesVinFilter = hasValidVin;
+            }
+
+            return matchesQuery && matchesVinFilter;
+        });
+
+        renderViews();
+    }
+
+    async function fetchMembers() {
+        try {
+            const token = localStorage.getItem('captainToken');
+            const response = await fetch(`${API_BASE}/students/captain/members`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('captainToken');
+                localStorage.removeItem('captainData');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const data = await response.json();
+            if (response.ok && data.success) {
+                membersList = data.members || [];
+                displayedMembers = [...membersList];
+                renderStats();
+                renderViews();
+
+                if (data.captain) {
+                    currentCaptain = data.captain;
+                    updateCaptainInfo();
+                }
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            document.getElementById('membersTableBody').innerHTML = `
+                <tr><td colspan="9" class="empty-state"><i class="fas fa-plug" style="color:#ef4444;"></i><h3>Network Error</h3><p>Unable to load members.</p></td></tr>
+            `;
+            document.getElementById('mobileCardsContainer').innerHTML = `
+                <div class="empty-state"><i class="fas fa-plug" style="color:#ef4444;"></i><h3>Network Error</h3><p>Unable to load members.</p></div>
+            `;
+        }
+    }
+
+    function updateCaptainInfo() {
+        if (!currentCaptain) return;
+        document.getElementById('captainNameDisplay').textContent = currentCaptain.fullName;
+        document.getElementById('welcomeGreeting').textContent = `Welcome, ${currentCaptain.fullName}!`;
+        document.getElementById('institutionChip').textContent = currentCaptain.institution || 'Campus Captain';
+        document.getElementById('captainCouponDisplay').textContent = currentCaptain.couponCode || '---';
+    }
+
+    // Modal Operations (Edit & Fill VIN)
+    window.openEditModal = function(memberId) {
+        const member = membersList.find(m => m._id === memberId);
+        if (!member) return;
+
+        document.getElementById('editMemberId').value = member._id;
+        document.getElementById('editFullName').value = member.fullName || '';
+        document.getElementById('editPhone').value = member.phone || '';
+        document.getElementById('editEmail').value = member.email || '';
+        document.getElementById('editInstitution').value = member.institution || '';
+        document.getElementById('editCourse').value = member.course || '';
+        document.getElementById('editHasPvc').value = (member.hasPvc || member.receivedBursary) ? 'Yes' : 'No';
+        document.getElementById('editGender').value = member.gender || 'Male';
+
+        const vinInput = document.getElementById('editVin');
+        vinInput.value = member.vin || '';
+        document.getElementById('modalVinCharCount').textContent = `(${vinInput.value.length}/18)`;
+
+        const msgDiv = document.getElementById('modalStatusMsg');
+        msgDiv.style.display = 'none';
+
+        document.getElementById('editMemberModal').classList.add('active');
+    };
+
+    function closeModal() {
+        document.getElementById('editMemberModal').classList.remove('active');
+    }
+
+    // Modal VIN input auto-formatter
+    const modalVinInput = document.getElementById('editVin');
+    modalVinInput.addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 18);
+        document.getElementById('modalVinCharCount').textContent = `(${this.value.length}/18)`;
+    });
+
+    // Save Edit Form
+    document.getElementById('editMemberForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const memberId = document.getElementById('editMemberId').value;
+        const fullName = document.getElementById('editFullName').value.trim();
+        const phone = document.getElementById('editPhone').value.trim();
+        const institution = document.getElementById('editInstitution').value;
+        const course = document.getElementById('editCourse').value.trim();
+        const hasPvcChoice = document.getElementById('editHasPvc').value;
+        const gender = document.getElementById('editGender').value;
+        const vin = document.getElementById('editVin').value.trim().toUpperCase();
+
+        const msgDiv = document.getElementById('modalStatusMsg');
+        msgDiv.style.display = 'none';
+
+        // Validate VIN if entered
+        if (vin !== '') {
+            if (!STRICT_VIN_REGEX.test(vin)) {
+                msgDiv.className = 'modal-msg error';
+                msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid VIN. Format: 2 digits + 1 letter + 1 digit + "B" + 2 digits + 2 letters + 9 digits (e.g. 90F5B12FC515580873).';
+                return;
+            }
+        }
+
+        const saveBtn = document.getElementById('saveMemberBtn');
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+        try {
+            const token = localStorage.getItem('captainToken');
+            const response = await fetch(`${API_BASE}/students/captain/member/${memberId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    fullName,
+                    phone,
+                    institution,
+                    course,
+                    hasPvc: hasPvcChoice === 'Yes',
+                    receivedBursary: hasPvcChoice === 'Yes',
+                    gender,
+                    vin: vin || ''
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                const idx = membersList.findIndex(m => m._id === memberId);
+                if (idx !== -1) {
+                    membersList[idx] = data.data;
+                }
+                applyFilter();
+                renderStats();
+
+                msgDiv.className = 'modal-msg success';
+                msgDiv.innerHTML = '<i class="fas fa-check-circle"></i> Member details & VIN updated successfully!';
+
+                setTimeout(() => {
+                    closeModal();
+                    showToast('Member details updated successfully');
+                }, 800);
+            } else {
+                msgDiv.className = 'modal-msg error';
+                msgDiv.innerHTML = `<i class="fas fa-times-circle"></i> ${data.message || 'Failed to update member.'}`;
+            }
+        } catch (error) {
+            msgDiv.className = 'modal-msg error';
+            msgDiv.innerHTML = '<i class="fas fa-plug"></i> Server error. Could not update.';
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-check"></i> Save Changes';
+        }
+    });
+
+    // SPREADSHEET EXPORT FOR CAMPUS CAPTAINS (Requirement 1)
+    function exportCaptainSpreadsheet(format) {
+        if (!displayedMembers || displayedMembers.length === 0) {
+            alert('No member records to export.');
+            return;
+        }
+
+        const captainCode = currentCaptain ? currentCaptain.couponCode : 'Captain';
+        const formattedData = displayedMembers.map((m, idx) => ({
+            'S/N': idx + 1,
+            'Full Name': m.fullName || '',
+            'Phone Number': m.phone || '',
+            'Email Address': m.email || '',
+            'Institution': m.institution || '',
+            'Course of Study': m.course || '',
+            'Gender': m.gender || '',
+            'Has PVC?': (m.hasPvc || m.receivedBursary) ? 'Yes' : 'No',
+            'Voter ID (VIN)': m.vin || '',
+            'Coupon Code Used': m.usedCouponCode || '',
+            'Registration Date': m.createdAt ? new Date(m.createdAt).toLocaleDateString() : ''
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+        // Auto-width
+        worksheet['!cols'] = [
+            { wch: 6 },  // S/N
+            { wch: 24 }, // Name
+            { wch: 16 }, // Phone
+            { wch: 26 }, // Email
+            { wch: 16 }, // Institution
+            { wch: 22 }, // Course
+            { wch: 10 }, // Gender
+            { wch: 10 }, // Has PVC
+            { wch: 22 }, // VIN
+            { wch: 18 }, // Coupon
+            { wch: 14 }  // Date
+        ];
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'My_Members');
+
+        const timestamp = new Date().toISOString().split('T')[0];
+
+        if (format === 'xlsx') {
+            XLSX.writeFile(workbook, `My_Referred_Members_${captainCode}_${timestamp}.xlsx`);
+            showToast('Excel spreadsheet downloaded!');
+        } else {
+            const csvContent = XLSX.utils.sheet_to_csv(worksheet);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `My_Referred_Members_${captainCode}_${timestamp}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('CSV file downloaded!');
+        }
+    }
+
+    document.getElementById('btnDownloadExcel').addEventListener('click', () => exportCaptainSpreadsheet('xlsx'));
+    document.getElementById('btnDownloadCsv').addEventListener('click', () => exportCaptainSpreadsheet('csv'));
+
+    // Copy actions
+    document.getElementById('copyCodeBtn').addEventListener('click', function() {
+        if (!currentCaptain || !currentCaptain.couponCode) return;
+        navigator.clipboard.writeText(currentCaptain.couponCode);
+        showToast(`Coupon code ${currentCaptain.couponCode} copied!`);
+    });
+
+    document.getElementById('copyLinkBtn').addEventListener('click', function() {
+        if (!currentCaptain || !currentCaptain.couponCode) return;
+        const regUrl = `${window.location.origin}/form.html?code=${currentCaptain.couponCode}`;
+        navigator.clipboard.writeText(regUrl);
+        showToast('Registration link copied!');
+    });
+
+    // Listeners
+    document.getElementById('memberSearch').addEventListener('input', applyFilter);
+    document.getElementById('vinFilterSelect').addEventListener('change', applyFilter);
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+    document.getElementById('editMemberModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('captainToken');
+        localStorage.removeItem('captainData');
+        window.location.href = 'login.html';
+    });
+
+    // Initialize
+    if (checkAuth()) {
+        updateCaptainInfo();
+        fetchMembers();
+    }
+</script>
+</body>
+</html>

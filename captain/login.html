@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Campus Captain Portal | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="../media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #089546;
+            --accent-green: #067A3A;
+            --accent-lime: #9CC833;
+            --text-dark: #16351F;
+            --text-muted: #5F6F64;
+            --border-light: #DCE9DF;
+            --light-green: #F1F8F3;
+            --lighter-green: #F7FBF8;
+            --error-red: #dc2626;
+            --success-green: #059669;
+            --white: #ffffff;
+            --shadow-card: 0 20px 35px -12px rgba(0, 90, 45, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #063d1e 0%, #089546 50%, #055e2d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            padding: 2.5rem 2.2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .logo-badge {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--light-green);
+            color: var(--primary-dark);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 0.8rem;
+            border: 2px solid var(--border-light);
+        }
+
+        .logo-badge h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .logo-badge p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        .portal-tag {
+            display: inline-block;
+            background: var(--light-green);
+            color: var(--primary-dark);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .notice-box {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 0.85rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.82rem;
+            color: #92400e;
+            line-height: 1.4;
+        }
+
+        .notice-box i {
+            margin-right: 6px;
+            color: #d97706;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.45rem;
+            color: var(--text-dark);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i.prefix-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+            background: #fafbfc;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(8, 149, 70, 0.12);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 40px;
+            background: var(--primary-dark);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+            transition: all 0.25s ease;
+        }
+
+        .btn-login:hover {
+            background: var(--accent-green);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(8, 149, 70, 0.25);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-msg {
+            margin-top: 1.25rem;
+            padding: 0.85rem;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: none;
+            text-align: center;
+        }
+
+        .status-msg.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .status-msg.success {
+            display: block;
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .back-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.8rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.85rem;
+        }
+
+        .back-links a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem 0.8rem;
+            }
+            .login-card {
+                padding: 1.8rem 1.25rem;
+                border-radius: 1.25rem;
+            }
+            input {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="login-card">
+        <div class="logo-badge">
+            <div class="logo-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h2>Campus Captain Portal</h2>
+            <p>Renewed Hope Ambassadors | Lagos Students Wing</p>
+            <span class="portal-tag"><i class="fas fa-shield-alt"></i> Captain Authorization</span>
+        </div>
+
+        <!-- <div class="notice-box">
+            <i class="fas fa-info-circle"></i>
+            <strong>Login Info:</strong> Use your registered <strong>Email Address</strong>. Your initial password is your <strong>First Name</strong> (exactly as registered).
+        </div> -->
+
+        <form id="captainLoginForm">
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Registered Email</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-at prefix-icon"></i>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="captain@example.com"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password"><i class="fas fa-key"></i> Password </label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock prefix-icon"></i>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="***********"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Access Captain Portal
+            </button>
+
+            <div id="statusMessage" class="status-msg"></div>
+        </form>
+
+        <div class="back-links">
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Home</a>
+            <a href="../admin/login.html"><i class="fas fa-user-shield"></i> Admin Login</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configuration
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000/api'
+        : 'https://batkoh-backend.onrender.com/api';
+
+    const loginForm = document.getElementById('captainLoginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const statusMsg = document.getElementById('statusMessage');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+
+    // Password visibility toggle
+    if (togglePasswordBtn) {
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            toggleIcon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+        });
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!email || !password) {
+            statusMsg.className = 'status-msg error';
+            statusMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please provide both email and password.';
+            return;
+        }
+
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+        statusMsg.style.display = 'none';
+
+        try {
+            const response = await fetch(`${API_BASE}/students/captain-login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Save captain session
+                localStorage.setItem('captainToken', data.token);
+                localStorage.setItem('captainData', JSON.stringify(data.captain));
+
+                statusMsg.className = 'status-msg success';
+                statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Welcome, ${data.captain.fullName}! Redirecting to your portal...`;
+                statusMsg.style.display = 'block';
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1200);
+            } else {
+                statusMsg.className = 'status-msg error';
+                statusMsg.innerHTML = `<i class="fas fa-times-circle"></i> ${data.message || 'Login failed. Please verify your credentials.'}`;
+                statusMsg.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            statusMsg.className = 'status-msg error';
+            statusMsg.innerHTML = '<i class="fas fa-plug"></i> Network error: Unable to connect to server. Please try again.';
+            statusMsg.style.display = 'block';
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Access Captain Portal';
+        }
+    });
+</script>
+</body>
+</html>

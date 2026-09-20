@@ -697,7 +697,7 @@
 
                 padding: 11px 13px;
 
-                font-size: 0.9rem;
+                font-size: 16px;
             }
 
             .home-link {
@@ -1254,11 +1254,11 @@
 
                         <option value="Campus Coordinators">
                             Campus Coordinator
-                        </option>
+                        </option> -->
 
                         <option value="Campus Captains">
                             Campus Captain
-                        </option> -->
+                        </option>
 
                         <!-- <option value="NFSAN Coordinator">
                             NFSAN Coordinator
@@ -1330,29 +1330,47 @@
 
 
                 <!-- =================================================
-                     PVC / BURSARY FIELD
+                     PVC FIELD (DROPDOWN: YES / NO)
                 ================================================== -->
-
-                <div
-                    class="form-group full-width checkbox-group"
-                >
-
-                    <input
-                        type="checkbox"
-                        id="receivedBursary"
-                        name="receivedBursary"
-                    >
-
-                    <label for="receivedBursary">
-
-                        Do you have Permanent Voter's Card?
-
+                <div class="form-group">
+                    <label for="hasPvc">
+                        <i class="fas fa-id-card"></i>
+                        Do you have Permanent Voter's Card (PVC)?
+                        <span class="required-star">*</span>
                     </label>
+                    <select id="hasPvc" name="hasPvc">
+                        <option value="">-- Select Option --</option>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                    <div class="error-message" id="hasPvcError">
+                        Please indicate whether you have a Permanent Voter's Card.
+                    </div>
+                </div>
 
-                    <small>
-                        Check if yes, leave unchecked for No.
-                    </small>
-
+                <!-- =================================================
+                     VIN (VOTER IDENTIFICATION NUMBER)
+                     Dynamic: Visible only when PVC is "Yes"
+                ================================================== -->
+                <div class="form-group" id="vinSection" style="display: none;">
+                    <label for="vin">
+                        <i class="fas fa-barcode"></i>
+                        Voter Identification Number (VIN)
+                        <span class="required-star">*</span>
+                        <span id="vinCharCount" style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-left: 6px;">(0/18)</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="vin"
+                        name="vin"
+                        maxlength="18"
+                        placeholder="Enter Correct VIN"
+                        autocomplete="off"
+                        style="text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;"
+                    >
+                    <div class="error-message" id="vinError">
+                        VIN must be exactly 18 characters: 2 digits, 1 letter, 1 digit, "B", 2 digits, 2 letters, 9 digits (e.g. 90F5B12FC515580873).
+                    </div>
                 </div>
 
             </div>
@@ -1430,6 +1448,18 @@
 
     const couponInfo =
         document.getElementById("couponInfo");
+
+    const hasPvcSelect =
+        document.getElementById("hasPvc");
+
+    const vinSection =
+        document.getElementById("vinSection");
+
+    const vinInput =
+        document.getElementById("vin");
+
+    const vinCharCount =
+        document.getElementById("vinCharCount");
 
 
     /* =========================================================
@@ -1570,6 +1600,41 @@
 
         }
     );
+
+
+    /* =========================================================
+       PVC & VIN DYNAMIC DISPLAY & REAL-TIME VALIDATION
+    ========================================================= */
+
+    if (hasPvcSelect) {
+        hasPvcSelect.addEventListener("change", function () {
+            clearError("hasPvc");
+            if (this.value === "Yes") {
+                vinSection.style.display = "block";
+                vinInput.required = true;
+            } else {
+                vinSection.style.display = "none";
+                vinInput.required = false;
+                vinInput.value = "";
+                if (vinCharCount) vinCharCount.textContent = "(0/18)";
+                clearError("vin");
+            }
+        });
+    }
+
+    if (vinInput) {
+        vinInput.addEventListener("input", function () {
+            // Force uppercase and strip non-alphanumeric characters
+            this.value = this.value.toUpperCase().replace(/[^0-9A-Z]/g, "").slice(0, 18);
+            if (vinCharCount) {
+                vinCharCount.textContent = `(${this.value.length}/18)`;
+            }
+            if (this.value.length === 18) {
+                clearError("vin");
+            }
+        });
+
+    }
 
 
     /* =========================================================
@@ -2041,6 +2106,33 @@
         }
 
 
+        /* -----------------------------------------------------
+           PVC SELECTION (DROPDOWN YES / NO)
+        ----------------------------------------------------- */
+        if (!data.hasPvcChoice || (data.hasPvcChoice !== "Yes" && data.hasPvcChoice !== "No")) {
+            showError("hasPvcError", true);
+            markError("hasPvc", true);
+            valid = false;
+        } else {
+            clearError("hasPvc");
+        }
+
+
+        /* -----------------------------------------------------
+           VIN (CASE SENSITIVE STRICT REGEX: 19 ALPHANUMERIC)
+        ----------------------------------------------------- */
+        const STRICT_VIN_REGEX = /^[0-9]{2}[A-Z][0-9]B[0-9]{2}[A-Z]{2}[0-9]{9}$/;
+        if (data.hasPvcChoice === "Yes") {
+            if (!data.vin || !STRICT_VIN_REGEX.test(data.vin.trim())) {
+                showError("vinError", true);
+                markError("vin", true);
+                valid = false;
+            } else {
+                clearError("vin");
+            }
+        }
+
+
         return valid;
 
     }
@@ -2051,6 +2143,10 @@
     ========================================================= */
 
     function gatherFormData() {
+
+        const pvcEl = document.getElementById("hasPvc");
+        const pvcChoice = pvcEl ? pvcEl.value : "";
+        const vinEl = document.getElementById("vin");
 
         const data = {
 
@@ -2147,12 +2243,13 @@
                     )
                     .value,
 
-            receivedBursary:
-                document
-                    .getElementById(
-                        "receivedBursary"
-                    )
-                    .checked
+            hasPvcChoice: pvcChoice,
+
+            hasPvc: pvcChoice === "Yes",
+
+            receivedBursary: pvcChoice === "Yes",
+
+            vin: (pvcChoice === "Yes" && vinEl) ? vinEl.value.trim().toUpperCase() : undefined
 
         };
 
@@ -2285,8 +2382,8 @@
 
                 const response =
                     await fetch(
-                        "https://batkoh-backend.onrender.com/api/students/",
-                        // "http://localhost:3000/api/students/",
+                        // "https://batkoh-backend.onrender.com/api/students/",
+                        "http://localhost:3000/api/students/",
                         {
 
                             method: "POST",
