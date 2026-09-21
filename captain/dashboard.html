@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Campus Captain Portal | Dashboard</title>
+    <title>PBAT–KOH TEMA | Captain Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="shortcut icon" href="../media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg" type="image/x-icon">
@@ -826,8 +826,8 @@
 <!-- Navigation -->
 <nav class="navbar">
     <div class="logo-area">
-        <h2>RHASLW | <span>Captains</span></h2>
-        <span class="captain-chip" id="institutionChip">Campus Captain</span>
+        <h2>PBAT–KOH TEMA | <span>Captains</span></h2>
+        <span class="captain-chip" id="institutionChip">Captain</span>
     </div>
     <div class="nav-right">
         <span class="captain-name" id="captainNameDisplay">Loading...</span>
@@ -841,8 +841,8 @@
     <!-- Welcome & Coupon Banner -->
     <div class="welcome-banner">
         <div class="banner-info">
-            <h1 id="welcomeGreeting">Welcome, Campus Captain!</h1>
-            <p>Share your code to register students and verify member PVC/VINs.</p>
+            <h1 id="welcomeGreeting">Welcome, Captain!</h1>
+            <p>Share your code to register members and verify member PVC/VINs.</p>
         </div>
         <div class="coupon-box">
             <div>
@@ -1292,9 +1292,10 @@
 
     function updateCaptainInfo() {
         if (!currentCaptain) return;
+        const roleName = currentCaptain.volunteerPost === 'Staff Captains' ? 'Staff Captain' : 'Campus Captain';
         document.getElementById('captainNameDisplay').textContent = currentCaptain.fullName;
         document.getElementById('welcomeGreeting').textContent = `Welcome, ${currentCaptain.fullName}!`;
-        document.getElementById('institutionChip').textContent = currentCaptain.institution || 'Campus Captain';
+        document.getElementById('institutionChip').textContent = currentCaptain.institution ? `${currentCaptain.institution} • ${roleName}` : roleName;
         document.getElementById('captainCouponDisplay').textContent = currentCaptain.couponCode || '---';
     }
 
