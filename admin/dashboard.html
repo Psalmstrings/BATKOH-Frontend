@@ -776,6 +776,11 @@
             border-color: var(--primary-dark);
         }
 
+        .vin-input-highlight.input-error {
+            border-color: var(--error-red) !important;
+            background: #fff7f7 !important;
+        }
+
         .vin-input-highlight {
             border: 2px solid var(--primary-dark) !important;
             background: #f0fdf4 !important;
@@ -1478,12 +1483,12 @@
                 </div>
 
                 <div class="modal-form-group">
-                    <label for="editStateOrigin">State of Origin</label>
+                    <label for="editStateOrigin">State of Registration</label>
                     <input type="text" id="editStateOrigin">
                 </div>
 
                 <div class="modal-form-group">
-                    <label for="editLgaOrigin">LGA of Origin</label>
+                    <label for="editLgaOrigin">LGA of Registration</label>
                     <input type="text" id="editLgaOrigin">
                 </div>
 
@@ -1497,11 +1502,15 @@
                         id="editVin"
                         class="vin-input-highlight"
                         maxlength="20"
-                        placeholder="e.g. INC26000000044392309 or 90F5B126FC515580873"
+                        minlength="17"
+                        placeholder="Enter 17–20 character VIN"
                     >
                     <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:3px;">
-                        Two formats accepted: INC26000000044392309 (20 chars) or 90F5B126FC515580873 (19 chars). Uppercase only.
+                        VIN must contain only letters and numbers and be 17–20 characters.
                     </small>
+                    <div id="editVinError" class="error-message" style="display:none; color:#dc2626; font-size:0.78rem; margin-top:5px;">
+                        Invalid VIN. VIN must contain only letters and numbers and be 17–20 characters.
+                    </div>
                 </div>
             </div>
 
@@ -1667,7 +1676,7 @@
         ? 'http://localhost:3000/api'
         : 'https://batkoh-backend.onrender.com/api';
 
-    const STRICT_VIN_REGEX = /^[A-Z0-9]{17,20}$/;
+    const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
 
     let allStudents = [];
     let hubCurrentMembers = [];
@@ -1800,8 +1809,8 @@
         const staffCaptains = allStudents.filter(s => s.volunteerPost === 'Staff Captains');
         const stateCoords = allStudents.filter(s => s.volunteerPost && s.volunteerPost.toLowerCase().includes('state'));
         const members = allStudents.filter(s => s.volunteerPost === 'Student' || s.volunteerPost === 'Staff' || s.volunteerPost === 'Members' || s.volunteerPost === 'NFSAN Member');
-        const vinCount = allStudents.filter(s => s.vin && STRICT_VIN_REGEX.test(s.vin.trim())).length;
-        const pvcCount = allStudents.filter(s => s.hasPvc || s.receivedBursary).length;
+        const vinCount = allStudents.filter(s => s.vin && VIN_REGEX.test(s.vin.trim())).length;
+        const pvcCount = allStudents.filter(s => s.hasPvc === true).length;
 
         // KPIs
         document.getElementById('kpiTotalStudents').textContent = total;
@@ -1908,8 +1917,8 @@
         }
 
         tbody.innerHTML = filtered.map(s => {
-            const hasVin = s.vin && STRICT_VIN_REGEX.test(s.vin.trim());
-            const hasPvc = s.hasPvc || s.receivedBursary;
+            const hasVin = s.vin && VIN_REGEX.test(s.vin.trim());
+            const hasPvc = s.hasPvc === true;
             return `
                 <tr>
                     <td><strong>${escapeHtml(s.fullName)}</strong></td>
@@ -1981,7 +1990,7 @@
         }
 
         tbody.innerHTML = captains.map(c => {
-            const hasVin = c.vin && STRICT_VIN_REGEX.test(c.vin.trim());
+            const hasVin = c.vin && VIN_REGEX.test(c.vin.trim());
             return `
                 <tr>
                     <td><strong>${escapeHtml(c.fullName)}</strong></td>
@@ -2020,7 +2029,7 @@
         }
 
         tbody.innerHTML = staffCaptains.map(c => {
-            const hasVin = c.vin && STRICT_VIN_REGEX.test(c.vin.trim());
+            const hasVin = c.vin && VIN_REGEX.test(c.vin.trim());
             return `
                 <tr>
                     <td><strong>${escapeHtml(c.fullName)}</strong></td>
@@ -2132,8 +2141,8 @@
                 const tbody = document.getElementById('hubMembersTableBody');
 
                 tbody.innerHTML = hubCurrentMembers.map(m => {
-                    const hasVin = m.vin && STRICT_VIN_REGEX.test(m.vin.trim());
-                    const hasPvc = m.hasPvc || m.receivedBursary;
+                    const hasVin = m.vin && VIN_REGEX.test(m.vin.trim());
+                    const hasPvc = m.hasPvc === true;
                     return `
                         <tr>
                             <td><strong>${escapeHtml(m.fullName)}</strong></td>
@@ -2182,7 +2191,7 @@
             'Course of Study': s.course || '',
             'Phone Number': s.phone || '',
             'Email Address': s.email || '',
-            'Has PVC?': (s.hasPvc || s.receivedBursary) ? 'Yes' : 'No',
+            'Has PVC?': s.hasPvc === true ? 'Yes' : 'No',
             'Voter ID (VIN)': s.vin || '',
             'Assigned Coupon Code': s.couponCode || '',
             'Used Referral Code': s.usedCouponCode || '',
@@ -2239,7 +2248,7 @@
             'Course of Study': s.course || '',
             'Phone Number': s.phone || '',
             'Email Address': s.email || '',
-            'Has PVC?': (s.hasPvc || s.receivedBursary) ? 'Yes' : 'No',
+            'Has PVC?': s.hasPvc === true ? 'Yes' : 'No',
             'Voter ID (VIN)': s.vin || '',
             'Assigned Coupon Code': s.couponCode || '',
             'Used Referral Code': s.usedCouponCode || '',
@@ -2295,14 +2304,16 @@
         document.getElementById('editInstitution').value = student.institution || 'UNILAG';
         document.getElementById('editCourse').value = student.course || '';
         document.getElementById('editCouponCode').value = student.couponCode || '';
-        document.getElementById('editHasPvc').value = (student.hasPvc || student.receivedBursary) ? 'Yes' : 'No';
+        document.getElementById('editHasPvc').value = student.hasPvc ? 'Yes' : 'No';
         document.getElementById('editGender').value = student.gender || 'Male';
         document.getElementById('editStateOrigin').value = student.stateOrigin || '';
         document.getElementById('editLgaOrigin').value = student.lgaOrigin || '';
 
         const vinInput = document.getElementById('editVin');
-        vinInput.value = student.vin || '';
-        document.getElementById('editVinCharCount').textContent = `(${vinInput.value.length}/18)`;
+        vinInput.value = (student.vin || '').toString().trim().toUpperCase();
+        document.getElementById('editVinCharCount').textContent = `(${vinInput.value.length}/20)`;
+        document.getElementById('editVinError').style.display = 'none';
+        vinInput.classList.remove('input-error');
 
         document.getElementById('editModalTitle').innerHTML = `<i class="fas fa-user-edit"></i> Edit ${escapeHtml(student.volunteerPost || 'Record')}`;
         document.getElementById('editModalStatusMsg').style.display = 'none';
@@ -2314,11 +2325,58 @@
         document.getElementById('editModal').classList.remove('active');
     }
 
-    // Modal VIN input formatter
+    // VIN validation / formatter for the edit modal
     const editVinInput = document.getElementById('editVin');
-    editVinInput.addEventListener('input', function() {
-        this.value = this.value.toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 20);
-        document.getElementById('editVinCharCount').textContent = `(${this.value.length}/20)`;
+    const editVinError = document.getElementById('editVinError');
+    const editVinCharCount = document.getElementById('editVinCharCount');
+
+    function validateEditVin(showError = true) {
+        const value = editVinInput.value.trim().toUpperCase();
+        editVinInput.value = value;
+        editVinCharCount.textContent = `(${value.length}/20)`;
+
+        if (value === '') {
+            editVinError.style.display = 'none';
+            editVinInput.classList.remove('input-error');
+            return true;
+        }
+
+        let message = '';
+
+        if (value.length < 17) {
+            message = `VIN is too short. It must be 17–20 characters. (${value.length}/20)`;
+        } else if (value.length > 20) {
+            message = 'VIN is too long. It must be 17–20 characters.';
+        } else if (!/^[A-Z0-9]+$/.test(value)) {
+            message = 'VIN can only contain letters (A–Z) and numbers (0–9).';
+        }
+
+        if (message) {
+            if (showError) editVinError.textContent = message;
+            editVinError.style.display = 'block';
+            editVinInput.classList.add('input-error');
+            return false;
+        }
+
+        editVinError.style.display = 'none';
+        editVinInput.classList.remove('input-error');
+        return true;
+    }
+
+    editVinInput.addEventListener('input', function () {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 20);
+        editVinCharCount.textContent = `(${this.value.length}/20)`;
+
+        if (this.value.length > 0) {
+            validateEditVin(true);
+        } else {
+            editVinError.style.display = 'none';
+            this.classList.remove('input-error');
+        }
+    });
+
+    editVinInput.addEventListener('blur', function () {
+        validateEditVin(true);
     });
 
     // Save Edit Form
@@ -2337,18 +2395,30 @@
         const gender = document.getElementById('editGender').value;
         const stateOrigin = document.getElementById('editStateOrigin').value.trim();
         const lgaOrigin = document.getElementById('editLgaOrigin').value.trim();
-        const vin = document.getElementById('editVin').value.trim().toUpperCase();
+        const vin = editVinInput.value.trim().toUpperCase();
 
         const msgDiv = document.getElementById('editModalStatusMsg');
         msgDiv.style.display = 'none';
 
-        // Validate VIN if entered
-        if (vin !== '') {
-            if (!STRICT_VIN_REGEX.test(vin)) {
-                msgDiv.className = 'modal-msg error';
-                msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid VIN. Accepted: INC26000000044392309 (20 chars) or 90F5B126FC515580873 (19 chars).';
-                return;
-            }
+        if (hasPvcChoice === 'Yes' && !vin) {
+            editVinError.textContent = 'VIN is required when PVC is Yes.';
+            editVinError.style.display = 'block';
+            editVinInput.classList.add('input-error');
+            msgDiv.className = 'modal-msg error';
+            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter the Voter Identification Number (VIN).';
+            editVinInput.focus();
+            return;
+        }
+
+        if (vin && !validateEditVin(true)) {
+            msgDiv.className = 'modal-msg error';
+            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please correct the VIN before saving.';
+            editVinInput.focus();
+            return;
+        }
+
+        if (hasPvcChoice === 'No') {
+            editVinInput.value = '';
         }
 
         const saveBtn = document.getElementById('saveEditBtn');
@@ -2372,22 +2442,18 @@
                     course,
                     couponCode: couponCode || undefined,
                     hasPvc: hasPvcChoice === 'Yes',
-                    receivedBursary: hasPvcChoice === 'Yes',
                     gender,
                     stateOrigin,
                     lgaOrigin,
-                    vin: vin || ''
+                    vin: hasPvcChoice === 'Yes' ? vin : ''
                 })
             });
 
             const data = await res.json();
 
             if (res.ok && data.success) {
-                // Update local array
                 const idx = allStudents.findIndex(s => s._id === id);
-                if (idx !== -1) {
-                    allStudents[idx] = data.data;
-                }
+                if (idx !== -1) allStudents[idx] = data.data;
 
                 updateDashboardStats();
                 renderAllTables();
@@ -2395,9 +2461,7 @@
                 msgDiv.className = 'modal-msg success';
                 msgDiv.innerHTML = '<i class="fas fa-check-circle"></i> Record updated successfully!';
 
-                setTimeout(() => {
-                    closeEditModal();
-                }, 800);
+                setTimeout(() => closeEditModal(), 800);
             } else {
                 msgDiv.className = 'modal-msg error';
                 msgDiv.innerHTML = `<i class="fas fa-times-circle"></i> ${data.message || 'Failed to update record.'}`;
@@ -2549,7 +2613,7 @@
         const gender = document.getElementById('regGender').value;
         const dob = document.getElementById('regDob').value;
         const institution = document.getElementById('regInstitution').value;
-        const course = document.getElementById('regCourse').value.trim();
+        // const course = document.getElementById('regCourse').value.trim();
         const stateOrigin = document.getElementById('regStateOrigin').value.trim();
         const lgaOrigin = document.getElementById('regLgaOrigin').value.trim();
         const stateResidence = document.getElementById('regStateResidence').value.trim();
@@ -2563,7 +2627,7 @@
             gender,
             dob,
             institution,
-            course,
+            // course,
             stateOrigin,
             lgaOrigin,
             stateResidence,

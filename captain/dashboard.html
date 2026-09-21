@@ -1061,6 +1061,11 @@
 
     const STRICT_VIN_REGEX = /^[A-Z0-9]{17,20}$/;
 
+function isValidVin(v) {
+    if (!v || v.trim() === "") return true;
+    return STRICT_VIN_REGEX.test(v.trim().toUpperCase());
+}
+
     let currentCaptain = null;
     let membersList = [];
     let displayedMembers = [];
@@ -1350,12 +1355,13 @@
         msgDiv.style.display = 'none';
 
         // Validate VIN if entered
-        if (vin !== '') {
-            if (!STRICT_VIN_REGEX.test(vin)) {
-                msgDiv.className = 'modal-msg error';
-                msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid VIN. Accepted: INC26000000044392309 or 90F5B126FC515580873.';
-                return;
-            }
+       if (!isValidVin(vin)) {
+            msgDiv.className = 'modal-msg error';
+            msgDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                VIN must contain only letters and numbers and be between 17 and 20 characters.
+            `;
+            return;
         }
 
         const saveBtn = document.getElementById('saveMemberBtn');
