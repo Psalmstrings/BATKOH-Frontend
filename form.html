@@ -1185,7 +1185,7 @@
                 <!-- =================================================
                      COURSE
                 ================================================== -->
-
+<!-- 
                 <div class="form-group">
 
                     <label for="course">
@@ -1212,7 +1212,7 @@
                         Course is required.
                     </div>
 
-                </div>
+                </div> -->
 
 
                 <!-- =================================================
@@ -1938,8 +1938,6 @@
 
             "stateResidence",
 
-            "course"
-
         ];
 
 
@@ -2106,9 +2104,10 @@
         /* -----------------------------------------------------
            VIN (CASE SENSITIVE STRICT REGEX: 19 ALPHANUMERIC)
         ----------------------------------------------------- */
-        const STRICT_VIN_REGEX = /^(INC[0-9]{17}|[0-9]{2}[A-Z][0-9]B[0-9]{3}[A-Z]{2}[0-9]{9})$/;
+      const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
+
         if (pvcChoice === "Yes") {
-            if (!data.vin || !STRICT_VIN_REGEX.test(data.vin.trim())) {
+            if (!data.vin || !VIN_REGEX.test(data.vin.trim().toUpperCase())) {
                 showError("vinError", true);
                 markError("vin", true);
                 valid = false;
@@ -2213,13 +2212,7 @@
                     )
                     .value,
 
-            course:
-                document
-                    .getElementById(
-                        "course"
-                    )
-                    .value
-                    .trim(),
+          
 
             volunteerPost:
                 document
