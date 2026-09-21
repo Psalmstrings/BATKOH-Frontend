@@ -925,6 +925,7 @@
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Institution</th>
+                        <th>Course</th>
                         <th>PVC?</th>
                         <th>Voter ID (VIN)</th>
                         <th>Date</th>
@@ -1017,6 +1018,26 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="editStateOfRegistration">State of Registration</label>
+                    <input type="text" id="editStateOfRegistration" placeholder="e.g. Lagos">
+                </div>
+
+                <div class="form-group">
+                    <label for="editLgaOfRegistration">LGA of Registration</label>
+                    <input type="text" id="editLgaOfRegistration" placeholder="e.g. Ikeja">
+                </div>
+
+                <div class="form-group">
+                    <label for="editStateResidence">State of Residence</label>
+                    <input type="text" id="editStateResidence" placeholder="e.g. Lagos">
+                </div>
+
+                <div class="form-group full-span">
+                    <label for="editAddress">Residential Address</label>
+                    <input type="text" id="editAddress" placeholder="e.g. 15 University Rd, Akoka">
+                </div>
+
                 <!-- Strict VIN Input with Live Counter -->
                 <div class="form-group full-span">
                     <label for="editVin">
@@ -1060,11 +1081,6 @@
         : 'https://batkoh-backend.onrender.com/api';
 
     const STRICT_VIN_REGEX = /^[A-Z0-9]{17,20}$/;
-
-function isValidVin(v) {
-    if (!v || v.trim() === "") return true;
-    return STRICT_VIN_REGEX.test(v.trim().toUpperCase());
-}
 
     let currentCaptain = null;
     let membersList = [];
@@ -1303,6 +1319,11 @@ function isValidVin(v) {
         document.getElementById('captainCouponDisplay').textContent = currentCaptain.couponCode || '---';
     }
 
+    function isValidVin(v) {
+        if (!v || v.trim() === "") return true;
+        return STRICT_VIN_REGEX.test(v.trim().toUpperCase());
+    }
+
     // Modal Operations (Edit & Fill VIN)
     window.openEditModal = function(memberId) {
         const member = membersList.find(m => m._id === memberId);
@@ -1316,6 +1337,10 @@ function isValidVin(v) {
         document.getElementById('editCourse').value = member.course || '';
         document.getElementById('editHasPvc').value = (member.hasPvc || member.receivedBursary) ? 'Yes' : 'No';
         document.getElementById('editGender').value = member.gender || 'Male';
+        document.getElementById('editStateOfRegistration').value = member.stateOfRegistration || member.stateOrigin || '';
+        document.getElementById('editLgaOfRegistration').value = member.lgaOfRegistration || member.lgaOrigin || '';
+        document.getElementById('editStateResidence').value = member.stateResidence || '';
+        document.getElementById('editAddress').value = member.address || '';
 
         const vinInput = document.getElementById('editVin');
         vinInput.value = member.vin || '';
@@ -1349,13 +1374,23 @@ function isValidVin(v) {
         const course = document.getElementById('editCourse').value.trim();
         const hasPvcChoice = document.getElementById('editHasPvc').value;
         const gender = document.getElementById('editGender').value;
+        const stateOfRegistration = document.getElementById('editStateOfRegistration').value.trim();
+        const lgaOfRegistration = document.getElementById('editLgaOfRegistration').value.trim();
+        const stateResidence = document.getElementById('editStateResidence').value.trim();
+        const address = document.getElementById('editAddress').value.trim();
         const vin = document.getElementById('editVin').value.trim().toUpperCase();
 
         const msgDiv = document.getElementById('modalStatusMsg');
         msgDiv.style.display = 'none';
 
+        if (hasPvcChoice === 'Yes' && !vin) {
+            msgDiv.className = 'modal-msg error';
+            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> VIN is required when member has a PVC.';
+            return;
+        }
+
         // Validate VIN if entered
-       if (!isValidVin(vin)) {
+        if (vin && !isValidVin(vin)) {
             msgDiv.className = 'modal-msg error';
             msgDiv.innerHTML = `
                 <i class="fas fa-exclamation-circle"></i>
@@ -1379,11 +1414,16 @@ function isValidVin(v) {
                 body: JSON.stringify({
                     fullName,
                     phone,
+                    course,
                     institution,
+                    stateOfRegistration,
+                    lgaOfRegistration,
+                    stateResidence,
+                    address,
                     hasPvc: hasPvcChoice === 'Yes',
                     receivedBursary: hasPvcChoice === 'Yes',
                     gender,
-                    vin: vin || ''
+                    vin: hasPvcChoice === 'Yes' ? vin : (vin || '')
                 })
             });
 
@@ -1431,8 +1471,12 @@ function isValidVin(v) {
             'Phone Number': m.phone || '',
             'Email Address': m.email || '',
             'Institution': m.institution || '',
-            // 'Course of Study': m.course || '',
+            'Course of Study': m.course || '',
             'Gender': m.gender || '',
+            'State of Registration': m.stateOfRegistration || m.stateOrigin || '',
+            'LGA of Registration': m.lgaOfRegistration || m.lgaOrigin || '',
+            'State of Residence': m.stateResidence || '',
+            'Residential Address': m.address || '',
             'Has PVC?': (m.hasPvc || m.receivedBursary) ? 'Yes' : 'No',
             'Voter ID (VIN)': m.vin || '',
             'Coupon Code Used': m.usedCouponCode || '',
@@ -1448,8 +1492,12 @@ function isValidVin(v) {
             { wch: 16 }, // Phone
             { wch: 26 }, // Email
             { wch: 16 }, // Institution
-            // { wch: 22 }, // Course
+            { wch: 22 }, // Course
             { wch: 10 }, // Gender
+            { wch: 20 }, // State of Registration
+            { wch: 20 }, // LGA of Registration
+            { wch: 18 }, // State of Residence
+            { wch: 30 }, // Residential Address
             { wch: 10 }, // Has PVC
             { wch: 22 }, // VIN
             { wch: 18 }, // Coupon

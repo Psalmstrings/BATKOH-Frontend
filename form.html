@@ -973,14 +973,13 @@
 
                 </div>
 
-
                 <!-- =================================================
                      LGA
                 ================================================== -->
 
                 <div class="form-group">
 
-                    <label for="lgaOrigin">
+                    <label for="lgaOfRegistration">
 
                         <i class="fas fa-map-marker-alt"></i>
 
@@ -992,14 +991,14 @@
 
                     <input
                         type="text"
-                        id="lgaOrigin"
-                        name="lgaOrigin"
+                        id="lgaOfRegistration"
+                        name="lgaOfRegistration"
                         placeholder="Local Government Area"
                     >
 
                     <div
                         class="error-message"
-                        id="lgaOriginError"
+                        id="lgaOfRegistrationError"
                     >
                         LGA of registration is required.
                     </div>
@@ -1008,12 +1007,12 @@
 
 
                 <!-- =================================================
-                     STATE OF ORIGIN
+                     STATE OF REGISTRATION
                 ================================================== -->
 
                 <div class="form-group">
 
-                    <label for="stateOrigin">
+                    <label for="stateOfRegistration">
 
                         <i class="fas fa-flag"></i>
 
@@ -1025,14 +1024,14 @@
 
                     <input
                         type="text"
-                        id="stateOrigin"
-                        name="stateOrigin"
+                        id="stateOfRegistration"
+                        name="stateOfRegistration"
                         placeholder="e.g., Lagos"
                     >
 
                     <div
                         class="error-message"
-                        id="stateOriginError"
+                        id="stateOfRegistrationError"
                     >
                         State of Registration is required.
                     </div>
@@ -1929,9 +1928,9 @@
 
         const requiredFields = [
 
-            "lgaOrigin",
+            "lgaOfRegistration",
 
-            "stateOrigin",
+            "stateOfRegistration",
 
             "address",
 
@@ -2172,18 +2171,18 @@
                     .value
                     .trim(),
 
-            lgaOrigin:
+            lgaOfRegistration:
                 document
                     .getElementById(
-                        "lgaOrigin"
+                        "lgaOfRegistration"
                     )
                     .value
                     .trim(),
 
-            stateOrigin:
+            stateOfRegistration:
                 document
                     .getElementById(
-                        "stateOrigin"
+                        "stateOfRegistration"
                     )
                     .value
                     .trim(),
@@ -2764,9 +2763,9 @@
 
         "phone",
 
-        "lgaOrigin",
+        "lgaOfRegistration",
 
-        "stateOrigin",
+        "stateOfRegistration",
 
         "address",
 
