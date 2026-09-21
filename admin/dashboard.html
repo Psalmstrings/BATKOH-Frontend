@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PBAT–KOH TEMA | Admin Portal & Dashboard</title>
+    <title>PBATâ€“KOH TEMA | Admin Portal & Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="shortcut icon" href="../media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg" type="image/x-icon">
@@ -938,7 +938,7 @@
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
         <div class="brand-text">
-            <h2>PBAT–KOH <span>TEMA</span></h2>
+            <h2>PBATâ€“KOH <span>TEMA</span></h2>
             <p>Tertiary Education Mobilisation Alliance</p>
         </div>
     </div>
@@ -1466,14 +1466,6 @@
                 </div>
 
                 <div class="modal-form-group">
-                    <label for="editHasPvc">Do they have PVC?</label>
-                    <select id="editHasPvc">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-
-                <div class="modal-form-group">
                     <label for="editGender">Gender</label>
                     <select id="editGender">
                         <option value="Male">Male</option>
@@ -1492,11 +1484,6 @@
                     <input type="text" id="editLgaOfRegistration">
                 </div>
 
-                <div class="modal-form-group">
-                    <label for="editStateResidence">State of Residence</label>
-                    <input type="text" id="editStateResidence">
-                </div>
-
                 <div class="modal-form-group full-col">
                     <label for="editAddress">Residential Address</label>
                     <input type="text" id="editAddress">
@@ -1504,7 +1491,7 @@
 
                 <div class="modal-form-group full-col">
                     <label for="editVin">
-                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN)
+                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN) *
                         <span id="editVinCharCount" style="color:var(--text-muted); font-weight:normal; margin-left:6px;">(0/20)</span>
                     </label>
                     <input
@@ -1513,13 +1500,14 @@
                         class="vin-input-highlight"
                         maxlength="20"
                         minlength="17"
-                        placeholder="Enter 17–20 character VIN"
+                        placeholder="Enter 17â€“20 character VIN"
+                        required
                     >
                     <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:3px;">
-                        VIN must contain only letters and numbers and be 17–20 characters.
+                        VIN is required. Must be 17â€“20 alphanumeric characters.
                     </small>
                     <div id="editVinError" class="error-message" style="display:none; color:#dc2626; font-size:0.78rem; margin-top:5px;">
-                        Invalid VIN. VIN must contain only letters and numbers and be 17–20 characters.
+                        VIN is required and must be 17â€“20 letters and numbers only.
                     </div>
                 </div>
             </div>
@@ -1630,18 +1618,13 @@
                 </div>
 
                 <div class="modal-form-group">
-                    <label for="regStateResidence">State of Residence *</label>
-                    <input type="text" id="regStateResidence" placeholder="e.g. Lagos" required>
-                </div>
-
-                <div class="modal-form-group">
                     <label for="regAddress">Residential Address *</label>
                     <input type="text" id="regAddress" placeholder="e.g. 15 University Rd, Akoka" required>
                 </div>
 
                 <div class="modal-form-group full-col">
                     <label for="regUsedCouponCode" style="color:var(--text-muted);">
-                        Campus Coordinator Coupon Code (Optional — No code needed to register)
+                        Campus Coordinator Coupon Code (Optional â€” No code needed to register)
                     </label>
                     <input type="text" id="regUsedCouponCode" placeholder="Leave blank if registering directly without code">
                     <small style="color:var(--text-muted); font-size:0.78rem;">
@@ -1693,7 +1676,7 @@
     let hubCurrentReferrer = null;
     let recordToDeleteId = null;
 
-    // ── Toast Notification Utility ──────────────────────────────────────────
+    // â”€â”€ Toast Notification Utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function showToast(message, type = 'info') {
         let container = document.getElementById('toastContainer');
         if (!container) {
@@ -1703,7 +1686,7 @@
             document.body.appendChild(container);
         }
         const colors = { success: '#22c55e', error: '#ef4444', info: '#3b82f6' };
-        const icons  = { success: '✓', error: '✕', info: 'ℹ' };
+        const icons  = { success: 'âœ“', error: 'âœ•', info: 'â„¹' };
         const toast = document.createElement('div');
         toast.style.cssText = `
             background:${colors[type] || colors.info};color:#fff;padding:14px 20px;
@@ -1737,7 +1720,7 @@
 
     // Escape HTML Helper
     function escapeHtml(str) {
-        if (!str) return '—';
+        if (!str) return 'â€”';
         return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
     }
 
@@ -1785,7 +1768,7 @@
             });
 
             if (res.status === 401 || res.status === 403) {
-                // Session expired or invalid token — show message then redirect
+                // Session expired or invalid token â€” show message then redirect
                 showToast('Session expired. Please log in again.', 'error');
                 setTimeout(() => {
                     localStorage.removeItem('adminToken');
@@ -1936,7 +1919,7 @@
                     <td>${escapeHtml(s.institution)}</td>
                     <td>${escapeHtml(s.phone)}</td>
                     <td style="font-size:0.83rem;">${escapeHtml(s.email)}</td>
-                    <td>${s.couponCode ? `<span class="badge badge-code">${escapeHtml(s.couponCode)}</span>` : (s.usedCouponCode ? `<span class="badge badge-code" style="color:#64748b;">Ref: ${escapeHtml(s.usedCouponCode)}</span>` : '—')}</td>
+                    <td>${s.couponCode ? `<span class="badge badge-code">${escapeHtml(s.couponCode)}</span>` : (s.usedCouponCode ? `<span class="badge badge-code" style="color:#64748b;">Ref: ${escapeHtml(s.usedCouponCode)}</span>` : 'â€”')}</td>
                     <td>${hasPvc ? '<span style="color:#059669; font-weight:700;">Yes</span>' : '<span style="color:#94a3b8;">No</span>'}</td>
                     <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(s.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
                     <td style="text-align:center;">
@@ -2006,7 +1989,7 @@
                     <td><strong>${escapeHtml(c.fullName)}</strong></td>
                     <td>${escapeHtml(c.institution)}</td>
                     <td><span class="badge badge-code" style="color:#059669;">${escapeHtml(c.couponCode)}</span></td>
-                    <td><span class="badge badge-code" style="color:#64748b;">${escapeHtml(c.usedCouponCode || '—')}</span></td>
+                    <td><span class="badge badge-code" style="color:#64748b;">${escapeHtml(c.usedCouponCode || 'â€”')}</span></td>
                     <td>${escapeHtml(c.phone)}</td>
                     <td style="font-size:0.83rem;">${escapeHtml(c.email)}</td>
                     <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(c.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
@@ -2045,7 +2028,7 @@
                     <td><strong>${escapeHtml(c.fullName)}</strong></td>
                     <td>${escapeHtml(c.institution)}</td>
                     <td><span class="badge badge-code" style="color:#0f766e; font-weight:700;">${escapeHtml(c.couponCode)}</span></td>
-                    <td><span class="badge badge-code" style="color:#64748b;">${escapeHtml(c.usedCouponCode || '—')}</span></td>
+                    <td><span class="badge badge-code" style="color:#64748b;">${escapeHtml(c.usedCouponCode || 'â€”')}</span></td>
                     <td>${escapeHtml(c.phone)}</td>
                     <td style="font-size:0.83rem;">${escapeHtml(c.email)}</td>
                     <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(c.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
@@ -2082,7 +2065,7 @@
                 <td>${escapeHtml(s.phone)}</td>
                 <td style="font-size:0.83rem;">${escapeHtml(s.email)}</td>
                 <td>${escapeHtml(s.institution)}</td>
-                <td>${escapeHtml(s.stateResidence || s.stateOfRegistration || s.stateOrigin)}</td>
+                <td>${escapeHtml(s.stateOfRegistration || s.stateResidence || s.stateOrigin || 'â€”')}</td>
                 <td style="text-align:center;">
                     <div class="action-btns">
                         <button class="btn-table-action btn-edit" title="Edit State Coordinator" onclick="openEditModal('${s._id}')">
@@ -2314,11 +2297,9 @@
         document.getElementById('editInstitution').value = student.institution || 'UNILAG';
         document.getElementById('editCourse').value = student.course || '';
         document.getElementById('editCouponCode').value = student.couponCode || '';
-        document.getElementById('editHasPvc').value = student.hasPvc ? 'Yes' : 'No';
         document.getElementById('editGender').value = student.gender || 'Male';
         document.getElementById('editStateOfRegistration').value = student.stateOfRegistration || '';
         document.getElementById('editLgaOfRegistration').value = student.lgaOfRegistration || '';
-        document.getElementById('editStateResidence').value = student.stateResidence || '';
         document.getElementById('editAddress').value = student.address || '';
 
         const vinInput = document.getElementById('editVin');
@@ -2356,11 +2337,11 @@
         let message = '';
 
         if (value.length < 17) {
-            message = `VIN is too short. It must be 17–20 characters. (${value.length}/20)`;
+            message = `VIN is too short. It must be 17â€“20 characters. (${value.length}/20)`;
         } else if (value.length > 20) {
-            message = 'VIN is too long. It must be 17–20 characters.';
+            message = 'VIN is too long. It must be 17â€“20 characters.';
         } else if (!/^[A-Z0-9]+$/.test(value)) {
-            message = 'VIN can only contain letters (A–Z) and numbers (0–9).';
+            message = 'VIN can only contain letters (Aâ€“Z) and numbers (0â€“9).';
         }
 
         if (message) {
@@ -2403,36 +2384,21 @@
         const institution = document.getElementById('editInstitution').value;
         const course = document.getElementById('editCourse').value.trim();
         const couponCode = document.getElementById('editCouponCode').value.trim().toUpperCase();
-        const hasPvcChoice = document.getElementById('editHasPvc').value;
         const gender = document.getElementById('editGender').value;
         const stateOfRegistration = document.getElementById('editStateOfRegistration').value.trim();
         const lgaOfRegistration = document.getElementById('editLgaOfRegistration').value.trim();
-        const stateResidence = document.getElementById('editStateResidence').value.trim();
         const address = document.getElementById('editAddress').value.trim();
         const vin = editVinInput.value.trim().toUpperCase();
 
         const msgDiv = document.getElementById('editModalStatusMsg');
         msgDiv.style.display = 'none';
 
-        if (hasPvcChoice === 'Yes' && !vin) {
-            editVinError.textContent = 'VIN is required when PVC is Yes.';
-            editVinError.style.display = 'block';
-            editVinInput.classList.add('input-error');
-            msgDiv.className = 'modal-msg error';
-            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter the Voter Identification Number (VIN).';
-            editVinInput.focus();
-            return;
-        }
-
         if (vin && !validateEditVin(true)) {
+            msgDiv.style.display = 'block';
             msgDiv.className = 'modal-msg error';
-            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please correct the VIN before saving.';
+            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter a valid VIN (17â€“20 letters and numbers).';
             editVinInput.focus();
             return;
-        }
-
-        if (hasPvcChoice === 'No') {
-            editVinInput.value = '';
         }
 
         const saveBtn = document.getElementById('saveEditBtn');
@@ -2455,13 +2421,11 @@
                     institution,
                     course,
                     couponCode: couponCode || undefined,
-                    hasPvc: hasPvcChoice === 'Yes',
                     gender,
                     stateOfRegistration,
                     lgaOfRegistration,
-                    stateResidence,
                     address,
-                    vin: hasPvcChoice === 'Yes' ? vin : ''
+                    vin: vin || ''
                 })
             });
 
@@ -2474,17 +2438,24 @@
                 updateDashboardStats();
                 renderAllTables();
 
+                msgDiv.style.display = 'block';
                 msgDiv.className = 'modal-msg success';
                 msgDiv.innerHTML = '<i class="fas fa-check-circle"></i> Record updated successfully!';
+                showToast('Record updated successfully!', 'success');
 
-                setTimeout(() => closeEditModal(), 800);
+                setTimeout(() => closeEditModal(), 1200);
             } else {
+                const errorText = data.message || data.error || (data.errors ? Object.values(data.errors).map(e => e.message).join(', ') : 'Failed to update record.');
+                msgDiv.style.display = 'block';
                 msgDiv.className = 'modal-msg error';
-                msgDiv.innerHTML = `<i class="fas fa-times-circle"></i> ${data.message || 'Failed to update record.'}`;
+                msgDiv.innerHTML = `<i class="fas fa-times-circle"></i> ${escapeHtml(errorText)}`;
+                showToast(errorText, 'error');
             }
         } catch (error) {
+            msgDiv.style.display = 'block';
             msgDiv.className = 'modal-msg error';
-            msgDiv.innerHTML = '<i class="fas fa-plug"></i> Network or server error.';
+            msgDiv.innerHTML = `<i class="fas fa-plug"></i> Network or server error: ${escapeHtml(error.message || 'Unable to connect')}`;
+            showToast('Network or server error.', 'error');
         } finally {
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
@@ -2631,7 +2602,6 @@
         const institution = document.getElementById('regInstitution').value;
         const stateOfRegistration = document.getElementById('regStateOfRegistration').value.trim();
         const lgaOfRegistration = document.getElementById('regLgaOfRegistration').value.trim();
-        const stateResidence = document.getElementById('regStateResidence').value.trim();
         const address = document.getElementById('regAddress').value.trim();
         const usedCouponCode = document.getElementById('regUsedCouponCode').value.trim();
 
@@ -2644,7 +2614,6 @@
             institution,
             stateOfRegistration,
             lgaOfRegistration,
-            stateResidence,
             address,
             volunteerPost: role
         };
@@ -2679,14 +2648,17 @@
                 document.getElementById('displayGeneratedCode').textContent = result.data.couponCode || 'GENERATED';
                 document.getElementById('regSuccessCodeBox').style.display = 'block';
             } else {
+                const errorText = result.message || result.error || result.msg || 'Failed to register captain.';
                 msgDiv.className = 'modal-msg error';
-                msgDiv.textContent = result.message || result.error || 'Failed to register captain.';
+                msgDiv.textContent = errorText;
                 msgDiv.style.display = 'block';
+                showToast(errorText, 'error');
             }
         } catch (err) {
             msgDiv.className = 'modal-msg error';
             msgDiv.textContent = 'Network error: Failed to connect to server.';
             msgDiv.style.display = 'block';
+            showToast('Network error: Failed to connect to server.', 'error');
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-check-circle"></i> Register Captain';

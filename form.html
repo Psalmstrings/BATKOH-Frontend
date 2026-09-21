@@ -1072,39 +1072,6 @@
 
 
                 <!-- =================================================
-                     STATE OF RESIDENCE
-                ================================================== -->
-
-                <div class="form-group">
-
-                    <label for="stateResidence">
-
-                        <i class="fas fa-city"></i>
-
-                        State of Residence
-
-                        <span class="required-star">*</span>
-
-                    </label>
-
-                    <input
-                        type="text"
-                        id="stateResidence"
-                        name="stateResidence"
-                        placeholder="Current state of residence"
-                    >
-
-                    <div
-                        class="error-message"
-                        id="stateResidenceError"
-                    >
-                        State of Residence is required.
-                    </div>
-
-                </div>
-
-
-                <!-- =================================================
                      INSTITUTION
                 ================================================== -->
 
@@ -1182,39 +1149,6 @@
 
 
                 <!-- =================================================
-                     COURSE
-                ================================================== -->
-<!-- 
-                <div class="form-group">
-
-                    <label for="course">
-
-                        <i class="fas fa-book-open"></i>
-
-                        Course of Study
-
-                        <span class="required-star">*</span>
-
-                    </label>
-
-                    <input
-                        type="text"
-                        id="course"
-                        name="course"
-                        placeholder="e.g., Computer Science"
-                    >
-
-                    <div
-                        class="error-message"
-                        id="courseError"
-                    >
-                        Course is required.
-                    </div>
-
-                </div> -->
-
-
-                <!-- =================================================
                      VOLUNTEER POSITION
                 ================================================== -->
 
@@ -1238,26 +1172,6 @@
                         <option value="">
                             -- Select an Option --
                         </option>
-
-                        <!-- <option value="Director">
-                            Director
-                        </option>
-
-                        <option value="State Coordinator">
-                            State Coordinator
-                        </option> -->
-
-                        <!-- <option value="Deputy Coordinator">
-                            Deputy Coordinator
-                        </option> -->
-
-                        <!-- <option value="State Working Committee">
-                            State Working Committee
-                        </option>
-
-                        <option value="Campus Coordinators">
-                            Campus Coordinator
-                        </option> -->
 
                         <option value="Student">
                             Student
@@ -1325,32 +1239,13 @@
 
 
                 <!-- =================================================
-                     PVC FIELD (DROPDOWN: YES / NO)
-                ================================================== -->
-                <div class="form-group">
-                    <label for="hasPvc">
-                        <i class="fas fa-id-card"></i>
-                        Do you have Permanent Voter's Card (PVC)?
-                        <span class="required-star">*</span>
-                    </label>
-                    <select id="hasPvc" name="hasPvc">
-                        <option value="">-- Select Option --</option>
-                        <option value="Yes">Yes</option>
-                    </select>
-                    <div class="error-message" id="hasPvcError">
-                        Please indicate whether you have a Permanent Voter's Card.
-                    </div>
-                </div>
-
-                <!-- =================================================
                      VIN (VOTER IDENTIFICATION NUMBER)
-                     Dynamic: Visible only when PVC is "Yes"
+                     Required 17–20 alphanumeric characters
                 ================================================== -->
-                <div class="form-group" id="vinSection" style="display: none;">
+                <div class="form-group" id="vinSection">
                     <label for="vin">
                         <i class="fas fa-barcode"></i>
-                        Voter Identification Number (VIN)
-                        <span class="required-star">*</span>
+                        Voter Identification Number (VIN) *
                         <span id="vinCharCount" style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-left: 6px;">(0/20)</span>
                     </label>
                     <input
@@ -1358,12 +1253,16 @@
                         id="vin"
                         name="vin"
                         maxlength="20"
-                        placeholder="e.g. INC26000000044392309 or 90F5B126FC515580873"
+                        placeholder="Enter 17–20 character VIN"
                         autocomplete="off"
+                        required
                         style="text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;"
                     >
+                    <small style="color: var(--text-muted); font-size: 0.78rem; display: block; margin-top: 4px;">
+                        Enter your valid 17–20 alphanumeric Permanent Voter's Card (PVC) VIN.
+                    </small>
                     <div class="error-message" id="vinError">
-                        Please enter a valid VIN (e.g. INC26000000044392309 or 90F5B126FC515580873).
+                        Voter Identification Number (VIN) is required and must be 17–20 letters and numbers.
                     </div>
                 </div>
 
@@ -1450,9 +1349,6 @@
     const couponInfo =
         document.getElementById("couponInfo");
 
-    const hasPvcSelect =
-        document.getElementById("hasPvc");
-
     const vinSection =
         document.getElementById("vinSection");
 
@@ -1532,28 +1428,27 @@
 
 
             /* -------------------------------------------------
-               CAMPUS CAPTAIN
+               STUDENT -> CAMPUS CAPTAIN CODE
             ------------------------------------------------- */
 
-            if (
-                position === "Student" || position === "Staff"
-            ) {
+            if (position === "Student") {
+                couponSection.style.display = "block";
+                usedCouponCode.required = true;
+                couponLabel.textContent = "Campus Captain Coupon Code";
+                couponInfo.textContent = "Enter the coupon code provided by your Campus Captain.";
+                usedCouponCode.placeholder = "Example: PGD-1234 or JOHN482";
+            }
 
-                couponSection.style.display =
-                    "block";
+            /* -------------------------------------------------
+               STAFF -> STAFF CAPTAIN CODE
+            ------------------------------------------------- */
 
-                usedCouponCode.required =
-                    true;
-
-                couponLabel.textContent =
-                    "Campus Captain Coupon Code";
-
-                couponInfo.textContent =
-                    "Enter the coupon code provided by your Campus Captain.";
-
-                usedCouponCode.placeholder =
-                    "Example: PGD-1234";
-
+            else if (position === "Staff") {
+                couponSection.style.display = "block";
+                usedCouponCode.required = true;
+                couponLabel.textContent = "Staff Captain Coupon Code";
+                couponInfo.textContent = "Enter the coupon code provided by your Staff Captain (e.g. STAFF-1234).";
+                usedCouponCode.placeholder = "Example: STAFF-1234";
             }
 
 
@@ -1591,24 +1486,8 @@
 
 
     /* =========================================================
-       PVC & VIN DYNAMIC DISPLAY & REAL-TIME VALIDATION
+       VIN REAL-TIME FORMATTING & COUNTER
     ========================================================= */
-
-    if (hasPvcSelect) {
-        hasPvcSelect.addEventListener("change", function () {
-            clearError("hasPvc");
-            if (this.value === "Yes") {
-                vinSection.style.display = "block";
-                vinInput.required = true;
-            } else {
-                vinSection.style.display = "none";
-                vinInput.required = false;
-                vinInput.value = "";
-                if (vinCharCount) vinCharCount.textContent = "(0/20)";
-                clearError("vin");
-            }
-        });
-    }
 
     if (vinInput) {
         vinInput.addEventListener("input", function () {
@@ -1617,11 +1496,10 @@
             if (vinCharCount) {
                 vinCharCount.textContent = `(${this.value.length}/20)`;
             }
-            if (this.value.length >= 19) {
+            if (this.value.length >= 17) {
                 clearError("vin");
             }
         });
-
     }
 
 
@@ -1934,8 +1812,6 @@
 
             "address",
 
-            "stateResidence",
-
         ];
 
 
@@ -2086,32 +1962,29 @@
 
 
         /* -----------------------------------------------------
-           PVC SELECTION (DROPDOWN YES / NO)
+           VIN (REQUIRED: 17–20 ALPHANUMERIC CHARACTERS)
         ----------------------------------------------------- */
-        const pvcChoice = document.getElementById("hasPvc")?.value || "";
-        if (pvcChoice !== "Yes" && pvcChoice !== "No") {
-            showError("hasPvcError", true);
-            markError("hasPvc", true);
+        const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
+        const vinVal = (data.vin || "").trim().toUpperCase();
+
+        if (!vinVal || vinVal === "") {
+            const vinErrorEl = document.getElementById("vinError");
+            if (vinErrorEl) {
+                vinErrorEl.textContent = "Voter Identification Number (VIN) is required.";
+            }
+            showError("vinError", true);
+            markError("vin", true);
+            valid = false;
+        } else if (!VIN_REGEX.test(vinVal)) {
+            const vinErrorEl = document.getElementById("vinError");
+            if (vinErrorEl) {
+                vinErrorEl.textContent = "VIN must contain only letters and numbers and be between 17 and 20 characters.";
+            }
+            showError("vinError", true);
+            markError("vin", true);
             valid = false;
         } else {
-            clearError("hasPvc");
-        }
-
-
-
-        /* -----------------------------------------------------
-           VIN (CASE SENSITIVE STRICT REGEX: 19 ALPHANUMERIC)
-        ----------------------------------------------------- */
-      const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
-
-        if (pvcChoice === "Yes") {
-            if (!data.vin || !VIN_REGEX.test(data.vin.trim().toUpperCase())) {
-                showError("vinError", true);
-                markError("vin", true);
-                valid = false;
-            } else {
-                clearError("vin");
-            }
+            clearError("vin");
         }
 
 
@@ -2126,9 +1999,8 @@
 
     function gatherFormData() {
 
-        const pvcEl = document.getElementById("hasPvc");
-        const pvcChoice = pvcEl ? pvcEl.value : "";
         const vinEl = document.getElementById("vin");
+        const cleanVin = vinEl ? vinEl.value.trim().toUpperCase() : "";
 
         const data = {
 
@@ -2195,22 +2067,12 @@
                     .value
                     .trim(),
 
-            stateResidence:
-                document
-                    .getElementById(
-                        "stateResidence"
-                    )
-                    .value
-                    .trim(),
-
             institution:
                 document
                     .getElementById(
                         "institution"
                     )
                     .value,
-
-          
 
             volunteerPost:
                 document
@@ -2219,9 +2081,9 @@
                     )
                     .value,
 
-            hasPvc: pvcChoice === "Yes",
+            hasPvc: cleanVin.length > 0,
 
-            vin: (pvcChoice === "Yes" && vinEl) ? vinEl.value.trim().toUpperCase() : undefined
+            vin: cleanVin
 
         };
 
@@ -2408,7 +2270,8 @@
                             registeredPosition === "Deputy Coordinator" ||
                             registeredPosition === "State Working Committee" ||
                             registeredPosition === "Campus Coordinators" ||
-                            registeredPosition === "Campus Captains"
+                            registeredPosition === "Campus Captains" ||
+                            registeredPosition === "Staff Captains"
 
                         ) &&
 
@@ -2769,7 +2632,7 @@
 
         "address",
 
-        "stateResidence",
+        "vin",
 
         "course",
 
@@ -2852,6 +2715,24 @@
 
         }
     );
+
+
+    /* =========================================================
+       URL PARAMETER AUTO-POPULATION (?code=... or ?ref=...)
+    ========================================================= */
+    const urlParams = new URLSearchParams(window.location.search);
+    const promoParam = urlParams.get("code") || urlParams.get("ref");
+    if (promoParam) {
+        const cleanPromo = promoParam.trim().toUpperCase();
+        if (cleanPromo.startsWith("STAFF")) {
+            volunteerPost.value = "Staff";
+        } else {
+            volunteerPost.value = "Student";
+        }
+        volunteerPost.dispatchEvent(new Event("change"));
+        usedCouponCode.value = cleanPromo;
+        clearError("usedCouponCode");
+    }
 
 </script>
 
