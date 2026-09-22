@@ -1012,12 +1012,36 @@
 
                 <div class="form-group">
                     <label for="editStateOfRegistration">State of Registration</label>
-                    <input type="text" id="editStateOfRegistration" placeholder="e.g. Lagos">
+                    <select id="editStateOfRegistration">
+                        <option value="Lagos" selected>Lagos</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label for="editLgaOfRegistration">LGA of Registration</label>
-                    <input type="text" id="editLgaOfRegistration" placeholder="e.g. Ikeja">
+                    <select id="editLgaOfRegistration">
+                        <option value="">-- Select LGA of Registration --</option>
+                        <option value="AGEGE">AGEGE</option>
+                        <option value="AJEROMI/IFELODUN">AJEROMI/IFELODUN</option>
+                        <option value="ALIMOSHO">ALIMOSHO</option>
+                        <option value="AMUWO-ODOFIN">AMUWO-ODOFIN</option>
+                        <option value="APAPA">APAPA</option>
+                        <option value="BADAGRY">BADAGRY</option>
+                        <option value="EPE">EPE</option>
+                        <option value="ETI-OSA">ETI-OSA</option>
+                        <option value="IBEJU/LEKKI">IBEJU/LEKKI</option>
+                        <option value="IFAKO-IJAYE">IFAKO-IJAYE</option>
+                        <option value="IKEJA">IKEJA</option>
+                        <option value="IKORODU">IKORODU</option>
+                        <option value="KOSOFE">KOSOFE</option>
+                        <option value="LAGOS ISLAND">LAGOS ISLAND</option>
+                        <option value="LAGOS MAINLAND">LAGOS MAINLAND</option>
+                        <option value="MUSHIN">MUSHIN</option>
+                        <option value="0J0">0J0</option>
+                        <option value="OSHODI/ISOLO">OSHODI/ISOLO</option>
+                        <option value="SOMOLU">SOMOLU</option>
+                        <option value="SURULERE">SURULERE</option>
+                    </select>
                 </div>
 
                 <div class="form-group full-span">
@@ -1324,8 +1348,19 @@
         document.getElementById('editInstitution').value = member.institution || '';
         document.getElementById('editCourse').value = member.course || '';
         document.getElementById('editGender').value = member.gender || 'Male';
-        document.getElementById('editStateOfRegistration').value = member.stateOfRegistration || member.stateOrigin || '';
-        document.getElementById('editLgaOfRegistration').value = member.lgaOfRegistration || member.lgaOrigin || '';
+        document.getElementById('editStateOfRegistration').value = 'Lagos';
+        const rawMemberLga = (member.lgaOfRegistration || member.lgaOrigin || '').trim().toUpperCase();
+        const memberLgaVal = (rawMemberLga === 'OJO') ? '0J0' : rawMemberLga;
+        const captainLgaSelect = document.getElementById('editLgaOfRegistration');
+        captainLgaSelect.value = memberLgaVal;
+        if (!captainLgaSelect.value && memberLgaVal) {
+            for (let opt of captainLgaSelect.options) {
+                if (opt.value.toUpperCase() === memberLgaVal || opt.text.toUpperCase() === memberLgaVal) {
+                    captainLgaSelect.value = opt.value;
+                    break;
+                }
+            }
+        }
         document.getElementById('editAddress').value = member.address || '';
 
         const vinInput = document.getElementById('editVin');
@@ -1359,13 +1394,21 @@
         const institution = document.getElementById('editInstitution').value;
         const course = document.getElementById('editCourse').value.trim();
         const gender = document.getElementById('editGender').value;
-        const stateOfRegistration = document.getElementById('editStateOfRegistration').value.trim();
+        const stateOfRegistration = document.getElementById('editStateOfRegistration').value.trim() || 'Lagos';
         const lgaOfRegistration = document.getElementById('editLgaOfRegistration').value.trim();
         const address = document.getElementById('editAddress').value.trim();
         const vin = document.getElementById('editVin').value.trim().toUpperCase();
 
         const msgDiv = document.getElementById('modalStatusMsg');
         msgDiv.style.display = 'none';
+
+        if (!lgaOfRegistration) {
+            msgDiv.style.display = 'block';
+            msgDiv.className = 'modal-msg error';
+            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> LGA of Registration is required.';
+            document.getElementById('editLgaOfRegistration').focus();
+            return;
+        }
 
         // VIN is REQUIRED
         if (!vin) {

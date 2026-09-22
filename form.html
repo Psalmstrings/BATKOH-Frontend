@@ -989,12 +989,32 @@
 
                     </label>
 
-                    <input
-                        type="text"
+                    <select
                         id="lgaOfRegistration"
                         name="lgaOfRegistration"
-                        placeholder="Local Government Area"
                     >
+                        <option value="">-- Select LGA of Registration --</option>
+                        <option value="AGEGE">AGEGE</option>
+                        <option value="AJEROMI/IFELODUN">AJEROMI/IFELODUN</option>
+                        <option value="ALIMOSHO">ALIMOSHO</option>
+                        <option value="AMUWO-ODOFIN">AMUWO-ODOFIN</option>
+                        <option value="APAPA">APAPA</option>
+                        <option value="BADAGRY">BADAGRY</option>
+                        <option value="EPE">EPE</option>
+                        <option value="ETI-OSA">ETI-OSA</option>
+                        <option value="IBEJU/LEKKI">IBEJU/LEKKI</option>
+                        <option value="IFAKO-IJAYE">IFAKO-IJAYE</option>
+                        <option value="IKEJA">IKEJA</option>
+                        <option value="IKORODU">IKORODU</option>
+                        <option value="KOSOFE">KOSOFE</option>
+                        <option value="LAGOS ISLAND">LAGOS ISLAND</option>
+                        <option value="LAGOS MAINLAND">LAGOS MAINLAND</option>
+                        <option value="MUSHIN">MUSHIN</option>
+                        <option value="0J0">0J0</option>
+                        <option value="OSHODI/ISOLO">OSHODI/ISOLO</option>
+                        <option value="SOMOLU">SOMOLU</option>
+                        <option value="SURULERE">SURULERE</option>
+                    </select>
 
                     <div
                         class="error-message"
@@ -1022,12 +1042,12 @@
 
                     </label>
 
-                    <input
-                        type="text"
+                    <select
                         id="stateOfRegistration"
                         name="stateOfRegistration"
-                        placeholder="e.g., Lagos"
                     >
+                        <option value="Lagos" selected>Lagos</option>
+                    </select>
 
                     <div
                         class="error-message"
@@ -2697,6 +2717,38 @@
 
                 clearError(
                     "institution"
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "lgaOfRegistration"
+        )
+        .addEventListener(
+            "change",
+            function () {
+
+                clearError(
+                    "lgaOfRegistration"
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "stateOfRegistration"
+        )
+        .addEventListener(
+            "change",
+            function () {
+
+                clearError(
+                    "stateOfRegistration"
                 );
 
             }
