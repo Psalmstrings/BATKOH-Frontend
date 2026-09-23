@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PBATâ€“KOH TEMA | Admin Portal & Dashboard</title>
+    <title>PBAT-KOH TEMA | Admin Portal & Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="shortcut icon" href="../media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg" type="image/x-icon">
@@ -58,11 +58,12 @@
         }
 
         .sidebar-brand {
-            padding: 1.6rem 1.5rem;
+            padding: 1.4rem 1.25rem;
             display: flex;
             align-items: center;
             gap: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
         }
 
         .brand-icon {
@@ -76,12 +77,21 @@
             font-size: 1.25rem;
             color: white;
             border: 1.5px solid var(--accent-lime);
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            flex: 1;
+            min-width: 0;
         }
 
         .brand-text h2 {
             font-size: 1.15rem;
             font-weight: 800;
             letter-spacing: -0.02em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .brand-text span {
@@ -93,6 +103,89 @@
             color: #a3c2ab;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-sidebar-close {
+            display: none;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            line-height: 1;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .btn-sidebar-close:hover, .btn-sidebar-close:active {
+            background: rgba(255, 255, 255, 0.25);
+            color: var(--accent-lime);
+        }
+
+        .sidebar-quick-actions {
+            padding: 0.2rem 0.4rem 0.8rem 0.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-quick-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #72967d;
+            padding: 0 0.4rem;
+        }
+
+        .sidebar-quick-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-side-quick {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-side-quick.campus {
+            background: rgba(8, 149, 70, 0.55);
+            border: 1px solid rgba(156, 200, 51, 0.4);
+        }
+
+        .btn-side-quick.campus:hover, .btn-side-quick.campus:active {
+            background: var(--primary-dark);
+        }
+
+        .btn-side-quick.staff {
+            background: rgba(15, 118, 110, 0.55);
+            border: 1px solid rgba(20, 184, 166, 0.4);
+        }
+
+        .btn-side-quick.staff:hover, .btn-side-quick.staff:active {
+            background: #0f766e;
         }
 
         .sidebar-menu {
@@ -699,7 +792,7 @@
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            z-index: 1000;
+            z-index: 1100;
             backdrop-filter: blur(4px);
         }
 
@@ -846,14 +939,23 @@
             display: none;
             background: var(--light-green);
             color: var(--primary-dark);
-            border: 1px solid var(--border-light);
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
+            border: 1.5px solid var(--border-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            touch-action: manipulation;
+        }
+
+        .btn-hamburger:hover, .btn-hamburger:active {
+            background: var(--primary-dark);
+            color: white;
+            border-color: var(--primary-dark);
         }
 
         .sidebar-backdrop {
@@ -862,10 +964,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 998;
             display: none;
             backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            transition: opacity 0.3s ease;
+            touch-action: manipulation;
         }
 
         .sidebar-backdrop.active {
@@ -876,20 +981,53 @@
             .btn-hamburger {
                 display: flex;
             }
+            .btn-sidebar-close {
+                display: flex;
+            }
             .sidebar {
-                left: -280px;
-                width: 270px;
-                box-shadow: 0 0 30px rgba(0,0,0,0.3);
+                left: -300px;
+                width: 280px;
+                max-width: 84vw;
+                z-index: 1002 !important;
+                box-shadow: 6px 0 32px rgba(0, 0, 0, 0.45);
                 transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             .sidebar.open {
                 left: 0;
+            }
+            .sidebar-menu .nav-link {
+                padding: 13px 16px;
+                font-size: 0.94rem;
+                touch-action: manipulation;
             }
             .main-wrapper {
                 margin-left: 0;
             }
             .topbar {
+                height: 64px;
                 padding: 0 1rem;
+                gap: 10px;
+            }
+            .topbar-left {
+                gap: 10px;
+                min-width: 0;
+                flex: 1;
+                display: flex;
+                align-items: center;
+            }
+            .page-title {
+                font-size: 1.05rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .topbar-right {
+                gap: 8px;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
             }
             .content {
                 padding: 1rem;
@@ -904,14 +1042,104 @@
             .admin-meta {
                 display: none;
             }
-            .page-title {
-                font-size: 1.05rem;
-            }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
+            .topbar {
+                height: 58px;
+                padding: 0 0.75rem;
+                gap: 6px;
+            }
+            .topbar-left {
+                gap: 8px;
+            }
+            .btn-hamburger {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+            .page-title {
+                font-size: 0.92rem;
+                max-width: 120px;
+            }
+            .topbar-right {
+                gap: 6px;
+            }
+            .btn-reg-top .btn-text {
+                display: none;
+            }
+            .btn-reg-top {
+                padding: 0 !important;
+                width: 34px !important;
+                height: 34px !important;
+                border-radius: 50% !important;
+                justify-content: center !important;
+                font-size: 0.85rem !important;
+            }
+            .btn-reg-top i {
+                margin: 0;
+            }
+            .btn-logout .btn-text {
+                display: none;
+            }
+            .btn-logout {
+                padding: 0;
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                justify-content: center;
+                font-size: 0.85rem;
+            }
+            .btn-logout i {
+                margin: 0;
+            }
+            .btn-refresh {
+                width: 34px;
+                height: 34px;
+                font-size: 0.85rem;
+            }
+            .admin-avatar {
+                width: 34px;
+                height: 34px;
+                font-size: 0.82rem;
+            }
             .kpi-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.65rem;
+            }
+            .kpi-card {
+                padding: 1rem;
+                gap: 0.7rem;
+            }
+            .kpi-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 1.15rem;
+            }
+            .kpi-info h3 {
+                font-size: 1.35rem;
+            }
+            .kpi-info p {
+                font-size: 0.72rem;
+            }
+            .card-header {
+                padding: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .table-controls {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                min-width: 100%;
+                width: 100%;
+            }
+            .filter-select, .btn-export {
+                width: 100%;
+                justify-content: center;
             }
             .modal-overlay {
                 padding: 0;
@@ -929,6 +1157,15 @@
                 grid-column: span 1;
             }
         }
+
+        @media (max-width: 380px) {
+            .page-title {
+                display: none;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -938,12 +1175,27 @@
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
         <div class="brand-text">
-            <h2>PBATâ€“KOH <span>TEMA</span></h2>
+            <h2>PBAT-KOH <span>TEMA</span></h2>
             <p>Tertiary Education Mobilisation Alliance</p>
         </div>
+        <button type="button" class="btn-sidebar-close" id="sidebarCloseBtn" aria-label="Close navigation menu" title="Close Menu">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
 
     <ul class="sidebar-menu">
+        <li class="sidebar-quick-actions">
+            <div class="sidebar-quick-title">Register Captains</div>
+            <div class="sidebar-quick-btns">
+                <button type="button" class="btn-side-quick campus" onclick="openRegisterCaptainModal('Campus Captains')">
+                    <i class="fas fa-plus-circle"></i> + Campus Captain
+                </button>
+                <button type="button" class="btn-side-quick staff" onclick="openRegisterCaptainModal('Staff Captains')">
+                    <i class="fas fa-plus-circle"></i> + Staff Captain
+                </button>
+            </div>
+        </li>
+
         <li class="menu-header">Main Menu</li>
         <li>
             <a class="nav-link active" data-view="overview">
@@ -999,7 +1251,7 @@
     </ul>
 
     <div class="sidebar-footer">
-        <a href="../captain/login.html" target="_blank" class="btn-captain-link">
+        <a href="../captain/login.html" target="_blank" class="btn-captain-link" onclick="closeMobileSidebar()">
             <i class="fas fa-external-link-alt"></i> Captain Portal Login
         </a>
     </div>
@@ -1013,17 +1265,17 @@
     <!-- Topbar -->
     <header class="topbar">
         <div class="topbar-left">
-            <button class="btn-hamburger" id="mobileMenuToggle" title="Toggle Navigation Menu">
+            <button class="btn-hamburger" id="mobileMenuToggle" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu">
                 <i class="fas fa-bars"></i>
             </button>
             <h1 class="page-title" id="currentViewTitle">Overview & Analytics</h1>
         </div>
         <div class="topbar-right">
-            <button type="button" class="btn-reg-top" onclick="openRegisterCaptainModal('Campus Captains')" style="background:var(--primary-dark); color:white; border:none; padding:7px 14px; border-radius:20px; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                <i class="fas fa-plus-circle"></i> Campus Captain
+            <button type="button" class="btn-reg-top" onclick="openRegisterCaptainModal('Campus Captains')" style="background:var(--primary-dark); color:white; border:none; padding:7px 14px; border-radius:20px; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;" title="Register Campus Captain">
+                <i class="fas fa-plus-circle"></i> <span class="btn-text">Campus Captain</span>
             </button>
-            <button type="button" class="btn-reg-top" onclick="openRegisterCaptainModal('Staff Captains')" style="background:#0f766e; color:white; border:none; padding:7px 14px; border-radius:20px; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                <i class="fas fa-plus-circle"></i> Staff Captain
+            <button type="button" class="btn-reg-top" onclick="openRegisterCaptainModal('Staff Captains')" style="background:#0f766e; color:white; border:none; padding:7px 14px; border-radius:20px; font-size:0.8rem; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;" title="Register Staff Captain">
+                <i class="fas fa-plus-circle"></i> <span class="btn-text">Staff Captain</span>
             </button>
             <button class="btn-refresh" id="refreshDataBtn" title="Refresh Data">
                 <i class="fas fa-sync-alt"></i>
@@ -1035,8 +1287,8 @@
                     <div class="role">Super Admin</div>
                 </div>
             </div>
-            <button class="btn-logout" id="adminLogoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Logout
+            <button class="btn-logout" id="adminLogoutBtn" title="Logout">
+                <i class="fas fa-sign-out-alt"></i> <span class="btn-text">Logout</span>
             </button>
         </div>
     </header>
@@ -1790,9 +2042,29 @@
 
     // Escape HTML Helper
     function escapeHtml(str) {
-        if (!str) return 'â€”';
+        if (!str) return '—';
         return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
     }
+
+    // Mobile Drawer Controls
+    function openMobileSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    window.openMobileSidebar = openMobileSidebar;
+    window.closeMobileSidebar = closeMobileSidebar;
 
     // Switch View
     function switchView(viewName) {
@@ -1806,10 +2078,7 @@
         if (targetLink) targetLink.classList.add('active');
 
         // Close mobile drawer if open
-        const sidebar = document.querySelector('.sidebar');
-        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-        if (sidebar) sidebar.classList.remove('open');
-        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+        closeMobileSidebar();
 
         // Update Title
         const titles = {
@@ -1822,6 +2091,7 @@
             couponExport: 'Coupon & Export Hub'
         };
         document.getElementById('currentViewTitle').textContent = titles[viewName] || 'Dashboard';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Fetch All Students
@@ -2356,6 +2626,7 @@
 
     // EDIT MODAL (REQUIREMENT 6)
     window.openEditModal = function(id) {
+        closeMobileSidebar();
         const student = allStudents.find(s => s._id === id);
         if (!student) return;
 
@@ -2597,19 +2868,56 @@
 
     // Mobile Drawer Toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-    const sidebar = document.querySelector('.sidebar');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const sidebarBackdropEl = document.getElementById('sidebarBackdrop');
+    const sidebarEl = document.querySelector('.sidebar');
 
-    if (mobileMenuToggle && sidebar && sidebarBackdrop) {
-        mobileMenuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            sidebarBackdrop.classList.toggle('active');
+    // Hamburger button — open/close sidebar
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (sidebarEl && sidebarEl.classList.contains('open')) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
         });
+    }
 
-        sidebarBackdrop.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            sidebarBackdrop.classList.remove('active');
+    // Close button inside sidebar header
+    if (sidebarCloseBtn) {
+        sidebarCloseBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeMobileSidebar();
         });
+    }
+
+    // Backdrop click — close sidebar
+    if (sidebarBackdropEl) {
+        sidebarBackdropEl.addEventListener('click', function() {
+            closeMobileSidebar();
+        });
+    }
+
+    // Escape key — close sidebar
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebarEl && sidebarEl.classList.contains('open')) {
+            closeMobileSidebar();
+        }
+    });
+
+    // Swipe-left on sidebar to close (touch support)
+    if (sidebarEl) {
+        let touchStartX = 0;
+        sidebarEl.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].clientX;
+        }, { passive: true });
+        sidebarEl.addEventListener('touchend', function(e) {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (dx < -60) {
+                closeMobileSidebar();
+            }
+        }, { passive: true });
     }
 
     document.getElementById('refreshDataBtn').addEventListener('click', () => {
@@ -2645,6 +2953,7 @@
 
     // Register Captain Modal Functions
     window.openRegisterCaptainModal = function(role = 'Campus Captains') {
+        closeMobileSidebar();
         const modal = document.getElementById('registerCaptainModal');
         const formEl = document.getElementById('registerCaptainForm');
         const successBox = document.getElementById('regSuccessCodeBox');
