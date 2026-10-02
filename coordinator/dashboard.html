@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>PBAT–KOH TEMA | Coordinator Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="../media/WhatsApp Image 2026-08-18 at 5.51.36 AM.jpeg" type="image/x-icon">
+    <!-- SheetJS for export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --accent: #a78bfa;
+            --accent-lime: #9CC833;
+            --text-dark: #1e1b4b;
+            --text-muted: #6b7280;
+            --border-light: #e5e7eb;
+            --light-bg: #f5f3ff;
+            --lighter-bg: #faf9ff;
+            --error-red: #dc2626;
+            --success-green: #059669;
+            --warning-amber: #d97706;
+            --white: #ffffff;
+            --shadow-card: 0 8px 24px -6px rgba(109, 40, 217, 0.12);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f3ff;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: var(--primary-dark);
+            color: white;
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.10);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area h2 { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
+        .logo-area span { color: #c4b5fd; }
+        .coord-chip {
+            background: rgba(255,255,255,0.18);
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .coord-name { font-weight: 600; font-size: 0.85rem; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-logout {
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+            color: white; padding: 7px 14px; border-radius: 8px;
+            font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 5px; transition: 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── CONTAINER ── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1.5rem; }
+
+        /* ── READ-ONLY BANNER ── */
+        .read-only-banner {
+            background: #fef3c7; border: 1px solid #fde68a;
+            border-left: 4px solid #f59e0b;
+            padding: 0.75rem 1.25rem; border-radius: 8px;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.85rem; color: #92400e; font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── PROFILE CARD ── */
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #ddd6fe;
+            padding: 1.25rem 1.5rem;
+            display: flex; align-items: center; gap: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-card);
+        }
+        .profile-avatar {
+            width: 56px; height: 56px;
+            background: var(--primary); color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; font-weight: 800; flex-shrink: 0;
+        }
+        .profile-info h3 { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); }
+        .profile-info p { font-size: 0.83rem; color: var(--text-muted); margin-top: 2px; }
+        .profile-badge {
+            margin-left: auto;
+            background: var(--light-bg); color: var(--primary);
+            border: 1px solid #ddd6fe; padding: 5px 14px;
+            border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+        }
+
+        /* ── KPI CARDS ── */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem; margin-bottom: 1.5rem;
+        }
+        .kpi-card {
+            background: white; border-radius: 14px;
+            padding: 1.25rem; text-align: center;
+            box-shadow: var(--shadow-card); border: 1px solid #ede9fe;
+        }
+        .kpi-card i { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .kpi-card h3 { font-size: 2rem; font-weight: 900; color: var(--text-dark); }
+        .kpi-card p { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+
+        /* ── CARDS ── */
+        .card {
+            background: white; border-radius: 16px;
+            box-shadow: var(--shadow-card); border: 1px solid #ede9fe;
+            margin-bottom: 1.5rem; overflow: hidden;
+        }
+        .card-header {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid #ede9fe;
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;
+        }
+        .card-header h3 { font-size: 1rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
+        .card-header h3 i { color: var(--primary); }
+
+        /* ── TABLE ── */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem 1rem; text-align: left; font-size: 0.84rem; border-bottom: 1px solid #f3f0ff; }
+        th { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: #faf9ff; }
+        tr:hover td { background: #fdf4ff; }
+
+        /* ── BADGES ── */
+        .badge {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+        }
+        .badge-campus { background: #ede9fe; color: #7c3aed; }
+        .badge-staff { background: #d1fae5; color: #065f46; }
+        .badge-count { background: #7c3aed; color: white; padding: 2px 9px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; }
+        .badge-vin { background: #d1fae5; color: #065f46; font-family: monospace; font-size: 0.78rem; padding: 3px 8px; border-radius: 6px; }
+        .badge-no-vin { background: #fee2e2; color: #991b1b; font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; }
+        .badge-pvc-yes { background: #d1fae5; color: #065f46; }
+        .badge-pvc-no { background: #f3f4f6; color: #6b7280; }
+
+        /* ── SEARCH / FILTER BAR ── */
+        .controls-bar {
+            display: flex; flex-wrap: wrap; gap: 0.75rem;
+            align-items: center; padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid #f3f0ff;
+        }
+        .search-box {
+            position: relative; flex: 1; min-width: 180px;
+        }
+        .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
+        .search-box input {
+            width: 100%; padding: 8px 12px 8px 36px;
+            border: 1.5px solid #e5e7eb; border-radius: 8px;
+            font-size: 0.85rem; font-family: inherit;
+        }
+        .search-box input:focus { outline: none; border-color: var(--primary); }
+        .filter-select {
+            padding: 8px 12px; border: 1.5px solid #e5e7eb;
+            border-radius: 8px; font-size: 0.85rem; font-family: inherit;
+            background: white; cursor: pointer;
+        }
+        .filter-select:focus { outline: none; border-color: var(--primary); }
+
+        /* ── EXPORT BUTTON ── */
+        .btn-export {
+            background: var(--primary); color: white;
+            border: none; padding: 8px 16px; border-radius: 8px;
+            font-size: 0.82rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .btn-export:hover { background: var(--primary-dark); }
+
+        /* ── SECTION TABS ── */
+        .tab-nav {
+            display: flex; gap: 0; border-bottom: 1px solid #ede9fe;
+        }
+        .tab-btn {
+            padding: 0.85rem 1.5rem; border: none; background: none;
+            font-size: 0.88rem; font-weight: 600; color: var(--text-muted);
+            cursor: pointer; border-bottom: 3px solid transparent;
+            transition: 0.2s; display: flex; align-items: center; gap: 7px;
+        }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-btn:hover { color: var(--primary); }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+            background: #1e1b4b; color: white; padding: 12px 24px;
+            border-radius: 40px; font-size: 0.9rem; font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18); z-index: 9999;
+            transition: transform 0.3s ease, opacity 0.3s ease; opacity: 0;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center; padding: 3rem; color: var(--text-muted);
+        }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; }
+        .empty-state h3 { font-size: 1rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0.75rem 1rem; }
+            .container { padding: 1rem; }
+            .profile-card { flex-direction: column; text-align: center; }
+            .profile-badge { margin: 0 auto; }
+            th, td { padding: 0.6rem 0.75rem; }
+            .tab-btn { padding: 0.75rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo-area">
+        <h2>PBAT-KOH <span>TEMA</span></h2>
+        <span class="coord-chip"><i class="fas fa-university"></i> Coordinator</span>
+    </div>
+    <div class="nav-right">
+        <span class="coord-name" id="coordNameDisplay">Coordinator</span>
+        <button class="btn-logout" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- READ-ONLY BANNER -->
+    <div class="read-only-banner">
+        <i class="fas fa-eye"></i>
+        <span>Read-Only View — You can monitor your school's captains and members but cannot edit any records.</span>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+        <div class="profile-avatar" id="coordAvatar">C</div>
+        <div class="profile-info">
+            <h3 id="coordFullName">Loading...</h3>
+            <p id="coordMeta">Campus Coordinator</p>
+        </div>
+        <div class="profile-badge" id="coordInstitutionBadge">
+            <i class="fas fa-university"></i> Institution
+        </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <i class="fas fa-crown"></i>
+            <h3 id="kpiCaptains">0</h3>
+            <p>Captains</p>
+        </div>
+        <div class="kpi-card">
+            <i class="fas fa-users"></i>
+            <h3 id="kpiMembers">0</h3>
+            <p>Members</p>
+        </div>
+        <div class="kpi-card">
+            <i class="fas fa-id-card"></i>
+            <h3 id="kpiVinVerified">0</h3>
+            <p>VIN Verified</p>
+        </div>
+        <div class="kpi-card">
+            <i class="fas fa-check-circle"></i>
+            <h3 id="kpiPvcHolders">0</h3>
+            <p>PVC Holders</p>
+        </div>
+    </div>
+
+    <!-- MAIN DATA CARD WITH TABS -->
+    <div class="card">
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="captains">
+                <i class="fas fa-crown"></i> Captains &amp; Work Rate
+            </button>
+            <button class="tab-btn" data-tab="members">
+                <i class="fas fa-users"></i> All Members
+            </button>
+        </div>
+
+        <!-- TAB: CAPTAINS -->
+        <div class="tab-panel active" id="tab-captains">
+            <div class="controls-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="captainSearch" placeholder="Search captains by name or code...">
+                </div>
+                <button class="btn-export" id="btnExportCaptains">
+                    <i class="fas fa-file-excel"></i> Export Captains
+                </button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Coupon Code</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th style="text-align:center;">Members Recruited</th>
+                            <th>Work Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="captainsTableBody">
+                        <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading captains...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB: MEMBERS -->
+        <div class="tab-panel" id="tab-members">
+            <div class="controls-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="memberSearch" placeholder="Search members by name, email, phone...">
+                </div>
+                <select class="filter-select" id="vinFilter">
+                    <option value="">All Members</option>
+                    <option value="HAS_VIN">Has VIN</option>
+                    <option value="NO_VIN">Missing VIN</option>
+                </select>
+                <button class="btn-export" id="btnExportMembers">
+                    <i class="fas fa-file-excel"></i> Export Members
+                </button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Gender</th>
+                            <th>PVC?</th>
+                            <th>VIN Status</th>
+                            <th>Recruited By</th>
+                            <th>Reg. Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading members...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000/api'
+        : 'https://batkoh-backend.onrender.com/api';
+
+    const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
+
+    let currentCoordinator = null;
+    let allCaptains = [];
+    let allMembers = [];
+
+    // ── AUTH CHECK ──
+    function checkAuth() {
+        const token = localStorage.getItem('coordinatorToken');
+        if (!token) { window.location.href = 'login.html'; return false; }
+        try {
+            currentCoordinator = JSON.parse(localStorage.getItem('coordinatorData'));
+        } catch(e) {}
+        return true;
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    // ── HTML ESCAPE ──
+    function escapeHtml(str) {
+        if (!str) return '—';
+        return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    }
+
+    // ── UPDATE PROFILE UI ──
+    function updateProfileUI() {
+        if (!currentCoordinator) return;
+        const name = currentCoordinator.fullName || 'Coordinator';
+        const firstName = name.trim().split(/\s+/)[0];
+        document.getElementById('coordNameDisplay').textContent = name;
+        document.getElementById('coordFullName').textContent = name;
+        document.getElementById('coordAvatar').textContent = firstName.charAt(0).toUpperCase();
+        document.getElementById('coordMeta').textContent =
+            `${currentCoordinator.volunteerPost || 'Coordinator'} · ${currentCoordinator.email || ''}`;
+        document.getElementById('coordInstitutionBadge').innerHTML =
+            `<i class="fas fa-university"></i> ${currentCoordinator.institution || ''}`;
+    }
+
+    // ── FETCH SCHOOL DATA ──
+    async function fetchSchoolData() {
+        try {
+            const token = localStorage.getItem('coordinatorToken');
+            const res = await fetch(`${API_BASE}/students/coordinator/school`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.status === 401 || res.status === 403) {
+                localStorage.removeItem('coordinatorToken');
+                localStorage.removeItem('coordinatorData');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                allCaptains = data.captains || [];
+                allMembers = data.members || [];
+
+                // Update coordinator profile from server response
+                if (data.coordinator) {
+                    currentCoordinator = { ...currentCoordinator, ...data.coordinator };
+                    localStorage.setItem('coordinatorData', JSON.stringify(currentCoordinator));
+                    updateProfileUI();
+                }
+
+                updateKPIs();
+                renderCaptainsTable();
+                renderMembersTable();
+            } else {
+                showToast('Failed to load school data. Please refresh.');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            document.getElementById('captainsTableBody').innerHTML =
+                '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#dc2626;"><i class="fas fa-plug"></i> Network Error — Unable to load data.</td></tr>';
+            document.getElementById('membersTableBody').innerHTML =
+                '<tr><td colspan="8" style="text-align:center;padding:2rem;color:#dc2626;"><i class="fas fa-plug"></i> Network Error — Unable to load data.</td></tr>';
+        }
+    }
+
+    // ── KPI UPDATE ──
+    function updateKPIs() {
+        const vinVerified = allMembers.filter(m => m.vin && VIN_REGEX.test(m.vin.trim())).length;
+        const pvcHolders = allMembers.filter(m => m.hasPvc === true || m.receivedBursary === true).length;
+
+        document.getElementById('kpiCaptains').textContent = allCaptains.length;
+        document.getElementById('kpiMembers').textContent = allMembers.length;
+        document.getElementById('kpiVinVerified').textContent = vinVerified;
+        document.getElementById('kpiPvcHolders').textContent = pvcHolders;
+    }
+
+    // ── CAPTAINS TABLE ──
+    function renderCaptainsTable() {
+        const query = (document.getElementById('captainSearch').value || '').toLowerCase().trim();
+        const filtered = allCaptains.filter(c =>
+            !query ||
+            (c.fullName && c.fullName.toLowerCase().includes(query)) ||
+            (c.couponCode && c.couponCode.toLowerCase().includes(query))
+        );
+
+        const tbody = document.getElementById('captainsTableBody');
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);"><i class="fas fa-inbox"></i> No captains found for this school.</td></tr>';
+            return;
+        }
+
+        const totalMembers = allMembers.length;
+
+        tbody.innerHTML = filtered.map(c => {
+            const isStaff = c.volunteerPost === 'Staff Captains';
+            const count = c.memberCount || 0;
+            const workRate = totalMembers > 0 ? Math.round((count / totalMembers) * 100) : 0;
+            return `
+                <tr>
+                    <td><strong>${escapeHtml(c.fullName)}</strong></td>
+                    <td><span class="badge ${isStaff ? 'badge-staff' : 'badge-campus'}">${escapeHtml(c.volunteerPost)}</span></td>
+                    <td><span class="badge badge-campus" style="font-family:monospace;">${escapeHtml(c.couponCode || '—')}</span></td>
+                    <td>${escapeHtml(c.phone)}</td>
+                    <td style="font-size:0.82rem;">${escapeHtml(c.email)}</td>
+                    <td style="text-align:center;"><span class="badge-count">${count}</span></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="flex:1;height:6px;background:#ede9fe;border-radius:4px;">
+                                <div style="width:${workRate}%;height:100%;background:var(--primary);border-radius:4px;"></div>
+                            </div>
+                            <span style="font-size:0.78rem;font-weight:700;color:var(--text-muted);white-space:nowrap;">${workRate}%</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // ── MEMBERS TABLE ──
+    function renderMembersTable() {
+        const query = (document.getElementById('memberSearch').value || '').toLowerCase().trim();
+        const vinFilter = document.getElementById('vinFilter').value;
+
+        const filtered = allMembers.filter(m => {
+            const matchQ = !query ||
+                (m.fullName && m.fullName.toLowerCase().includes(query)) ||
+                (m.email && m.email.toLowerCase().includes(query)) ||
+                (m.phone && m.phone.includes(query));
+            const hasVin = m.vin && VIN_REGEX.test(m.vin.trim());
+            const matchVin = !vinFilter ||
+                (vinFilter === 'HAS_VIN' && hasVin) ||
+                (vinFilter === 'NO_VIN' && !hasVin);
+            return matchQ && matchVin;
+        });
+
+        const tbody = document.getElementById('membersTableBody');
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">No members match the current filter.</td></tr>';
+            return;
+        }
+
+        // Build coupon→captain map for "Recruited By" column
+        const couponMap = {};
+        allCaptains.forEach(c => { if (c.couponCode) couponMap[c.couponCode] = c.fullName; });
+
+        tbody.innerHTML = filtered.map(m => {
+            const hasVin = m.vin && VIN_REGEX.test(m.vin.trim());
+            const hasPvc = m.hasPvc === true || m.receivedBursary === true;
+            const dateStr = m.createdAt ? new Date(m.createdAt).toLocaleDateString() : '—';
+            const recruitedBy = m.usedCouponCode && couponMap[m.usedCouponCode]
+                ? escapeHtml(couponMap[m.usedCouponCode])
+                : (m.usedCouponCode ? `<span style="font-size:0.78rem;color:var(--text-muted);">${escapeHtml(m.usedCouponCode)}</span>` : '—');
+
+            return `
+                <tr>
+                    <td><strong>${escapeHtml(m.fullName)}</strong></td>
+                    <td>${escapeHtml(m.phone)}</td>
+                    <td style="font-size:0.82rem;">${escapeHtml(m.email)}</td>
+                    <td>${escapeHtml(m.gender)}</td>
+                    <td><span class="badge ${hasPvc ? 'badge-pvc-yes' : 'badge-pvc-no'}">${hasPvc ? 'Yes' : 'No'}</span></td>
+                    <td>${hasVin
+                        ? `<span class="badge-vin"><i class="fas fa-shield-alt"></i> ${escapeHtml(m.vin)}</span>`
+                        : `<span class="badge-no-vin"><i class="fas fa-times-circle"></i> Missing</span>`
+                    }</td>
+                    <td>${recruitedBy}</td>
+                    <td style="font-size:0.8rem;color:var(--text-muted);">${dateStr}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // ── EXPORT ──
+    function exportToExcel(data, filename, headers) {
+        if (!data || data.length === 0) { showToast('No records to export.'); return; }
+        const sheet = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, sheet, filename.slice(0, 31));
+        XLSX.writeFile(wb, `${filename}_${new Date().toISOString().split('T')[0]}.xlsx`);
+        showToast('Excel file downloaded!');
+    }
+
+    document.getElementById('btnExportCaptains').addEventListener('click', () => {
+        const rows = allCaptains.map((c, i) => ({
+            'S/N': i + 1,
+            'Full Name': c.fullName || '',
+            'Role': c.volunteerPost || '',
+            'Coupon Code': c.couponCode || '',
+            'Phone': c.phone || '',
+            'Email': c.email || '',
+            'Members Recruited': c.memberCount || 0,
+            'Institution': c.institution || ''
+        }));
+        exportToExcel(rows, `Captains_${currentCoordinator?.institution || 'School'}`);
+    });
+
+    document.getElementById('btnExportMembers').addEventListener('click', () => {
+        const rows = allMembers.map((m, i) => ({
+            'S/N': i + 1,
+            'Full Name': m.fullName || '',
+            'Phone': m.phone || '',
+            'Email': m.email || '',
+            'Gender': m.gender || '',
+            'Institution': m.institution || '',
+            'Has PVC?': (m.hasPvc || m.receivedBursary) ? 'Yes' : 'No',
+            'VIN': m.vin || '',
+            'Used Coupon': m.usedCouponCode || '',
+            'LGA': m.lgaOfRegistration || '',
+            'State': m.stateOfRegistration || '',
+            'Reg. Date': m.createdAt ? new Date(m.createdAt).toLocaleDateString() : ''
+        }));
+        exportToExcel(rows, `Members_${currentCoordinator?.institution || 'School'}`);
+    });
+
+    // ── TAB NAVIGATION ──
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        });
+    });
+
+    // ── FILTER LISTENERS ──
+    document.getElementById('captainSearch').addEventListener('input', renderCaptainsTable);
+    document.getElementById('memberSearch').addEventListener('input', renderMembersTable);
+    document.getElementById('vinFilter').addEventListener('change', renderMembersTable);
+
+    // ── LOGOUT ──
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('coordinatorToken');
+        localStorage.removeItem('coordinatorData');
+        window.location.href = 'login.html';
+    });
+
+    // ── INIT ──
+    if (checkAuth()) {
+        updateProfileUI();
+        fetchSchoolData();
+    }
+</script>
+</body>
+</html>

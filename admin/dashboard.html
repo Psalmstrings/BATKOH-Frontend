@@ -1185,12 +1185,18 @@
 
     <ul class="sidebar-menu">
         <li class="sidebar-quick-actions">
-            <div class="sidebar-quick-title">Register Captains</div>
+            <div class="sidebar-quick-title">Register Roles</div>
             <div class="sidebar-quick-btns">
-                <button type="button" class="btn-side-quick campus" onclick="openRegisterCaptainModal('Campus Captains')">
+                <button type="button" class="btn-side-quick campus" onclick="openRegisterCaptainModal('Campus Coordinators')">
+                    <i class="fas fa-plus-circle"></i> + Campus Coordinator
+                </button>
+                <button type="button" class="btn-side-quick staff" onclick="openRegisterCaptainModal('Staff Coordinator')">
+                    <i class="fas fa-plus-circle"></i> + Staff Coordinator
+                </button>
+                <button type="button" class="btn-side-quick campus" onclick="openRegisterCaptainModal('Campus Captains')" style="background:rgba(37,99,235,0.55); border-color:rgba(59,130,246,0.4);">
                     <i class="fas fa-plus-circle"></i> + Campus Captain
                 </button>
-                <button type="button" class="btn-side-quick staff" onclick="openRegisterCaptainModal('Staff Captains')">
+                <button type="button" class="btn-side-quick staff" onclick="openRegisterCaptainModal('Staff Captains')" style="background:rgba(15,118,110,0.55);">
                     <i class="fas fa-plus-circle"></i> + Staff Captain
                 </button>
             </div>
@@ -1215,7 +1221,7 @@
         <li>
             <a class="nav-link" data-view="campusCoordinators">
                 <i class="fas fa-university"></i>
-                <span>Campus Coordinators</span>
+                <span>Campus &amp; Staff Coordinators</span>
                 <span class="badge-count" id="badgeCoordCount">0</span>
             </a>
         </li>
@@ -1253,6 +1259,9 @@
     <div class="sidebar-footer">
         <a href="../captain/login.html" target="_blank" class="btn-captain-link" onclick="closeMobileSidebar()">
             <i class="fas fa-external-link-alt"></i> Captain Portal Login
+        </a>
+        <a href="../coordinator/login.html" target="_blank" class="btn-captain-link" onclick="closeMobileSidebar()" style="background:rgba(124,58,237,0.18); border-color:rgba(167,139,250,0.4); color:#c4b5fd; margin-top:6px;">
+            <i class="fas fa-external-link-alt"></i> Coordinator Portal Login
         </a>
     </div>
 </aside>
@@ -1395,6 +1404,29 @@
                         <select id="allStudentsSchoolFilter" class="filter-select">
                             <option value="">All Institutions</option>
                         </select>
+                        <select id="allStudentsLgaFilter" class="filter-select">
+                            <option value="">All LGAs</option>
+                            <option value="AGEGE">AGEGE</option>
+                            <option value="AJEROMI/IFELODUN">AJEROMI/IFELODUN</option>
+                            <option value="ALIMOSHO">ALIMOSHO</option>
+                            <option value="AMUWO-ODOFIN">AMUWO-ODOFIN</option>
+                            <option value="APAPA">APAPA</option>
+                            <option value="BADAGRY">BADAGRY</option>
+                            <option value="EPE">EPE</option>
+                            <option value="ETI-OSA">ETI-OSA</option>
+                            <option value="IBEJU/LEKKI">IBEJU/LEKKI</option>
+                            <option value="IFAKO-IJAYE">IFAKO-IJAYE</option>
+                            <option value="IKEJA">IKEJA</option>
+                            <option value="IKORODU">IKORODU</option>
+                            <option value="KOSOFE">KOSOFE</option>
+                            <option value="LAGOS ISLAND">LAGOS ISLAND</option>
+                            <option value="LAGOS MAINLAND">LAGOS MAINLAND</option>
+                            <option value="MUSHIN">MUSHIN</option>
+                            <option value="0J0">0J0</option>
+                            <option value="OSHODI/ISOLO">OSHODI/ISOLO</option>
+                            <option value="SOMOLU">SOMOLU</option>
+                            <option value="SURULERE">SURULERE</option>
+                        </select>
                         <select id="allStudentsRoleFilter" class="filter-select">
                             <option value="">All Volunteer Positions</option>
                             <option value="Campus Coordinators">Campus Coordinators</option>
@@ -1418,6 +1450,7 @@
                                 <th>Full Name</th>
                                 <th>Position</th>
                                 <th>Institution</th>
+                                <th>LGA</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Coupon Code</th>
@@ -1427,23 +1460,29 @@
                             </tr>
                         </thead>
                         <tbody id="allStudentsTableBody">
-                            <tr><td colspan="9" style="text-align:center; padding:2rem;">Loading records...</td></tr>
+                            <tr><td colspan="10" style="text-align:center; padding:2rem;">Loading records...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- VIEW 3: CAMPUS COORDINATORS -->
+        <!-- VIEW 3: CAMPUS & STAFF COORDINATORS -->
         <section class="dashboard-view" id="view-campusCoordinators">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-university"></i> Campus Coordinators</h3>
+                    <h3><i class="fas fa-university"></i> Campus &amp; Staff Coordinators</h3>
                     <div class="table-controls">
                         <div class="search-box">
                             <i class="fas fa-search"></i>
                             <input type="text" id="coordSearch" placeholder="Search coordinators...">
                         </div>
+                        <button class="btn-export" style="background:#7c3aed;" onclick="openRegisterCaptainModal('Campus Coordinators')">
+                            <i class="fas fa-plus-circle"></i> + Campus Coordinator
+                        </button>
+                        <button class="btn-export" style="background:#6d28d9;" onclick="openRegisterCaptainModal('Staff Coordinator')">
+                            <i class="fas fa-plus-circle"></i> + Staff Coordinator
+                        </button>
                         <button class="btn-export" onclick="exportCurrentTable('campusCoordinators')">
                             <i class="fas fa-file-excel"></i> Export Coordinators
                         </button>
@@ -1455,6 +1494,7 @@
                         <thead>
                             <tr>
                                 <th>Full Name</th>
+                                <th>Role</th>
                                 <th>Institution</th>
                                 <th>Coupon Code</th>
                                 <th>Phone</th>
@@ -1465,7 +1505,7 @@
                             </tr>
                         </thead>
                         <tbody id="coordTableBody">
-                            <tr><td colspan="8" style="text-align:center; padding:2rem;">Loading coordinators...</td></tr>
+                            <tr><td colspan="9" style="text-align:center; padding:2rem;">Loading coordinators...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1678,6 +1718,7 @@
                     <label for="editVolunteerPost">Volunteer Position *</label>
                     <select id="editVolunteerPost" required>
                         <option value="Campus Coordinators">Campus Coordinators</option>
+                        <option value="Staff Coordinator">Staff Coordinator</option>
                         <option value="Campus Captains">Campus Captains</option>
                         <option value="Staff Captains">Staff Captains</option>
                         <option value="State Coordinator">State Coordinator</option>
@@ -1704,6 +1745,7 @@
                         <option value="LASCOETH">LASCOETH</option>
                         <option value="LASUSTECH">LASUSTECH</option>
                         <option value="LASUED">LASUED</option>
+                        <option value="FCFMT">FCFMT</option>
                     </select>
                 </div>
 
@@ -1828,6 +1870,8 @@
                 <div class="modal-form-group">
                     <label for="regRole">Role *</label>
                     <select id="regRole" required>
+                        <option value="Campus Coordinators">Campus Coordinator</option>
+                        <option value="Staff Coordinator">Staff Coordinator</option>
                         <option value="Campus Captains">Campus Captain</option>
                         <option value="Staff Captains">Staff Captain</option>
                     </select>
@@ -1875,6 +1919,7 @@
                         <option value="LASCOETH">LASCOETH</option>
                         <option value="LASUSTECH">LASUSTECH</option>
                         <option value="LASUED">LASUED</option>
+                        <option value="FCFMT">FCFMT</option>
                     </select>
                 </div>
 
@@ -1968,7 +2013,7 @@
         <!-- Captain Success Code Display Box -->
         <div id="regSuccessCodeBox" style="display:none; text-align:center; padding:1.5rem; background:#f0fdf4; border-radius:12px; margin-top:0.5rem; border:1px solid #bbf7d0;">
             <i class="fas fa-check-circle" style="font-size:2.5rem; color:#16a34a; margin-bottom:0.5rem;"></i>
-            <h4 style="font-size:1.15rem; color:#166534; font-weight:800; margin-bottom:6px;">Captain Registered Successfully!</h4>
+            <h4 id="successHeaderTitle" style="font-size:1.15rem; color:#166534; font-weight:800; margin-bottom:6px;">Registered Successfully!</h4>
             <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;">
                 Assigned referral coupon code for <span id="successCaptainName" style="font-weight:700;"></span>:
             </p>
@@ -2084,7 +2129,7 @@
         const titles = {
             overview: 'Overview & Analytics',
             allStudents: 'All Registrations',
-            campusCoordinators: 'Campus Coordinators',
+            campusCoordinators: 'Campus & Staff Coordinators',
             campusCaptains: 'Campus Captains',
             staffCaptains: 'Staff Captains',
             stateCoordinators: 'State Coordinators & Executive',
@@ -2137,7 +2182,7 @@
     // Update KPIs & Analytics
     function updateDashboardStats() {
         const total = allStudents.length;
-        const coords = allStudents.filter(s => s.volunteerPost === 'Campus Coordinators');
+        const coords = allStudents.filter(s => s.volunteerPost === 'Campus Coordinators' || s.volunteerPost === 'Staff Coordinator');
         const captains = allStudents.filter(s => s.volunteerPost === 'Campus Captains');
         const staffCaptains = allStudents.filter(s => s.volunteerPost === 'Staff Captains');
         const stateCoords = allStudents.filter(s => s.volunteerPost && s.volunteerPost.toLowerCase().includes('state'));
@@ -2228,6 +2273,7 @@
     function renderAllStudentsTable() {
         const query = (document.getElementById('allStudentsSearch').value || '').toLowerCase().trim();
         const school = document.getElementById('allStudentsSchoolFilter').value;
+        const lga = document.getElementById('allStudentsLgaFilter').value;
         const role = document.getElementById('allStudentsRoleFilter').value;
 
         const filtered = allStudents.filter(s => {
@@ -2238,14 +2284,17 @@
                 (s.couponCode && s.couponCode.toLowerCase().includes(query));
 
             const matchSchool = !school || s.institution === school;
+            const studentLga = (s.lgaOfRegistration || s.lgaOrigin || '').trim().toUpperCase();
+            const filterLga = lga.trim().toUpperCase();
+            const matchLga = !filterLga || studentLga === filterLga || (filterLga.replace(/0/g, 'O') === studentLga.replace(/0/g, 'O'));
             const matchRole = !role || s.volunteerPost === role;
 
-            return matchQ && matchSchool && matchRole;
+            return matchQ && matchSchool && matchLga && matchRole;
         });
 
         const tbody = document.getElementById('allStudentsTableBody');
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:2rem; color:var(--text-muted);">No matching registrations found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:2rem; color:var(--text-muted);">No matching registrations found.</td></tr>';
             return;
         }
 
@@ -2257,9 +2306,10 @@
                     <td><strong>${escapeHtml(s.fullName)}</strong></td>
                     <td><span class="badge badge-pos">${escapeHtml(s.volunteerPost)}</span></td>
                     <td>${escapeHtml(s.institution)}</td>
+                    <td>${escapeHtml(s.lgaOfRegistration || s.lgaOrigin || '—')}</td>
                     <td>${escapeHtml(s.phone)}</td>
                     <td style="font-size:0.83rem;">${escapeHtml(s.email)}</td>
-                    <td>${s.couponCode ? `<span class="badge badge-code">${escapeHtml(s.couponCode)}</span>` : (s.usedCouponCode ? `<span class="badge badge-code" style="color:#64748b;">Ref: ${escapeHtml(s.usedCouponCode)}</span>` : 'â€”')}</td>
+                    <td>${s.couponCode ? `<span class="badge badge-code">${escapeHtml(s.couponCode)}</span>` : (s.usedCouponCode ? `<span class="badge badge-code" style="color:#64748b;">Ref: ${escapeHtml(s.usedCouponCode)}</span>` : '—')}</td>
                     <td>${hasPvc ? '<span style="color:#059669; font-weight:700;">Yes</span>' : '<span style="color:#94a3b8;">No</span>'}</td>
                     <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(s.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
                     <td style="text-align:center;">
@@ -2277,20 +2327,21 @@
         }).join('');
     }
 
-    // Table 2: Campus Coordinators
+    // Table 2: Campus & Staff Coordinators
     function renderCoordinatorsTable() {
         const query = (document.getElementById('coordSearch').value || '').toLowerCase().trim();
-        const coords = allStudents.filter(s => s.volunteerPost === 'Campus Coordinators' && (!query || s.fullName.toLowerCase().includes(query) || (s.couponCode && s.couponCode.toLowerCase().includes(query))));
+        const coords = allStudents.filter(s => (s.volunteerPost === 'Campus Coordinators' || s.volunteerPost === 'Staff Coordinator') && (!query || s.fullName.toLowerCase().includes(query) || (s.couponCode && s.couponCode.toLowerCase().includes(query))));
 
         const tbody = document.getElementById('coordTableBody');
         if (coords.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">No Campus Coordinators found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:2rem; color:var(--text-muted);">No Coordinators found.</td></tr>';
             return;
         }
 
         tbody.innerHTML = coords.map(c => `
             <tr>
                 <td><strong>${escapeHtml(c.fullName)}</strong></td>
+                <td><span class="badge badge-pos">${escapeHtml(c.volunteerPost)}</span></td>
                 <td>${escapeHtml(c.institution)}</td>
                 <td><span class="badge badge-code" style="font-size:0.82rem;">${escapeHtml(c.couponCode)}</span></td>
                 <td>${escapeHtml(c.phone)}</td>
@@ -2610,8 +2661,8 @@
         if (tableType === 'allStudents') {
             exportDataset(allStudents, 'All_PBAT_KOH_TEMA_Students');
         } else if (tableType === 'campusCoordinators') {
-            const coords = allStudents.filter(s => s.volunteerPost === 'Campus Coordinators');
-            exportDataset(coords, 'Campus_Coordinators');
+            const coords = allStudents.filter(s => s.volunteerPost === 'Campus Coordinators' || s.volunteerPost === 'Staff Coordinator');
+            exportDataset(coords, 'Campus_And_Staff_Coordinators');
         } else if (tableType === 'campusCaptains') {
             const captains = allStudents.filter(s => s.volunteerPost === 'Campus Captains');
             exportDataset(captains, 'Campus_Captains');
@@ -2927,6 +2978,7 @@
     // Search input listeners
     document.getElementById('allStudentsSearch').addEventListener('input', renderAllStudentsTable);
     document.getElementById('allStudentsSchoolFilter').addEventListener('change', renderAllStudentsTable);
+    document.getElementById('allStudentsLgaFilter').addEventListener('change', renderAllStudentsTable);
     document.getElementById('allStudentsRoleFilter').addEventListener('change', renderAllStudentsTable);
     document.getElementById('coordSearch').addEventListener('input', renderCoordinatorsTable);
     document.getElementById('captainSearch').addEventListener('input', renderCaptainsTable);
@@ -2962,7 +3014,17 @@
         formEl.reset();
         document.getElementById('regRole').value = role;
         document.getElementById('regStateOfRegistration').value = 'Lagos';
-        document.getElementById('regCaptainModalTitle').innerHTML = `<i class="fas fa-user-plus"></i> Register ${role === 'Staff Captains' ? 'Staff Captain' : 'Campus Captain'}`;
+
+        const roleLabels = {
+            'Campus Coordinators': 'Campus Coordinator',
+            'Staff Coordinator': 'Staff Coordinator',
+            'Campus Captains': 'Campus Captain',
+            'Staff Captains': 'Staff Captain'
+        };
+        const roleLabel = roleLabels[role] || role;
+        document.getElementById('regCaptainModalTitle').innerHTML = `<i class="fas fa-user-plus"></i> Register ${roleLabel}`;
+        const saveBtn = document.getElementById('btnSaveNewCaptain');
+        if (saveBtn) saveBtn.innerHTML = `<i class="fas fa-check-circle"></i> Register ${roleLabel}`;
 
         const regVinInput = document.getElementById('regVin');
         if (regVinInput) {
@@ -3121,11 +3183,19 @@
             const result = await res.json();
 
             if (res.ok && result.success) {
-                showToast(`${role === 'Staff Captains' ? 'Staff Captain' : 'Campus Captain'} registered successfully!`, 'success');
+                const roleLabels2 = {
+                    'Campus Coordinators': 'Campus Coordinator',
+                    'Staff Coordinator': 'Staff Coordinator',
+                    'Campus Captains': 'Campus Captain',
+                    'Staff Captains': 'Staff Captain'
+                };
+                showToast(`${roleLabels2[role] || role} registered successfully!`, 'success');
                 await fetchStudents();
 
                 // Show success box with generated coupon code
                 document.getElementById('registerCaptainForm').style.display = 'none';
+                const successTitle = document.getElementById('successHeaderTitle');
+                if (successTitle) successTitle.textContent = `${roleLabels2[role] || 'Member'} Registered Successfully!`;
                 document.getElementById('successCaptainName').textContent = fullName;
                 document.getElementById('displayGeneratedCode').textContent = result.data.couponCode || 'GENERATED';
                 document.getElementById('regSuccessCodeBox').style.display = 'block';
@@ -3143,8 +3213,28 @@
             showToast('Network error: Failed to connect to server.', 'error');
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> Register Captain';
+            const currentRole = document.getElementById('regRole').value;
+            const roleLabels = {
+                'Campus Coordinators': 'Campus Coordinator',
+                'Staff Coordinator': 'Staff Coordinator',
+                'Campus Captains': 'Campus Captain',
+                'Staff Captains': 'Staff Captain'
+            };
+            btn.innerHTML = `<i class="fas fa-check-circle"></i> Register ${roleLabels[currentRole] || 'Member'}`;
         }
+    });
+
+    document.getElementById('regRole').addEventListener('change', function() {
+        const roleLabels = {
+            'Campus Coordinators': 'Campus Coordinator',
+            'Staff Coordinator': 'Staff Coordinator',
+            'Campus Captains': 'Campus Captain',
+            'Staff Captains': 'Staff Captain'
+        };
+        const label = roleLabels[this.value] || this.value;
+        document.getElementById('regCaptainModalTitle').innerHTML = `<i class="fas fa-user-plus"></i> Register ${label}`;
+        const saveBtn = document.getElementById('btnSaveNewCaptain');
+        if (saveBtn) saveBtn.innerHTML = `<i class="fas fa-check-circle"></i> Register ${label}`;
     });
 
     const staffSearchEl = document.getElementById('staffCaptainSearch');
