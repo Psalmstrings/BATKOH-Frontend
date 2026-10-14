@@ -1158,13 +1158,137 @@
             }
         }
 
-        @media (max-width: 380px) {
-            .page-title {
-                display: none;
-            }
-            .kpi-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Data Maintenance Styles */
+        .maint-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 0.8rem;
+        }
+
+        .maint-tab-btn {
+            background: white;
+            border: 1.5px solid var(--border-light);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .maint-tab-btn:hover {
+            border-color: var(--primary-dark);
+            color: var(--primary-dark);
+        }
+
+        .maint-tab-btn.active {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+            box-shadow: 0 4px 12px rgba(8, 149, 70, 0.25);
+        }
+
+        .maint-dropzone {
+            border: 2px dashed #089546;
+            background: #f7fbf8;
+            border-radius: 14px;
+            padding: 2.2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .maint-dropzone:hover, .maint-dropzone.dragover {
+            background: #eef7f1;
+            border-color: #056830;
+            transform: scale(1.005);
+        }
+
+        .maint-dropzone i.upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .maint-sheet-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #e8f5ec;
+            color: #067a3a;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin: 3px;
+        }
+
+        .badge-retain {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-downgrade {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-rule-a {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .badge-rule-b {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .maint-verification-box {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            border-radius: 12px;
+            padding: 1.3rem;
+            margin-top: 1.5rem;
+        }
+
+        .maint-confirm-box {
+            background: #fffbeb;
+            border: 1.5px solid #fde68a;
+            border-radius: 12px;
+            padding: 1.3rem;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
@@ -1254,6 +1378,13 @@
                 <span>Coupon & Export Hub</span>
             </a>
         </li>
+        <!-- <li>
+            <a class="nav-link" data-view="dataMaintenance" id="nav-dataMaintenance">
+                <i class="fas fa-tools"></i>
+                <span>Data Maintenance</span>
+                <span class="badge-count" style="background:#0f766e; color:#fff;" id="badgeMaintCount">Clean & Sync</span>
+            </a>
+        </li> -->
     </ul>
 
     <div class="sidebar-footer">
@@ -1682,6 +1813,341 @@
                 </div>
 
                 <div id="hubStatusMsg" style="margin-top:1rem; font-size:0.9rem; color:var(--text-muted);"></div>
+            </div>
+        </section>
+
+        <!-- VIEW 7: DATA MAINTENANCE & SYSTEM CLEANUP -->
+        <section class="dashboard-view" id="view-dataMaintenance">
+            <div class="card" style="padding: 1.8rem; margin-bottom: 1.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:1.2rem;">
+                    <div>
+                        <h2 style="font-size:1.4rem; font-weight:800; color:var(--primary-dark); display:flex; align-items:center; gap:10px;">
+                            <i class="fas fa-tools"></i> Data Maintenance &amp; Synchronization Portal
+                        </h2>
+                        <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">
+                            Official administrative tools for Campus Captain role synchronization from Excel and generic student institution standardization.
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-export" onclick="loadMaintenanceData()" style="padding:8px 16px; font-size:0.82rem;">
+                            <i class="fas fa-sync-alt"></i> Refresh Status
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs for Maintenance -->
+                <div class="maint-tabs">
+                    <button type="button" class="maint-tab-btn active" id="maintTabCaptainsBtn" onclick="switchMaintTab('captains')">
+                        <i class="fas fa-crown"></i> Part 1: Campus Captains (Excel)
+                    </button>
+                    <button type="button" class="maint-tab-btn" id="maintTabInstitutionsBtn" onclick="switchMaintTab('institutions')">
+                        <i class="fas fa-university"></i> Part 2: Institution Standardization
+                    </button>
+                    <button type="button" class="maint-tab-btn" id="maintTabBackupsBtn" onclick="switchMaintTab('backups')">
+                        <i class="fas fa-shield-alt"></i> Part 3: Backups &amp; Audit Logs
+                    </button>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- TAB 1: CAMPUS CAPTAIN STATUS UPDATE (EXCEL WORKBOOK)        -->
+                <!-- ============================================================ -->
+                <div id="maintPanelCaptains">
+                    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:1rem 1.2rem; margin-bottom:1.5rem;">
+                        <h4 style="color:#166534; font-size:0.95rem; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-info-circle"></i> Official Approved Campus Captains Policy
+                        </h4>
+                        <p style="color:#14532d; font-size:0.85rem; line-height:1.45;">
+                            Upload the approved Excel workbook containing institution sheets (e.g. LASU, LASUED, UNILAG, YABATECH, LASUSTECH, LASCON, LASCOETH, SACOED, FCE). Existing Campus Captains matching names on their institution's sheet will <strong>retain Campus Captain status</strong>. Existing Captains not appearing on their sheet are safely <strong>downgraded to ordinary Student</strong>.
+                            <br><em>Guarantee: No accounts will be deleted, and no student details or credentials will be erased.</em>
+                        </p>
+                    </div>
+
+                    <!-- Dropzone / File Picker -->
+                    <div class="maint-dropzone" id="captainDropzone" onclick="document.getElementById('captainExcelFileInput').click()">
+                        <i class="fas fa-file-excel upload-icon"></i>
+                        <h4 style="font-size:1.05rem; font-weight:700; color:var(--text-dark); margin-bottom:4px;" id="dropzoneTextTitle">
+                            Click to Upload or Drag &amp; Drop Excel Workbook (.xlsx / .xls)
+                        </h4>
+                        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;" id="dropzoneTextSubtitle">
+                            Reads all institution sheets to match approved Campus Captains
+                        </p>
+                        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;" onclick="event.stopPropagation()">
+                            <button type="button" class="btn-export" onclick="document.getElementById('captainExcelFileInput').click()" style="padding:8px 16px; font-size:0.82rem;">
+                                <i class="fas fa-folder-open"></i> Browse File
+                            </button>
+                            <button type="button" class="btn-export" onclick="loadDefaultDesktopWorkbook()" style="background:#0f766e; padding:8px 16px; font-size:0.82rem;" title="Load Desktop Active Campus Captains Workbook">
+                                <i class="fas fa-magic"></i> Load Active Captains Workbook
+                            </button>
+                        </div>
+                        <input type="file" id="captainExcelFileInput" accept=".xlsx, .xls" style="display:none;" onchange="handleCaptainFileSelect(event)">
+                    </div>
+
+                    <!-- Detected Sheets Badges -->
+                    <div id="captainDetectedSheetsCard" style="display:none; margin-bottom:1.5rem; background:white; border:1px solid var(--border-light); border-radius:10px; padding:1rem;">
+                        <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
+                            Detected Institution Sheets &amp; Approved Counts:
+                        </div>
+                        <div id="captainSheetsBadgesContainer"></div>
+                    </div>
+
+                    <!-- KPI Grid for Captains Preview -->
+                    <div class="kpi-grid" id="captainKpiGrid" style="display:none; margin-bottom:1.5rem;">
+                        <div class="kpi-card">
+                            <div class="kpi-icon students" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-users"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiCapApproved">0</h3>
+                                <p>Approved in Workbook</p>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-database"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiCapTotalDb">0</h3>
+                                <p>Current DB Captains</p>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background:#ecfdf5; color:#059669;"><i class="fas fa-check-circle"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiCapRetained" style="color:#059669;">0</h3>
+                                <p>Captains Retained</p>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background:#fef2f2; color:#dc2626;"><i class="fas fa-user-minus"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiCapDowngraded" style="color:#dc2626;">0</h3>
+                                <p>To Downgrade to Student</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Table Section -->
+                    <div id="captainPreviewSection" style="display:none;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:1rem;">
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button type="button" class="btn-export" id="btnCapFilterAll" onclick="filterCaptainPreview('all')" style="padding:6px 14px; font-size:0.8rem;">
+                                    All (<span id="capFilterAllCount">0</span>)
+                                </button>
+                                <button type="button" class="btn-export" id="btnCapFilterRetained" onclick="filterCaptainPreview('RETAIN')" style="background:#059669; padding:6px 14px; font-size:0.8rem;">
+                                    <i class="fas fa-check"></i> Retained (<span id="capFilterRetainCount">0</span>)
+                                </button>
+                                <button type="button" class="btn-export" id="btnCapFilterDowngraded" onclick="filterCaptainPreview('DOWNGRADE')" style="background:#dc2626; padding:6px 14px; font-size:0.8rem;">
+                                    <i class="fas fa-arrow-down"></i> To Downgrade (<span id="capFilterDownCount">0</span>)
+                                </button>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <div class="search-box" style="width:260px;">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="captainPreviewSearchInput" placeholder="Search name or school..." oninput="searchCaptainPreview()">
+                                </div>
+                                <button type="button" class="btn-export" onclick="exportCaptainPreviewXlsx()" style="background:#0f766e; padding:8px 14px; font-size:0.8rem;">
+                                    <i class="fas fa-download"></i> Export Preview
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px;">#</th>
+                                        <th>Full Name</th>
+                                        <th>Current DB Institution</th>
+                                        <th>Proposed Action</th>
+                                        <th>New Role</th>
+                                        <th>Matched Sheet</th>
+                                        <th>Status Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="captainPreviewTableBody"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Confirmation & Action Box -->
+                        <div class="maint-confirm-box" id="captainActionConfirmBox">
+                            <h4 style="color:#92400e; font-size:0.95rem; font-weight:700; margin-bottom:6px;">
+                                <i class="fas fa-exclamation-triangle"></i> Administrator Confirmation Required
+                            </h4>
+                            <p style="color:#78350f; font-size:0.85rem; margin-bottom:12px;">
+                                A recoverable backup of all affected records will automatically be created before any changes are written. Only the <code>volunteerPost</code> of unapproved captains will be updated to <code>Student</code>. All passwords, VINs, emails, and account data remain completely intact.
+                            </p>
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                                <input type="checkbox" id="chkConfirmCaptainUpdate" style="width:18px; height:18px; cursor:pointer;" onchange="toggleApplyCaptainsBtn()">
+                                <label for="chkConfirmCaptainUpdate" style="font-size:0.88rem; font-weight:700; cursor:pointer; color:var(--text-dark);">
+                                    I confirm and authorize downgrading <span id="lblConfirmDownCount">56</span> unapproved Campus Captains to ordinary Student.
+                                </label>
+                            </div>
+                            <button type="button" class="btn-export" id="btnExecuteCaptains" onclick="executeCaptainUpdates()" disabled style="background:#dc2626; padding:10px 22px; font-size:0.9rem; opacity:0.5; cursor:not-allowed;">
+                                <i class="fas fa-check-double"></i> Apply Campus Captain Role Updates
+                            </button>
+                        </div>
+
+                        <!-- Live Verification Report Box -->
+                        <div class="maint-verification-box" id="captainVerificationBox" style="display:none;">
+                            <h4 style="color:#166534; font-size:1.05rem; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-check-circle"></i> Verification Completed — Campus Captain Roles Successfully Synchronized
+                            </h4>
+                            <div id="captainVerificationDetails" style="font-size:0.88rem; color:#14532d; line-height:1.6;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- TAB 2: STUDENT INSTITUTION DATA CLEANUP                     -->
+                <!-- ============================================================ -->
+                <div id="maintPanelInstitutions" style="display:none;">
+                    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:1rem 1.2rem; margin-bottom:1.5rem;">
+                        <h4 style="color:#1e40af; font-size:0.95rem; font-weight:700; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-info-circle"></i> Institution Standardization Policy (Rules A &amp; B)
+                        </h4>
+                        <div style="color:#1e3a8a; font-size:0.85rem; line-height:1.5;">
+                            <strong>Rule A:</strong> Any student whose institution is recorded simply as <code>University</code> is updated to <strong>Lagos State University</strong> (Code: <code>LASU</code>).<br>
+                            <strong>Rule B:</strong> Any student whose institution is recorded simply as <code>College</code> is updated to <strong>Lagos State College of Nursing</strong> (Code: <code>LASCON</code>).<br>
+                            <strong style="color:#b91c1c;">Important Restrictions:</strong> Specific named institutions (e.g. LASU, LASUED, LASUSTECH, UNILAG, YABATECH, FCE) and institution names containing the words "University" or "College" as part of a larger name are strictly preserved and untouched.
+                        </div>
+                    </div>
+
+                    <!-- KPI Grid for Institution Cleanup -->
+                    <div class="kpi-grid" style="margin-bottom:1.5rem;">
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background:#fef3c7; color:#d97706;"><i class="fas fa-exclamation-circle"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiInstTotal" style="color:#d97706;">0</h3>
+                                <p>Total Generic Records</p>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background:#dbeafe; color:#2563eb;"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiInstUniv" style="color:#2563eb;">0</h3>
+                                <p>Rule A: "University" &rarr; LASU</p>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background:#ede9fe; color:#7c3aed;"><i class="fas fa-user-nurse"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiInstCollege" style="color:#7c3aed;">0</h3>
+                                <p>Rule B: "College" &rarr; LASCON</p>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-shield-alt"></i></div>
+                            <div class="kpi-info">
+                                <h3 id="kpiInstUnaffected" style="color:#16a34a;">0</h3>
+                                <p>Specific Schools (Preserved)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Institution Preview Table -->
+                    <div id="institutionPreviewSection">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:1rem;">
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button type="button" class="btn-export" id="btnInstFilterAll" onclick="filterInstitutionPreview('all')" style="padding:6px 14px; font-size:0.8rem;">
+                                    All (<span id="instFilterAllCount">0</span>)
+                                </button>
+                                <button type="button" class="btn-export" id="btnInstFilterRuleA" onclick="filterInstitutionPreview('Rule A')" style="background:#2563eb; padding:6px 14px; font-size:0.8rem;">
+                                    Rule A: University &rarr; LASU (<span id="instFilterRuleACount">0</span>)
+                                </button>
+                                <button type="button" class="btn-export" id="btnInstFilterRuleB" onclick="filterInstitutionPreview('Rule B')" style="background:#7c3aed; padding:6px 14px; font-size:0.8rem;">
+                                    Rule B: College &rarr; LASCON (<span id="instFilterRuleBCount">0</span>)
+                                </button>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <div class="search-box" style="width:260px;">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="instPreviewSearchInput" placeholder="Search student name or email..." oninput="searchInstitutionPreview()">
+                                </div>
+                                <button type="button" class="btn-export" onclick="exportInstitutionPreviewXlsx()" style="background:#0f766e; padding:8px 14px; font-size:0.8rem;">
+                                    <i class="fas fa-download"></i> Export List
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px;">#</th>
+                                        <th>Full Name</th>
+                                        <th>Email Address</th>
+                                        <th>Phone</th>
+                                        <th>Current Stored Value</th>
+                                        <th>Applied Rule</th>
+                                        <th>Standardized Name</th>
+                                        <th>Official Code</th>
+                                        <th>Current Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="institutionPreviewTableBody"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Confirmation & Action Box -->
+                        <div class="maint-confirm-box" id="institutionActionConfirmBox">
+                            <h4 style="color:#92400e; font-size:0.95rem; font-weight:700; margin-bottom:6px;">
+                                <i class="fas fa-exclamation-triangle"></i> Administrator Confirmation Required
+                            </h4>
+                            <p style="color:#78350f; font-size:0.85rem; margin-bottom:12px;">
+                                A recoverable backup of all affected records will automatically be saved before updates. Only generic <code>University</code> and <code>College</code> fields will be modified. All names, VINs, emails, coupon codes, and other details remain completely intact.
+                            </p>
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                                <input type="checkbox" id="chkConfirmInstUpdate" style="width:18px; height:18px; cursor:pointer;" onchange="toggleApplyInstitutionsBtn()">
+                                <label for="chkConfirmInstUpdate" style="font-size:0.88rem; font-weight:700; cursor:pointer; color:var(--text-dark);">
+                                    I confirm standardizing <span id="lblConfirmInstCount">94</span> generic student records to LASU and LASCON.
+                                </label>
+                            </div>
+                            <button type="button" class="btn-export" id="btnExecuteInstitutions" onclick="executeInstitutionCleanup()" disabled style="background:#089546; padding:10px 22px; font-size:0.9rem; opacity:0.5; cursor:not-allowed;">
+                                <i class="fas fa-check-double"></i> Apply Institution Standardization
+                            </button>
+                        </div>
+
+                        <!-- Live Verification Report Box -->
+                        <div class="maint-verification-box" id="institutionVerificationBox" style="display:none;">
+                            <h4 style="color:#166534; font-size:1.05rem; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-check-circle"></i> Verification Completed — Student Institution Data Cleaned Up
+                            </h4>
+                            <div id="institutionVerificationDetails" style="font-size:0.88rem; color:#14532d; line-height:1.6;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- TAB 3: BACKUPS, AUDIT LOGS & RESTORE                         -->
+                <!-- ============================================================ -->
+                <div id="maintPanelBackups" style="display:none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:10px;">
+                        <div>
+                            <h4 style="font-size:1rem; font-weight:700; color:var(--text-dark);">Recoverable Backups &amp; Audit Logs Archive</h4>
+                            <p style="font-size:0.82rem; color:var(--text-muted);">Timestamped snapshots captured before data modification operations.</p>
+                        </div>
+                        <button type="button" class="btn-export" onclick="loadBackupsList()" style="padding:7px 14px; font-size:0.8rem;">
+                            <i class="fas fa-sync-alt"></i> Refresh Archives
+                        </button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Type</th>
+                                    <th>Created Timestamp</th>
+                                    <th>File Size</th>
+                                    <th style="text-align:center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="backupsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center; padding:1.5rem; color:var(--text-muted);">
+                                        Click 'Refresh Archives' to load backup logs.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -2133,10 +2599,15 @@
             campusCaptains: 'Campus Captains',
             staffCaptains: 'Staff Captains',
             stateCoordinators: 'State Coordinators & Executive',
-            couponExport: 'Coupon & Export Hub'
+            couponExport: 'Coupon & Export Hub',
+            dataMaintenance: 'Data Maintenance & Cleanup'
         };
         document.getElementById('currentViewTitle').textContent = titles[viewName] || 'Dashboard';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (viewName === 'dataMaintenance') {
+            loadMaintenanceData();
+        }
     }
 
     // Fetch All Students
@@ -3246,6 +3717,573 @@
     document.getElementById('closeEditModalBtn').addEventListener('click', closeEditModal);
     document.getElementById('cancelEditBtn').addEventListener('click', closeEditModal);
     document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+
+    // =========================================================================
+    // DATA MAINTENANCE & CLEANUP FUNCTIONS (PARTS 1, 2, 3)
+    // =========================================================================
+    let maintCaptainRecords = [];
+    let maintFilteredCaptainRecords = [];
+    let maintCaptainCurrentFilter = 'all';
+    let maintParsedSheetsData = null;
+
+    let maintInstitutionRecords = [];
+    let maintFilteredInstitutionRecords = [];
+    let maintInstitutionCurrentFilter = 'all';
+
+    function switchMaintTab(tabName) {
+        document.getElementById('maintTabCaptainsBtn').classList.toggle('active', tabName === 'captains');
+        document.getElementById('maintTabInstitutionsBtn').classList.toggle('active', tabName === 'institutions');
+        document.getElementById('maintTabBackupsBtn').classList.toggle('active', tabName === 'backups');
+
+        document.getElementById('maintPanelCaptains').style.display = tabName === 'captains' ? 'block' : 'none';
+        document.getElementById('maintPanelInstitutions').style.display = tabName === 'institutions' ? 'block' : 'none';
+        document.getElementById('maintPanelBackups').style.display = tabName === 'backups' ? 'block' : 'none';
+
+        if (tabName === 'backups') {
+            loadBackupsList();
+        }
+    }
+
+    async function loadMaintenanceData() {
+        try {
+            const token = localStorage.getItem('adminToken');
+            if (!token) return;
+
+            // Load Stats
+            const resStats = await fetch(`${API_BASE}/admin/maintenance/stats`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const dataStats = await resStats.json();
+            if (dataStats.success) {
+                const s = dataStats.stats;
+                const badge = document.getElementById('badgeMaintCount');
+                if (badge) {
+                    badge.textContent = s.needsInstitutionCleanup > 0 ? `${s.needsInstitutionCleanup} Pending` : 'Clean & Sync';
+                }
+            }
+
+            // Load Institution Preview
+            const resInst = await fetch(`${API_BASE}/admin/maintenance/preview-institutions`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const dataInst = await resInst.json();
+            if (dataInst.success) {
+                maintInstitutionRecords = dataInst.records || [];
+                maintFilteredInstitutionRecords = [...maintInstitutionRecords];
+
+                document.getElementById('kpiInstTotal').textContent = dataInst.summary.totalToUpdate || 0;
+                document.getElementById('kpiInstUniv').textContent = dataInst.summary.ruleACount || 0;
+                document.getElementById('kpiInstCollege').textContent = dataInst.summary.ruleBCount || 0;
+                document.getElementById('kpiInstUnaffected').textContent = (dataInst.summary.unaffectedCount || 0).toLocaleString();
+
+                document.getElementById('instFilterAllCount').textContent = dataInst.summary.totalToUpdate || 0;
+                document.getElementById('instFilterRuleACount').textContent = dataInst.summary.ruleACount || 0;
+                document.getElementById('instFilterRuleBCount').textContent = dataInst.summary.ruleBCount || 0;
+                document.getElementById('lblConfirmInstCount').textContent = dataInst.summary.totalToUpdate || 0;
+
+                renderInstitutionPreviewTable();
+            }
+        } catch (err) {
+            console.error('Error loading maintenance data:', err);
+        }
+    }
+
+    // ── Captain Workbook Processing ──
+    async function loadDefaultDesktopWorkbook() {
+        showToast('Loading desktop workbook...', 'info');
+        try {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch(`${API_BASE}/admin/maintenance/preview-captains`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({})
+            });
+            const result = await res.json();
+            if (result.success) {
+                handleCaptainPreviewResult(result, 'Active Campus Captains Workbook (Desktop)');
+            } else {
+                showToast(result.message || 'Failed to load default workbook.', 'error');
+            }
+        } catch (err) {
+            showToast('Error loading desktop workbook.', 'error');
+        }
+    }
+
+    function handleCaptainFileSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        processCaptainExcelFile(file);
+    }
+
+    // Drag and drop listeners
+    const dropzoneEl = document.getElementById('captainDropzone');
+    if (dropzoneEl) {
+        dropzoneEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzoneEl.classList.add('dragover');
+        });
+        dropzoneEl.addEventListener('dragleave', () => {
+            dropzoneEl.classList.remove('dragover');
+        });
+        dropzoneEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzoneEl.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                processCaptainExcelFile(e.dataTransfer.files[0]);
+            }
+        });
+    }
+
+    function processCaptainExcelFile(file) {
+        showToast(`Reading ${file.name}...`, 'info');
+        document.getElementById('dropzoneTextTitle').textContent = `Uploaded: ${file.name}`;
+        document.getElementById('dropzoneTextSubtitle').textContent = `Size: ${(file.size / 1024).toFixed(1)} KB — Parsing sheets...`;
+
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                const parsedSheets = {};
+                workbook.SheetNames.forEach(sheetName => {
+                    const sheet = workbook.Sheets[sheetName];
+                    const rows = XLSX.utils.sheet_to_json(sheet);
+                    const names = [];
+                    rows.forEach(r => {
+                        let nameVal = null;
+                        for (const k of Object.keys(r)) {
+                            if (/full\s*name/i.test(k) || k.trim().toLowerCase() === 'name') {
+                                nameVal = r[k];
+                                break;
+                            }
+                        }
+                        if (!nameVal && r['__EMPTY'] != null) nameVal = r['__EMPTY'];
+                        if (!nameVal) {
+                            const vals = Object.values(r);
+                            if (vals.length > 1 && typeof vals[1] === 'string' && vals[1].trim()) nameVal = vals[1];
+                        }
+                        if (nameVal && typeof nameVal === 'string' && nameVal.trim()) {
+                            const clean = nameVal.trim();
+                            if (!/^(full\s*name|name|s\/n)$/i.test(clean)) names.push(clean);
+                        }
+                    });
+                    parsedSheets[sheetName] = names;
+                });
+
+                maintParsedSheetsData = parsedSheets;
+
+                // Send to backend preview
+                const token = localStorage.getItem('adminToken');
+                const res = await fetch(`${API_BASE}/admin/maintenance/preview-captains`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ sheets: parsedSheets })
+                });
+
+                const result = await res.json();
+                if (result.success) {
+                    handleCaptainPreviewResult(result, file.name);
+                } else {
+                    showToast(result.message || 'Failed to preview captains.', 'error');
+                }
+            } catch (err) {
+                console.error('File parsing error:', err);
+                showToast('Failed to parse Excel workbook. Ensure valid spreadsheet format.', 'error');
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function handleCaptainPreviewResult(result, sourceName) {
+        showToast('Workbook analyzed successfully!', 'success');
+        document.getElementById('dropzoneTextTitle').textContent = `Loaded: ${sourceName}`;
+        document.getElementById('dropzoneTextSubtitle').textContent = `Successfully matched against database Campus Captains.`;
+
+        // Render Sheet Badges
+        const badgesContainer = document.getElementById('captainSheetsBadgesContainer');
+        badgesContainer.innerHTML = '';
+        if (result.summary.sheetStats) {
+            for (const [sheet, cnt] of Object.entries(result.summary.sheetStats)) {
+                const badge = document.createElement('span');
+                badge.className = 'maint-sheet-badge';
+                badge.innerHTML = `<i class="fas fa-school"></i> ${sheet}: <strong>${cnt}</strong>`;
+                badgesContainer.appendChild(badge);
+            }
+            document.getElementById('captainDetectedSheetsCard').style.display = 'block';
+        }
+
+        // Update KPIs
+        let totalApproved = 0;
+        if (result.summary.sheetStats) {
+            totalApproved = Object.values(result.summary.sheetStats).reduce((a, b) => a + b, 0);
+        }
+        document.getElementById('kpiCapApproved').textContent = totalApproved;
+        document.getElementById('kpiCapTotalDb').textContent = result.summary.totalCaptainsInDb || 0;
+        document.getElementById('kpiCapRetained').textContent = result.summary.retainedCount || 0;
+        document.getElementById('kpiCapDowngraded').textContent = result.summary.downgradedCount || 0;
+
+        document.getElementById('capFilterAllCount').textContent = result.summary.totalCaptainsInDb || 0;
+        document.getElementById('capFilterRetainCount').textContent = result.summary.retainedCount || 0;
+        document.getElementById('capFilterDownCount').textContent = result.summary.downgradedCount || 0;
+        document.getElementById('lblConfirmDownCount').textContent = result.summary.downgradedCount || 0;
+
+        maintCaptainRecords = result.records || [];
+        maintFilteredCaptainRecords = [...maintCaptainRecords];
+
+        document.getElementById('captainKpiGrid').style.display = 'grid';
+        document.getElementById('captainPreviewSection').style.display = 'block';
+
+        renderCaptainPreviewTable();
+    }
+
+    function renderCaptainPreviewTable() {
+        const tbody = document.getElementById('captainPreviewTableBody');
+        tbody.innerHTML = '';
+
+        if (maintFilteredCaptainRecords.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:1.5rem; color:var(--text-muted);">No records found matching criteria.</td></tr>`;
+            return;
+        }
+
+        maintFilteredCaptainRecords.forEach((r, idx) => {
+            const tr = document.createElement('tr');
+            const isRetain = r.action === 'RETAIN';
+            tr.innerHTML = `
+                <td style="color:var(--text-muted); font-size:0.8rem;">${idx + 1}</td>
+                <td><strong>${escapeHtml(r.fullName)}</strong></td>
+                <td><span style="font-weight:600;">${escapeHtml(r.dbInstitution || 'None')}</span></td>
+                <td>
+                    <span class="${isRetain ? 'badge-retain' : 'badge-downgrade'}">
+                        <i class="fas ${isRetain ? 'fa-check' : 'fa-arrow-down'}"></i> ${isRetain ? 'RETAIN' : 'DOWNGRADE'}
+                    </span>
+                </td>
+                <td>
+                    <span style="font-weight:700; color:${isRetain ? '#056830' : '#475569'};">
+                        ${escapeHtml(r.proposedRole)}
+                    </span>
+                </td>
+                <td>
+                    ${r.matchedSheet ? `<span class="maint-sheet-badge"><i class="fas fa-table"></i> ${escapeHtml(r.matchedSheet)}</span>` : '<span style="color:#94a3b8;">None</span>'}
+                </td>
+                <td style="font-size:0.82rem; color:var(--text-muted);">
+                    ${isRetain ? `Matched: "${escapeHtml(r.matchedName || r.fullName)}"` : 'Not in approved institution sheet'}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterCaptainPreview(type) {
+        maintCaptainCurrentFilter = type;
+        const q = (document.getElementById('captainPreviewSearchInput').value || '').toLowerCase().trim();
+
+        maintFilteredCaptainRecords = maintCaptainRecords.filter(r => {
+            const matchesType = type === 'all' || r.action === type;
+            const matchesSearch = !q ||
+                (r.fullName && r.fullName.toLowerCase().includes(q)) ||
+                (r.dbInstitution && r.dbInstitution.toLowerCase().includes(q)) ||
+                (r.email && r.email.toLowerCase().includes(q));
+            return matchesType && matchesSearch;
+        });
+
+        renderCaptainPreviewTable();
+    }
+
+    function searchCaptainPreview() {
+        filterCaptainPreview(maintCaptainCurrentFilter);
+    }
+
+    function toggleApplyCaptainsBtn() {
+        const chk = document.getElementById('chkConfirmCaptainUpdate');
+        const btn = document.getElementById('btnExecuteCaptains');
+        if (chk && btn) {
+            btn.disabled = !chk.checked;
+            btn.style.opacity = chk.checked ? '1' : '0.5';
+            btn.style.cursor = chk.checked ? 'pointer' : 'not-allowed';
+        }
+    }
+
+    async function executeCaptainUpdates() {
+        const chk = document.getElementById('chkConfirmCaptainUpdate');
+        if (!chk || !chk.checked) {
+            showToast('Please confirm the checkbox first.', 'error');
+            return;
+        }
+
+        const downCount = document.getElementById('lblConfirmDownCount').textContent;
+        if (!confirm(`Are you absolutely sure you want to proceed?\n\nThis will safely update ${downCount} unapproved Campus Captains to ordinary Student.\nAll accounts, passwords, coupons, and student details are preserved.\nA recoverable backup will be saved automatically.`)) {
+            return;
+        }
+
+        const btn = document.getElementById('btnExecuteCaptains');
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing & Backing Up...`;
+
+        try {
+            const token = localStorage.getItem('adminToken');
+            const payload = {
+                confirmed: true,
+                sheets: maintParsedSheetsData || undefined
+            };
+
+            const res = await fetch(`${API_BASE}/admin/maintenance/execute-captains`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await res.json();
+            if (result.success) {
+                showToast('Campus Captain roles updated successfully!', 'success');
+                const vBox = document.getElementById('captainVerificationBox');
+                const vDetails = document.getElementById('captainVerificationDetails');
+                vBox.style.display = 'block';
+                vDetails.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        <div>✓ <strong>Recoverable Backup Created:</strong> <a href="#" onclick="downloadBackupFile('${result.backupFile}'); return false;" style="color:#089546; text-decoration:underline;">${result.backupFile}</a></div>
+                        <div>✓ <strong>Captains Retained:</strong> ${result.retainedCount} approved captains remained active.</div>
+                        <div>✓ <strong>Roles Updated:</strong> ${result.downgradedCount} captains downgraded to ordinary Student.</div>
+                        <div>✓ <strong>Account Safety Verified:</strong> Zero accounts deleted. Total student count completely preserved (${result.verification.postTotalStudents}).</div>
+                        <div>✓ <strong>Audit Log Created:</strong> ${result.auditFile}</div>
+                    </div>
+                `;
+                document.getElementById('captainActionConfirmBox').style.display = 'none';
+                await fetchStudents();
+                await loadMaintenanceData();
+            } else {
+                showToast(result.message || 'Failed to apply updates.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-check-double"></i> Apply Campus Captain Role Updates`;
+            }
+        } catch (err) {
+            console.error('Execute error:', err);
+            showToast('Network error while executing updates.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-check-double"></i> Apply Campus Captain Role Updates`;
+        }
+    }
+
+    // ── Institution Preview & Execution ──
+    function renderInstitutionPreviewTable() {
+        const tbody = document.getElementById('institutionPreviewTableBody');
+        tbody.innerHTML = '';
+
+        if (maintFilteredInstitutionRecords.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-muted);">No records found.</td></tr>`;
+            return;
+        }
+
+        maintFilteredInstitutionRecords.forEach((r, idx) => {
+            const tr = document.createElement('tr');
+            const isRuleA = r.rule === 'Rule A';
+            tr.innerHTML = `
+                <td style="color:var(--text-muted); font-size:0.8rem;">${idx + 1}</td>
+                <td><strong>${escapeHtml(r.fullName)}</strong></td>
+                <td style="font-size:0.85rem;">${escapeHtml(r.email)}</td>
+                <td style="font-size:0.85rem;">${escapeHtml(r.phone)}</td>
+                <td><code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:700;">${escapeHtml(r.currentInstitution)}</code></td>
+                <td>
+                    <span class="${isRuleA ? 'badge-rule-a' : 'badge-rule-b'}">
+                        ${escapeHtml(r.rule)}
+                    </span>
+                </td>
+                <td><strong>${escapeHtml(r.targetInstitutionName)}</strong></td>
+                <td><span style="background:#e8f5ec; color:#067a3a; padding:3px 8px; border-radius:12px; font-weight:800; font-size:0.8rem;">${escapeHtml(r.targetInstitutionCode)}</span></td>
+                <td style="font-size:0.82rem; color:var(--text-muted);">${escapeHtml(r.volunteerPost)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterInstitutionPreview(rule) {
+        maintInstitutionCurrentFilter = rule;
+        const q = (document.getElementById('instPreviewSearchInput').value || '').toLowerCase().trim();
+
+        maintFilteredInstitutionRecords = maintInstitutionRecords.filter(r => {
+            const matchesRule = rule === 'all' || r.rule === rule;
+            const matchesSearch = !q ||
+                (r.fullName && r.fullName.toLowerCase().includes(q)) ||
+                (r.email && r.email.toLowerCase().includes(q)) ||
+                (r.phone && r.phone.toLowerCase().includes(q));
+            return matchesRule && matchesSearch;
+        });
+
+        renderInstitutionPreviewTable();
+    }
+
+    function searchInstitutionPreview() {
+        filterInstitutionPreview(maintInstitutionCurrentFilter);
+    }
+
+    function toggleApplyInstitutionsBtn() {
+        const chk = document.getElementById('chkConfirmInstUpdate');
+        const btn = document.getElementById('btnExecuteInstitutions');
+        if (chk && btn) {
+            btn.disabled = !chk.checked;
+            btn.style.opacity = chk.checked ? '1' : '0.5';
+            btn.style.cursor = chk.checked ? 'pointer' : 'not-allowed';
+        }
+    }
+
+    async function executeInstitutionCleanup() {
+        const chk = document.getElementById('chkConfirmInstUpdate');
+        if (!chk || !chk.checked) {
+            showToast('Please confirm the checkbox first.', 'error');
+            return;
+        }
+
+        const count = document.getElementById('lblConfirmInstCount').textContent;
+        if (!confirm(`Are you absolutely sure you want to proceed?\n\nThis will standardize ${count} student records:\n- Generic "University" -> Lagos State University (LASU)\n- Generic "College" -> Lagos State College of Nursing (LASCON)\n\nAll other student details are preserved. A recoverable backup will be created.`)) {
+            return;
+        }
+
+        const btn = document.getElementById('btnExecuteInstitutions');
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Standardizing & Backing Up...`;
+
+        try {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch(`${API_BASE}/admin/maintenance/execute-institutions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ confirmed: true })
+            });
+
+            const result = await res.json();
+            if (result.success) {
+                showToast('Institution cleanup completed successfully!', 'success');
+                const vBox = document.getElementById('institutionVerificationBox');
+                const vDetails = document.getElementById('institutionVerificationDetails');
+                vBox.style.display = 'block';
+                vDetails.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        <div>✓ <strong>Recoverable Backup Created:</strong> <a href="#" onclick="downloadBackupFile('${result.backupFile}'); return false;" style="color:#089546; text-decoration:underline;">${result.backupFile}</a></div>
+                        <div>✓ <strong>Rule A Completed:</strong> ${result.ruleACount} records standardized to Lagos State University (LASU).</div>
+                        <div>✓ <strong>Rule B Completed:</strong> ${result.ruleBCount} records standardized to Lagos State College of Nursing (LASCON).</div>
+                        <div>✓ <strong>Integrity Verified:</strong> Remaining generic "University" = ${result.verification.remainingGenericUniversity}, Remaining generic "College" = ${result.verification.remainingGenericCollege}.</div>
+                        <div>✓ <strong>No Accounts Deleted:</strong> Total students preserved (${result.verification.postTotalStudents}).</div>
+                        <div>✓ <strong>Audit Log Created:</strong> ${result.auditFile}</div>
+                    </div>
+                `;
+                document.getElementById('institutionActionConfirmBox').style.display = 'none';
+                await fetchStudents();
+                await loadMaintenanceData();
+            } else {
+                showToast(result.message || 'Failed to execute cleanup.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-check-double"></i> Apply Institution Standardization`;
+            }
+        } catch (err) {
+            console.error('Execute cleanup error:', err);
+            showToast('Network error while standardizing institutions.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-check-double"></i> Apply Institution Standardization`;
+        }
+    }
+
+    // ── Backups & Audit Logs ──
+    async function loadBackupsList() {
+        const tbody = document.getElementById('backupsTableBody');
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading backups...</td></tr>`;
+
+        try {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch(`${API_BASE}/admin/maintenance/backups`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (data.success && data.files.length > 0) {
+                tbody.innerHTML = '';
+                data.files.forEach(f => {
+                    const tr = document.createElement('tr');
+                    const isAudit = f.isAudit;
+                    tr.innerHTML = `
+                        <td><code style="font-weight:700; color:var(--primary-dark);">${escapeHtml(f.filename)}</code></td>
+                        <td>
+                            <span class="${isAudit ? 'badge-rule-b' : 'badge-retain'}">
+                                ${isAudit ? 'Audit Trail' : 'Recoverable Backup'}
+                            </span>
+                        </td>
+                        <td>${new Date(f.createdAt).toLocaleString()}</td>
+                        <td>${(f.size / 1024).toFixed(1)} KB</td>
+                        <td style="text-align:center;">
+                            <button type="button" class="btn-export" onclick="downloadBackupFile('${f.filename}')" style="padding:5px 12px; font-size:0.75rem;">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:var(--text-muted);">No backups or audit logs created yet.</td></tr>`;
+            }
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:#dc2626;">Failed to load backup logs.</td></tr>`;
+        }
+    }
+
+    function downloadBackupFile(filename) {
+        const token = localStorage.getItem('adminToken');
+        window.open(`${API_BASE}/admin/maintenance/download-backup/${encodeURIComponent(filename)}?token=${encodeURIComponent(token)}`, '_blank');
+    }
+
+    // ── Export Previews ──
+    function exportCaptainPreviewXlsx() {
+        if (!maintFilteredCaptainRecords || maintFilteredCaptainRecords.length === 0) {
+            showToast('No records to export.', 'error');
+            return;
+        }
+        const exportData = maintFilteredCaptainRecords.map((r, i) => ({
+            'S/N': i + 1,
+            'Full Name': r.fullName,
+            'Current DB Institution': r.dbInstitution,
+            'Action': r.action,
+            'Proposed Role': r.proposedRole,
+            'Matched Sheet': r.matchedSheet || 'None',
+            'Matched Name': r.matchedName || 'None',
+            'Phone Number': r.phone || '',
+            'Email Address': r.email || ''
+        }));
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Captain_Preview');
+        XLSX.writeFile(wb, `PBAT-KOH_Campus_Captains_Preview_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    }
+
+    function exportInstitutionPreviewXlsx() {
+        if (!maintFilteredInstitutionRecords || maintFilteredInstitutionRecords.length === 0) {
+            showToast('No records to export.', 'error');
+            return;
+        }
+        const exportData = maintFilteredInstitutionRecords.map((r, i) => ({
+            'S/N': i + 1,
+            'Full Name': r.fullName,
+            'Email Address': r.email,
+            'Phone': r.phone,
+            'Current Institution Value': r.currentInstitution,
+            'Applied Rule': r.rule,
+            'Standardized Official Name': r.targetInstitutionName,
+            'Official Code': r.targetInstitutionCode,
+            'Volunteer Role': r.volunteerPost
+        }));
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Institution_Cleanup_Preview');
+        XLSX.writeFile(wb, `PBAT-KOH_Institution_Cleanup_Preview_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    }
 
     // Admin Logout
     document.getElementById('adminLogoutBtn').addEventListener('click', () => {
