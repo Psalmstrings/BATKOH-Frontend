@@ -707,6 +707,92 @@
             color: #dc2626;
         }
 
+        
+        .btn-view {
+            background: #e0f2fe;
+            color: #0284c7;
+            font-weight: 600;
+            padding: 0 10px;
+            width: auto;
+            gap: 5px;
+            font-size: 0.78rem;
+        }
+
+        .btn-view:hover {
+            background: #0284c7;
+            color: white;
+        }
+
+        /* View Member Modal Detailed Info Grid */
+        .view-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .view-detail-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .view-detail-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-detail-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            word-break: break-word;
+        }
+
+        .view-vin-box {
+            background: #ecfdf5;
+            border: 1.5px solid #10b981;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .view-vin-text {
+            font-family: monospace;
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #065f46;
+        }
+
+        .btn-copy-vin {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-copy-vin:hover {
+            background: #047857;
+        }
+
         .btn-delete:hover {
             background: #dc2626;
             color: white;
@@ -1314,9 +1400,9 @@
                 <button type="button" class="btn-side-quick campus" onclick="openRegisterCaptainModal('Campus Coordinators')">
                     <i class="fas fa-plus-circle"></i> + Campus Coordinator
                 </button>
-                <button type="button" class="btn-side-quick staff" onclick="openRegisterCaptainModal('Staff Coordinator')">
+                <!-- <button type="button" class="btn-side-quick staff" onclick="openRegisterCaptainModal('Staff Coordinator')">
                     <i class="fas fa-plus-circle"></i> + Staff Coordinator
-                </button>
+                </button> -->
                 <button type="button" class="btn-side-quick campus" onclick="openRegisterCaptainModal('Campus Captains')" style="background:rgba(37,99,235,0.55); border-color:rgba(59,130,246,0.4);">
                     <i class="fas fa-plus-circle"></i> + Campus Captain
                 </button>
@@ -1361,13 +1447,6 @@
                 <i class="fas fa-user-shield"></i>
                 <span>Staff Captains</span>
                 <span class="badge-count" id="badgeStaffCaptainCount">0</span>
-            </a>
-        </li>
-        <li>
-            <a class="nav-link" data-view="stateCoordinators">
-                <i class="fas fa-flag"></i>
-                <span>State Coordinators</span>
-                <span class="badge-count" id="badgeStateCount">0</span>
             </a>
         </li>
 
@@ -2308,6 +2387,23 @@
     </div>
 </div>
 
+<!-- VIEW MEMBER DETAILS MODAL -->
+<div class="modal-overlay" id="viewMemberModal">
+    <div class="modal-box" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h3 id="viewModalTitle"><i class="fas fa-id-card"></i> Member Profile & Complete Registration Details</h3>
+            <button class="modal-close" onclick="closeViewModal()">&times;</button>
+        </div>
+        <div id="viewModalContent" style="padding: 1rem 0;">
+            <!-- Dynamically populated -->
+        </div>
+        <div style="display:flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem; border-top: 1px solid var(--border-light); padding-top: 1rem;">
+            <button class="btn-modal-cancel" onclick="closeViewModal()">Close</button>
+            <button class="btn-modal-save" id="viewModalEditBtn" style="background: var(--primary-dark); color:white; border:none; padding:8px 18px; border-radius:8px; cursor:pointer; font-weight:600;"><i class="fas fa-pencil-alt"></i> Edit This Record</button>
+        </div>
+    </div>
+</div>
+
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box" style="max-width: 440px; text-align:center;">
@@ -2502,7 +2598,19 @@
         ? 'http://localhost:3000/api'
         : 'https://batkoh-backend.onrender.com/api';
 
+    
     const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
+
+    function maskVin(vin) {
+        if (!vin || typeof vin !== 'string') return '—';
+        const clean = vin.trim().toUpperCase();
+        if (clean.length < 8) return '****';
+        const first4 = clean.slice(0, 4);
+        const last4 = clean.slice(-4);
+        const maskLen = Math.max(clean.length - 8, 4);
+        return `${first4}${'•'.repeat(maskLen)}${last4}`;
+    }
+
 
     let allStudents = [];
     let hubCurrentMembers = [];
@@ -2676,7 +2784,7 @@
         document.getElementById('badgeCaptainCount').textContent = captains.length;
         const badgeStaffEl = document.getElementById('badgeStaffCaptainCount');
         if (badgeStaffEl) badgeStaffEl.textContent = staffCaptains.length;
-        document.getElementById('badgeStateCount').textContent = stateCoords.length;
+        const badgeStateEl = document.getElementById('badgeStateCount'); if (badgeStateEl) badgeStateEl.textContent = stateCoords.length;
 
         // Progress Percentages
         const vinPct = total > 0 ? Math.round((vinCount / total) * 100) : 0;
@@ -2782,9 +2890,12 @@
                     <td style="font-size:0.83rem;">${escapeHtml(s.email)}</td>
                     <td>${s.couponCode ? `<span class="badge badge-code">${escapeHtml(s.couponCode)}</span>` : (s.usedCouponCode ? `<span class="badge badge-code" style="color:#64748b;">Ref: ${escapeHtml(s.usedCouponCode)}</span>` : '—')}</td>
                     <td>${hasPvc ? '<span style="color:#059669; font-weight:700;">Yes</span>' : '<span style="color:#94a3b8;">No</span>'}</td>
-                    <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(s.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
+                    <td>${hasVin ? `<span class="badge badge-vin" title="Click View in Actions for complete unmasked VIN">${escapeHtml(maskVin(s.vin))}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
                     <td style="text-align:center;">
                         <div class="action-btns">
+                            <button class="btn-table-action btn-view" title="View Full Details" onclick="openViewModal('${s._id}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
                             <button class="btn-table-action btn-edit" title="Edit" onclick="openEditModal('${s._id}')">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
@@ -2821,6 +2932,9 @@
                 <td>${escapeHtml(c.lgaOfRegistration)}</td>
                 <td style="text-align:center;">
                     <div class="action-btns">
+                        <button class="btn-table-action btn-view" title="View Details" onclick="openViewModal('${c._id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
                         <button class="btn-table-action btn-edit" title="Edit Coordinator" onclick="openEditModal('${c._id}')">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
@@ -2854,9 +2968,12 @@
                     <td><span class="badge badge-code" style="color:#64748b;">${escapeHtml(c.usedCouponCode || 'â€”')}</span></td>
                     <td>${escapeHtml(c.phone)}</td>
                     <td style="font-size:0.83rem;">${escapeHtml(c.email)}</td>
-                    <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(c.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
+                    <td>${hasVin ? `<span class="badge badge-vin" title="Click View in Actions for complete unmasked VIN">${escapeHtml(maskVin(c.vin))}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
                     <td style="text-align:center;">
                         <div class="action-btns">
+                            <button class="btn-table-action btn-view" title="View Details" onclick="openViewModal('${c._id}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
                             <button class="btn-table-action btn-edit" title="Edit Captain" onclick="openEditModal('${c._id}')">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
@@ -2893,9 +3010,12 @@
                     <td><span class="badge badge-code" style="color:#64748b;">${escapeHtml(c.usedCouponCode || 'â€”')}</span></td>
                     <td>${escapeHtml(c.phone)}</td>
                     <td style="font-size:0.83rem;">${escapeHtml(c.email)}</td>
-                    <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(c.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
+                    <td>${hasVin ? `<span class="badge badge-vin" title="Click View in Actions for complete unmasked VIN">${escapeHtml(maskVin(c.vin))}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
                     <td style="text-align:center;">
                         <div class="action-btns">
+                            <button class="btn-table-action btn-view" title="View Details" onclick="openViewModal('${c._id}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
                             <button class="btn-table-action btn-edit" title="Edit Captain" onclick="openEditModal('${c._id}')">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
@@ -2930,6 +3050,9 @@
                 <td>${escapeHtml(s.stateOfRegistration || s.stateResidence || s.stateOrigin || 'â€”')}</td>
                 <td style="text-align:center;">
                     <div class="action-btns">
+                        <button class="btn-table-action btn-view" title="View Details" onclick="openViewModal('${s._id}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
                         <button class="btn-table-action btn-edit" title="Edit State Coordinator" onclick="openEditModal('${s._id}')">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
@@ -3006,13 +3129,18 @@
                             <td style="font-size:0.83rem;">${escapeHtml(m.email)}</td>
                             <td>${escapeHtml(m.institution)}</td>
                             <td>${hasPvc ? '<span style="color:#059669; font-weight:700;">Yes</span>' : '<span style="color:#94a3b8;">No</span>'}</td>
-                            <td>${hasVin ? `<span class="badge badge-vin">${escapeHtml(m.vin)}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
+                            <td>${hasVin ? `<span class="badge badge-vin" title="Click View in Actions for complete unmasked VIN">${escapeHtml(maskVin(m.vin))}</span>` : `<span class="badge badge-no-vin">No VIN</span>`}</td>
                             <td>${escapeHtml(m.lgaOfRegistration)}</td>
                             <td>${escapeHtml(m.stateOfRegistration)}</td>
                             <td style="text-align:center;">
-                                <button class="btn-table-action btn-edit" title="Edit Member" onclick="openEditModal('${m._id}')">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>
+                                <div class="action-btns">
+                                    <button class="btn-table-action btn-view" title="View Member Details" onclick="openViewModal('${m._id}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn-table-action btn-edit" title="Edit Member" onclick="openEditModal('${m._id}')">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -3345,6 +3473,150 @@
     });
 
     // DELETE MODAL
+        // ==========================================
+    // VIEW MEMBER FULL DETAILS MODAL
+    // ==========================================
+    window.openViewModal = function(id) {
+        closeMobileSidebar();
+        const student = allStudents.find(s => s._id === id) || (typeof hubCurrentMembers !== 'undefined' ? hubCurrentMembers.find(s => s._id === id) : null);
+        if (!student) {
+            alert('Member details not found.');
+            return;
+        }
+
+        const hasVin = student.vin && VIN_REGEX.test(student.vin.trim());
+        const hasPvc = student.hasPvc === true;
+        const regDate = student.createdAt ? new Date(student.createdAt).toLocaleString() : '—';
+        const updateDate = student.updatedAt ? new Date(student.updatedAt).toLocaleString() : '—';
+
+        // Find recruiting captain / referral info
+        let referrerInfo = '—';
+        if (student.couponCode) {
+            referrerInfo = `<span class="badge badge-code" style="background:#dcfce7; color:#166534; font-weight:700;">Assigned Code: ${escapeHtml(student.couponCode)}</span>`;
+        } else if (student.usedCouponCode) {
+            const captain = allStudents.find(s => s.couponCode === student.usedCouponCode);
+            referrerInfo = `<span class="badge badge-code" style="background:#e0f2fe; color:#0369a1; font-weight:600;">Code: ${escapeHtml(student.usedCouponCode)}</span>` +
+                (captain ? ` <span style="font-size:0.85rem; color:var(--text-muted);">(Captain: <strong>${escapeHtml(captain.fullName)}</strong>)</span>` : '');
+        }
+
+        const contentEl = document.getElementById('viewModalContent');
+        contentEl.innerHTML = `
+            <div style="background:#f1f5f9; border-radius:12px; padding:16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h2 style="font-size:1.35rem; color:var(--primary-dark); margin:0 0 4px 0;">${escapeHtml(student.fullName)}</h2>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <span class="badge badge-pos" style="font-size:0.82rem;">${escapeHtml(student.volunteerPost || 'Student')}</span>
+                        <span class="badge" style="background:#ede9fe; color:#6d28d9; font-weight:700;">${escapeHtml(student.institution || '—')}</span>
+                        ${student.course ? `<span style="font-size:0.83rem; color:var(--text-muted);">${escapeHtml(student.course)}</span>` : ''}
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <span style="font-size:0.75rem; color:var(--text-muted);">Record ID: <code style="font-size:0.75rem;">${student._id}</code></span>
+                </div>
+            </div>
+
+            <!-- VIN DETAILS CARD -->
+            <div class="view-detail-card" style="background:${hasVin ? '#f0fdf4' : '#fef2f2'}; border-color:${hasVin ? '#86efac' : '#fca5a5'}; margin-bottom:14px;">
+                <div class="view-detail-label" style="color:${hasVin ? '#166534' : '#991b1b'};">
+                    <i class="fas fa-barcode"></i> Voter Identification Number (INEC VIN)
+                </div>
+                ${hasVin ? `
+                    <div class="view-vin-box">
+                        <span class="view-vin-text" id="fullVinText">${escapeHtml(student.vin)}</span>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <span class="badge badge-vin" style="font-size:0.75rem;"><i class="fas fa-check-circle"></i> Format Validated</span>
+                            <button type="button" class="btn-copy-vin" onclick="copyVinToClipboard('${escapeHtml(student.vin)}')">
+                                <i class="fas fa-copy"></i> Copy VIN
+                            </button>
+                        </div>
+                    </div>
+                ` : `
+                    <div style="padding:6px 0; color:#dc2626; font-size:0.88rem; font-weight:600;">
+                        <i class="fas fa-exclamation-circle"></i> No Voter Identification Number (Missing VIN)
+                    </div>
+                `}
+            </div>
+
+            <div class="view-details-grid">
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-phone"></i> Phone Number</div>
+                    <div class="view-detail-val">
+                        <a href="tel:${escapeHtml(student.phone)}" style="color:var(--primary-dark); text-decoration:none;">${escapeHtml(student.phone || '—')}</a>
+                    </div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-envelope"></i> Email Address</div>
+                    <div class="view-detail-val">
+                        <a href="mailto:${escapeHtml(student.email)}" style="color:var(--primary-dark); text-decoration:none; font-size:0.88rem;">${escapeHtml(student.email || '—')}</a>
+                    </div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-venus-mars"></i> Gender & Date of Birth</div>
+                    <div class="view-detail-val">${escapeHtml(student.gender || '—')} • ${student.dob ? new Date(student.dob).toLocaleDateString() : '—'}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-id-badge"></i> Has Permanent Voter Card (PVC)?</div>
+                    <div class="view-detail-val">${hasPvc ? '<span style="color:#059669; font-weight:700;"><i class="fas fa-check-circle"></i> Yes</span>' : '<span style="color:#94a3b8;">No</span>'}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-map-marker-alt"></i> LGA of Registration</div>
+                    <div class="view-detail-val">${escapeHtml(student.lgaOfRegistration || student.lgaOrigin || '—')}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-flag"></i> State of Registration</div>
+                    <div class="view-detail-val">${escapeHtml(student.stateOfRegistration || student.stateOrigin || 'Lagos')}</div>
+                </div>
+
+                <div class="view-detail-card" style="grid-column: 1 / -1;">
+                    <div class="view-detail-label"><i class="fas fa-home"></i> Residential Address</div>
+                    <div class="view-detail-val" style="font-weight:normal; font-size:0.9rem;">${escapeHtml(student.address || '—')} ${student.stateResidence ? '(' + escapeHtml(student.stateResidence) + ')' : ''}</div>
+                </div>
+
+                <div class="view-detail-card" style="grid-column: 1 / -1;">
+                    <div class="view-detail-label"><i class="fas fa-user-tag"></i> Referral & Attribution Details</div>
+                    <div class="view-detail-val">${referrerInfo}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-calendar-plus"></i> Registered Date</div>
+                    <div class="view-detail-val" style="font-size:0.84rem; font-weight:normal;">${regDate}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-history"></i> Last Updated</div>
+                    <div class="view-detail-val" style="font-size:0.84rem; font-weight:normal;">${updateDate}</div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('viewModalEditBtn').onclick = function() {
+            closeViewModal();
+            openEditModal(student._id);
+        };
+
+        document.getElementById('viewMemberModal').classList.add('active');
+    };
+
+    window.closeViewModal = function() {
+        const el = document.getElementById('viewMemberModal');
+        if (el) el.classList.remove('active');
+    };
+
+    window.copyVinToClipboard = function(vin) {
+        if (!vin) return;
+        navigator.clipboard.writeText(vin).then(() => {
+            alert('VIN copied to clipboard: ' + vin);
+        }).catch(() => {
+            prompt('Copy VIN:', vin);
+        });
+    };
+
+
     window.openDeleteModal = function(id, name) {
         recordToDeleteId = id;
         document.getElementById('deleteModalMessage').textContent =

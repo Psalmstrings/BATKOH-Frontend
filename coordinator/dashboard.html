@@ -181,6 +181,160 @@
         .filter-select:focus { outline: none; border-color: var(--primary); }
 
         /* ── EXPORT BUTTON ── */
+        
+        .btn-view-member {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #0284c7;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-view-member:hover {
+            background: #0284c7;
+            color: white;
+        }
+
+        /* Modal Overlay & Box */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.15rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+
+        /* View Details Grid */
+        .view-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .view-detail-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .view-detail-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-detail-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            word-break: break-word;
+        }
+
+        .view-vin-box {
+            background: #ecfdf5;
+            border: 1.5px solid #10b981;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .view-vin-text {
+            font-family: monospace;
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #065f46;
+        }
+
+        .btn-copy-vin {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-copy-vin:hover {
+            background: #047857;
+        }
+
         .btn-export {
             background: var(--primary); color: white;
             border: none; padding: 8px 16px; border-radius: 8px;
@@ -325,10 +479,11 @@
                             <th>Email</th>
                             <th style="text-align:center;">Members Recruited</th>
                             <th>Work Rate</th>
+                            <th style="text-align:center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="captainsTableBody">
-                        <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading captains...</td></tr>
+                        <tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading captains...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -359,9 +514,10 @@
                             <th>Email</th>
                             <th>Gender</th>
                             <th>PVC?</th>
-                            <th>VIN Status</th>
+                            <th>VIN (Masked)</th>
                             <th>Recruited By</th>
                             <th>Reg. Date</th>
+                            <th style="text-align:center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="membersTableBody">
@@ -374,6 +530,22 @@
 
 </div>
 
+<!-- VIEW MEMBER FULL DETAILS MODAL -->
+<div class="modal-overlay" id="viewMemberModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-id-card"></i> Member Profile & Complete Registration Details</h3>
+            <button class="modal-close" onclick="closeViewModal()">&times;</button>
+        </div>
+        <div id="viewModalContent" style="padding: 0.5rem 0;">
+            <!-- Populated dynamically -->
+        </div>
+        <div style="display:flex; justify-content: flex-end; margin-top: 1.25rem; border-top: 1px solid #e2e8f0; padding-top: 0.75rem;">
+            <button class="btn-export" style="background:#64748b;" onclick="closeViewModal()">Close</button>
+        </div>
+    </div>
+</div>
+
 <!-- Toast notification -->
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
@@ -382,7 +554,19 @@
         ? 'http://localhost:3000/api'
         : 'https://batkoh-backend.onrender.com/api';
 
+    
     const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
+
+    function maskVin(vin) {
+        if (!vin || typeof vin !== 'string') return '—';
+        const clean = vin.trim().toUpperCase();
+        if (clean.length < 8) return '****';
+        const first4 = clean.slice(0, 4);
+        const last4 = clean.slice(-4);
+        const maskLen = Math.max(clean.length - 8, 4);
+        return `${first4}${'•'.repeat(maskLen)}${last4}`;
+    }
+
 
     let currentCoordinator = null;
     let allCaptains = [];
@@ -427,6 +611,141 @@
     }
 
     // ── FETCH SCHOOL DATA ──
+    
+    // ==========================================
+    // VIEW MEMBER FULL DETAILS MODAL
+    // ==========================================
+    window.openViewModal = function(id) {
+        const item = allMembers.find(m => m._id === id) || allCaptains.find(c => c._id === id);
+        if (!item) {
+            showToast('Details not found for this record.');
+            return;
+        }
+
+        const hasVin = item.vin && VIN_REGEX.test(item.vin.trim());
+        const hasPvc = item.hasPvc === true || item.receivedBursary === true;
+        const regDate = item.createdAt ? new Date(item.createdAt).toLocaleString() : '—';
+        const updateDate = item.updatedAt ? new Date(item.updatedAt).toLocaleString() : '—';
+
+        // Captain mapping for referral
+        let refInfo = '—';
+        if (item.couponCode) {
+            refInfo = `<span class="badge badge-campus" style="font-weight:700;">Assigned Code: ${escapeHtml(item.couponCode)}</span>`;
+        } else if (item.usedCouponCode) {
+            const cap = allCaptains.find(c => c.couponCode === item.usedCouponCode);
+            refInfo = `<span class="badge badge-campus">${escapeHtml(item.usedCouponCode)}</span>` +
+                (cap ? ` <span style="font-size:0.85rem; color:var(--text-muted);">(Captain: <strong>${escapeHtml(cap.fullName)}</strong>)</span>` : '');
+        }
+
+        const contentEl = document.getElementById('viewModalContent');
+        contentEl.innerHTML = `
+            <div style="background:#f1f5f9; border-radius:12px; padding:16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <h2 style="font-size:1.35rem; color:var(--primary); margin:0 0 4px 0;">${escapeHtml(item.fullName)}</h2>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <span class="badge badge-campus" style="font-weight:700;">${escapeHtml(item.institution || currentCoordinator?.institution || '—')}</span>
+                        <span class="badge ${item.volunteerPost === 'Staff Captains' ? 'badge-staff' : 'badge-campus'}">${escapeHtml(item.volunteerPost || 'Student')}</span>
+                        ${item.course ? `<span style="font-size:0.83rem; color:var(--text-muted);">${escapeHtml(item.course)}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIN DETAILS CARD -->
+            <div class="view-detail-card" style="background:${hasVin ? '#f0fdf4' : '#fef2f2'}; border-color:${hasVin ? '#86efac' : '#fca5a5'}; margin-bottom:14px;">
+                <div class="view-detail-label" style="color:${hasVin ? '#166534' : '#991b1b'};">
+                    <i class="fas fa-barcode"></i> Voter Identification Number (INEC VIN)
+                </div>
+                ${hasVin ? `
+                    <div class="view-vin-box">
+                        <span class="view-vin-text" id="fullVinText">${escapeHtml(item.vin)}</span>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <span class="badge-vin" style="font-size:0.75rem;"><i class="fas fa-check-circle"></i> Format Validated</span>
+                            <button type="button" class="btn-copy-vin" onclick="copyVinToClipboard('${escapeHtml(item.vin)}')">
+                                <i class="fas fa-copy"></i> Copy VIN
+                            </button>
+                        </div>
+                    </div>
+                ` : `
+                    <div style="padding:6px 0; color:#dc2626; font-size:0.88rem; font-weight:600;">
+                        <i class="fas fa-exclamation-circle"></i> No Voter Identification Number (Missing VIN)
+                    </div>
+                `}
+            </div>
+
+            <div class="view-details-grid">
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-phone"></i> Phone Number</div>
+                    <div class="view-detail-val">
+                        <a href="tel:${escapeHtml(item.phone)}" style="color:var(--primary); text-decoration:none;">${escapeHtml(item.phone || '—')}</a>
+                    </div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-envelope"></i> Email Address</div>
+                    <div class="view-detail-val">
+                        <a href="mailto:${escapeHtml(item.email)}" style="color:var(--primary); text-decoration:none; font-size:0.88rem;">${escapeHtml(item.email || '—')}</a>
+                    </div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-venus-mars"></i> Gender & Date of Birth</div>
+                    <div class="view-detail-val">${escapeHtml(item.gender || '—')} • ${item.dob ? new Date(item.dob).toLocaleDateString() : '—'}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-id-badge"></i> Has Permanent Voter Card (PVC)?</div>
+                    <div class="view-detail-val">${hasPvc ? '<span style="color:#059669; font-weight:700;"><i class="fas fa-check-circle"></i> Yes</span>' : '<span style="color:#94a3b8;">No</span>'}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-map-marker-alt"></i> LGA of Registration</div>
+                    <div class="view-detail-val">${escapeHtml(item.lgaOfRegistration || item.lgaOrigin || '—')}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-flag"></i> State of Registration</div>
+                    <div class="view-detail-val">${escapeHtml(item.stateOfRegistration || item.stateOrigin || 'Lagos')}</div>
+                </div>
+
+                <div class="view-detail-card" style="grid-column: 1 / -1;">
+                    <div class="view-detail-label"><i class="fas fa-home"></i> Residential Address</div>
+                    <div class="view-detail-val" style="font-weight:normal; font-size:0.9rem;">${escapeHtml(item.address || '—')} ${item.stateResidence ? '(' + escapeHtml(item.stateResidence) + ')' : ''}</div>
+                </div>
+
+                <div class="view-detail-card" style="grid-column: 1 / -1;">
+                    <div class="view-detail-label"><i class="fas fa-ticket-alt"></i> Referral / Coupon Details</div>
+                    <div class="view-detail-val">${refInfo}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-calendar-plus"></i> Registered Date</div>
+                    <div class="view-detail-val" style="font-size:0.84rem; font-weight:normal;">${regDate}</div>
+                </div>
+
+                <div class="view-detail-card">
+                    <div class="view-detail-label"><i class="fas fa-history"></i> Last Updated</div>
+                    <div class="view-detail-val" style="font-size:0.84rem; font-weight:normal;">${updateDate}</div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('viewMemberModal').classList.add('active');
+    };
+
+    window.closeViewModal = function() {
+        const el = document.getElementById('viewMemberModal');
+        if (el) el.classList.remove('active');
+    };
+
+    window.copyVinToClipboard = function(vin) {
+        if (!vin) return;
+        navigator.clipboard.writeText(vin).then(() => {
+            showToast('VIN copied to clipboard!');
+        }).catch(() => {
+            prompt('Copy VIN:', vin);
+        });
+    };
+
     async function fetchSchoolData() {
         try {
             const token = localStorage.getItem('coordinatorToken');
@@ -517,6 +836,11 @@
                             <span style="font-size:0.78rem;font-weight:700;color:var(--text-muted);white-space:nowrap;">${workRate}%</span>
                         </div>
                     </td>
+                    <td style="text-align:center;">
+                        <button class="btn-view-member" onclick="openViewModal('${c._id}')" title="View Captain details">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </td>
                 </tr>
             `;
         }).join('');
@@ -565,11 +889,16 @@
                     <td>${escapeHtml(m.gender)}</td>
                     <td><span class="badge ${hasPvc ? 'badge-pvc-yes' : 'badge-pvc-no'}">${hasPvc ? 'Yes' : 'No'}</span></td>
                     <td>${hasVin
-                        ? `<span class="badge-vin"><i class="fas fa-shield-alt"></i> ${escapeHtml(m.vin)}</span>`
+                        ? `<span class="badge-vin" title="Click View in Actions for complete unmasked VIN"><i class="fas fa-shield-alt"></i> ${escapeHtml(maskVin(m.vin))}</span>`
                         : `<span class="badge-no-vin"><i class="fas fa-times-circle"></i> Missing</span>`
                     }</td>
                     <td>${recruitedBy}</td>
                     <td style="font-size:0.8rem;color:var(--text-muted);">${dateStr}</td>
+                    <td style="text-align:center;">
+                        <button class="btn-view-member" onclick="openViewModal('${m._id}')" title="View all member details">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </td>
                 </tr>
             `;
         }).join('');
