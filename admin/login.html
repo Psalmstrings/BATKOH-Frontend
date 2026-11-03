@@ -375,7 +375,19 @@
                     body: JSON.stringify(formData),
                 });
 
-                const result = await response.json();
+                let result = {};
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    result = {};
+                }
+
+                if (response.status === 429) {
+                    statusDiv.innerHTML = `<i class="fas fa-hourglass-half"></i> ${result.message || result.error || "Too many login attempts. Please wait a few minutes and try again."}`;
+                    statusDiv.className = "status-msg error";
+                    statusDiv.style.display = "block";
+                    return;
+                }
 
                 if (response.ok) {
                     statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> Login successful! Redirecting to dashboard...';

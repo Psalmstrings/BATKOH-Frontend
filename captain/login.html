@@ -376,7 +376,19 @@
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (err) {
+                data = {};
+            }
+
+            if (response.status === 429) {
+                statusMsg.className = 'status-msg error';
+                statusMsg.innerHTML = `<i class="fas fa-hourglass-half"></i> ${data.message || data.error || 'Too many login attempts. Please wait a few minutes and try again.'}`;
+                statusMsg.style.display = 'block';
+                return;
+            }
 
             if (response.ok && data.success) {
                 // Save captain session
