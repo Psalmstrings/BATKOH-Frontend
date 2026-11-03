@@ -1198,11 +1198,19 @@
                         </option>
 
                         <option value="Student">
-                            Student
+                            Student Member
                         </option>
 
                         <option value="Staff">
-                            Staff
+                            Staff Member
+                        </option>
+
+                        <option value="Campus Captains">
+                            Campus Captain
+                        </option>
+
+                        <option value="Staff Captains">
+                            Staff Captain
                         </option>
 
                     </select>
@@ -1388,7 +1396,9 @@
 
     const allowedVolunteerPosts = [
         "Student",
-        "Staff"
+        "Staff",
+        "Campus Captains",
+        "Staff Captains"
     ];
 
 
@@ -1474,6 +1484,17 @@
                 couponLabel.textContent = "Staff Captain Coupon Code";
                 couponInfo.textContent = "Enter the valid coupon code provided by your authorized Staff Captain (e.g. STAFF-1234).";
                 usedCouponCode.placeholder = "Example: STAFF-1234";
+            }
+
+            /* -------------------------------------------------
+               CAMPUS CAPTAIN & STAFF CAPTAIN -> SELF REGISTRATION
+            ------------------------------------------------- */
+            else if (position === "Campus Captains" || position === "Staff Captains") {
+                couponSection.style.display = "block";
+                usedCouponCode.required = false;
+                couponLabel.textContent = "Coordinator Referral Code (Optional)";
+                couponInfo.textContent = "Optional. If you have a Coordinator referral code, you can enter it here. Otherwise, leave blank.";
+                usedCouponCode.placeholder = "Optional: e.g. DR-FirstName1234";
             }
 
 
@@ -2115,7 +2136,9 @@
 
         if (
             data.volunteerPost === "Student" ||
-            data.volunteerPost === "Staff"
+            data.volunteerPost === "Staff" ||
+            data.volunteerPost === "Campus Captains" ||
+            data.volunteerPost === "Staff Captains"
         ) {
 
             data.usedCouponCode =
@@ -2301,42 +2324,30 @@
                     ) {
 
                         statusDiv.innerHTML = `
-
-                            <i class="fas fa-check-circle"></i>
-
+                            <i class="fas fa-check-circle" style="font-size:2.8rem; color:#059669;"></i>
                             <br><br>
-
-                            <strong>
+                            <strong style="font-size:1.35rem; color:#065f46;">
                                 Registration Successful!
                             </strong>
-
                             <br><br>
-
-                            You have successfully registered as
-                            ${escapeHtml(
-                                registeredPosition
-                            )}.
-
+                            You have successfully registered as an official <strong>${escapeHtml(registeredPosition === 'Campus Captains' ? 'Campus Captain' : (registeredPosition === 'Staff Captains' ? 'Staff Captain' : registeredPosition))}</strong>.
                             <br><br>
-
-                            Your unique code is:
-
+                            Your unique recruitment coupon code is:
                             <br>
-
-                            <span class="generated-code">
-                                ${escapeHtml(
-                                    generatedCode
-                                )}
+                            <span class="generated-code" style="font-size:1.45rem; font-weight:800; letter-spacing:1px; background:#ecfdf5; color:#065f46; padding:10px 20px; border-radius:10px; display:inline-block; margin:10px 0; border:1.5px solid #10b981;">
+                                ${escapeHtml(generatedCode)}
                             </span>
-
                             <br><br>
-
-                            <small>
-                                Please save this code carefully.
-                                You may need it to register
-                                other members.
+                            <small style="color:var(--text-dark); display:block; max-width:520px; margin:0 auto; line-height:1.5;">
+                                Please save and copy this code carefully. Prospective members will use this code during registration so their numbers are automatically attributed to you.
                             </small>
-
+                            <div style="font-size:0.88rem; color:#1e3a8a; background:#eff6ff; padding:12px 16px; border-radius:10px; margin:16px auto; max-width:520px; border:1px solid #bfdbfe; text-align:left;">
+                                <i class="fas fa-info-circle"></i> <strong>Captain Portal Access:</strong><br>
+                                You can now log into your private Captain Dashboard using your registered email and your <strong>First Name</strong> as your initial password.
+                            </div>
+                            <a href="captain/login.html" class="home-link" style="margin-top:12px; font-weight:700; padding:10px 24px; font-size:0.92rem; background:var(--primary-dark);">
+                                <i class="fas fa-sign-in-alt"></i> Proceed to Captain Portal Login
+                            </a>
                         `;
 
                     } else {
