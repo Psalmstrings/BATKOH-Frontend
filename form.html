@@ -1269,7 +1269,7 @@
                 <div class="form-group" id="vinSection">
                     <label for="vin">
                         <i class="fas fa-barcode"></i>
-                        Voter Identification Number (VIN) <span class="required-star">*</span>
+                        Voter Identification Number (VIN) <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(Optional)</span>
                         <span id="vinCharCount" style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-left: 6px;">(0/20)</span>
                     </label>
                     <input
@@ -1277,13 +1277,12 @@
                         id="vin"
                         name="vin"
                         maxlength="20"
-                        placeholder="Enter 17–20 character VIN"
+                        placeholder="Enter 17–20 character VIN (Optional)"
                         autocomplete="off"
-                        required
                         style="text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;"
                     >
                     <small style="color: var(--text-muted); font-size: 0.78rem; display: block; margin-top: 4px;">
-                        Enter your valid 17–20 alphanumeric Permanent Voter's Card (PVC) VIN.
+                        Optional. If you have a Permanent Voter's Card (PVC), enter your valid 17–20 alphanumeric VIN.
                     </small>
                     <div class="error-message" id="vinError">
                         Voter Identification Number (VIN) is required and must be 17–20 letters and numbers.
@@ -1993,22 +1992,18 @@
         const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
         const vinVal = (data.vin || "").trim().toUpperCase();
 
-        if (!vinVal || vinVal === "") {
-            const vinErrorEl = document.getElementById("vinError");
-            if (vinErrorEl) {
-                vinErrorEl.textContent = "Voter Identification Number (VIN) is required.";
+        if (vinVal && vinVal !== "") {
+            if (!VIN_REGEX.test(vinVal)) {
+                const vinErrorEl = document.getElementById("vinError");
+                if (vinErrorEl) {
+                    vinErrorEl.textContent = "VIN must contain only letters and numbers and be between 17 and 20 characters.";
+                }
+                showError("vinError", true);
+                markError("vin", true);
+                valid = false;
+            } else {
+                clearError("vin");
             }
-            showError("vinError", true);
-            markError("vin", true);
-            valid = false;
-        } else if (!VIN_REGEX.test(vinVal)) {
-            const vinErrorEl = document.getElementById("vinError");
-            if (vinErrorEl) {
-                vinErrorEl.textContent = "VIN must contain only letters and numbers and be between 17 and 20 characters.";
-            }
-            showError("vinError", true);
-            markError("vin", true);
-            valid = false;
         } else {
             clearError("vin");
         }
