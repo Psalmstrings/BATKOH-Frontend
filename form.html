@@ -1485,47 +1485,7 @@
                 couponInfo.textContent = "Enter the valid coupon code provided by your authorized Staff Captain (e.g. STAFF-1234).";
                 usedCouponCode.placeholder = "Example: STAFF-1234";
             }
-
-            /* -------------------------------------------------
-               CAMPUS CAPTAIN & STAFF CAPTAIN -> SELF REGISTRATION
-            ------------------------------------------------- */
-            else if (position === "Campus Captains" || position === "Staff Captains") {
-                couponSection.style.display = "block";
-                usedCouponCode.required = false;
-                couponLabel.textContent = "Coordinator Referral Code (Optional)";
-                couponInfo.textContent = "Optional. If you have a Coordinator referral code, you can enter it here. Otherwise, leave blank.";
-                usedCouponCode.placeholder = "Optional: e.g. DR-FirstName1234";
-            }
-
-
-            /* -------------------------------------------------
-               MEMBERS / NFSAN MEMBERS
-            ------------------------------------------------- */
-
-            else if (
-
-                position === "Members" ||
-
-                position === "NFSAN Member"
-
-            ) {
-
-                couponSection.style.display =
-                    "block";
-
-                usedCouponCode.required =
-                    true;
-
-                couponLabel.textContent =
-                    "Coupon Code";
-
-                couponInfo.textContent =
-                    "Enter Coupon code.";
-
-                usedCouponCode.placeholder =
-                    "Example: FemaleWing763 or John4821";
-
-            }
+            // For Campus Captains, Staff Captains, and all other posts: couponSection stays hidden (display: none)
 
         }
     );
@@ -2131,14 +2091,12 @@
 
 
         /* -----------------------------------------------------
-           COUPON
+           COUPON (Only collected for Student and Staff)
         ----------------------------------------------------- */
 
         if (
             data.volunteerPost === "Student" ||
-            data.volunteerPost === "Staff" ||
-            data.volunteerPost === "Campus Captains" ||
-            data.volunteerPost === "Staff Captains"
+            data.volunteerPost === "Staff"
         ) {
 
             data.usedCouponCode =
@@ -2150,6 +2108,8 @@
                     .trim()
                     .toUpperCase();
 
+        } else {
+            delete data.usedCouponCode;
         }
 
 
