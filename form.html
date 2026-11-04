@@ -1272,12 +1272,12 @@
 
                 <!-- =================================================
                      VIN (VOTER IDENTIFICATION NUMBER)
-                     Required 17–20 alphanumeric characters
+                     Compulsory 17–20 alphanumeric characters
                 ================================================== -->
                 <div class="form-group" id="vinSection">
                     <label for="vin">
                         <i class="fas fa-barcode"></i>
-                        Voter Identification Number (VIN) <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">(Optional)</span>
+                        Voter Identification Number (VIN) <span class="required">*</span>
                         <span id="vinCharCount" style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-left: 6px;">(0/20)</span>
                     </label>
                     <input
@@ -1285,15 +1285,17 @@
                         id="vin"
                         name="vin"
                         maxlength="20"
-                        placeholder="Enter 17–20 character VIN (Optional)"
+                        minlength="17"
+                        required
+                        placeholder="Enter 17–20 character VIN (e.g. 90F1B2C3D4E5F6G7)"
                         autocomplete="off"
                         style="text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;"
                     >
                     <small style="color: var(--text-muted); font-size: 0.78rem; display: block; margin-top: 4px;">
-                        Optional. If you have a Permanent Voter's Card (PVC), enter your valid 17–20 alphanumeric VIN.
+                        Compulsory. Must be 17–20 alphanumeric characters from your Permanent Voter's Card (PVC).
                     </small>
                     <div class="error-message" id="vinError">
-                        Voter Identification Number (VIN) is required and must be 17–20 letters and numbers.
+                        Voter Identification Number (VIN) is compulsory and must be 17–20 letters and numbers.
                     </div>
                 </div>
 
@@ -1968,23 +1970,27 @@
 
 
         /* -----------------------------------------------------
-           VIN (REQUIRED: 17–20 ALPHANUMERIC CHARACTERS)
+           VIN (COMPULSORY: 17–20 ALPHANUMERIC CHARACTERS)
         ----------------------------------------------------- */
         const VIN_REGEX = /^[A-Z0-9]{17,20}$/;
         const vinVal = (data.vin || "").trim().toUpperCase();
 
-        if (vinVal && vinVal !== "") {
-            if (!VIN_REGEX.test(vinVal)) {
-                const vinErrorEl = document.getElementById("vinError");
-                if (vinErrorEl) {
-                    vinErrorEl.textContent = "VIN must contain only letters and numbers and be between 17 and 20 characters.";
-                }
-                showError("vinError", true);
-                markError("vin", true);
-                valid = false;
-            } else {
-                clearError("vin");
+        if (!vinVal || vinVal === "") {
+            const vinErrorEl = document.getElementById("vinError");
+            if (vinErrorEl) {
+                vinErrorEl.textContent = "Voter Identification Number (VIN) is compulsory for all registrations.";
             }
+            showError("vinError", true);
+            markError("vin", true);
+            valid = false;
+        } else if (!VIN_REGEX.test(vinVal)) {
+            const vinErrorEl = document.getElementById("vinError");
+            if (vinErrorEl) {
+                vinErrorEl.textContent = "VIN must contain only letters and numbers and be between 17 and 20 characters.";
+            }
+            showError("vinError", true);
+            markError("vin", true);
+            valid = false;
         } else {
             clearError("vin");
         }

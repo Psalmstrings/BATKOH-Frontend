@@ -1144,7 +1144,7 @@
                 <!-- Strict VIN Input with Live Counter -->
                 <div class="form-group full-span">
                     <label for="editVin">
-                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN) <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">(Optional)</span>
+                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN) <span class="required" style="color:#ef4444;">*</span>
                         <span id="modalVinCharCount" style="color:var(--text-muted); font-weight:normal; margin-left:6px;">(0/20)</span>
                     </label>
                     <input
@@ -1156,7 +1156,7 @@
                         autocomplete="off"
                     >
                     <small style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:4px;">
-                        Optional. If available, enter a valid 17–20 alphanumeric Permanent Voter's Card (PVC) VIN.
+                        Compulsory. Enter a valid 17–20 alphanumeric Permanent Voter's Card (PVC) VIN.
                     </small>
                 </div>
             </div>
@@ -1540,8 +1540,15 @@
             return;
         }
 
-        // VIN is optional: validate format only if provided
-        if (vin && !isValidVin(vin)) {
+        // VIN is compulsory
+        if (!vin) {
+            msgDiv.style.display = 'block';
+            msgDiv.className = 'modal-msg error';
+            msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Voter Identification Number (VIN) is compulsory.';
+            document.getElementById('editVin').focus();
+            return;
+        }
+        if (!isValidVin(vin)) {
             msgDiv.style.display = 'block';
             msgDiv.className = 'modal-msg error';
             msgDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> VIN must contain only letters and numbers and be between 17 and 20 characters.';

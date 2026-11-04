@@ -2354,7 +2354,7 @@
 
                 <div class="modal-form-group full-col">
                     <label for="editVin">
-                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN) <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">(Optional)</span>
+                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN) *
                         <span id="editVinCharCount" style="color:var(--text-muted); font-weight:normal; margin-left:6px;">(0/20)</span>
                     </label>
                     <input
@@ -2362,10 +2362,10 @@
                         id="editVin"
                         class="vin-input-highlight"
                         maxlength="20"
-                        placeholder="Enter 17–20 character VIN (Optional)"
+                        placeholder="Enter 17–20 character VIN"
                     >
                     <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:3px;">
-                        Optional. If available, enter 17–20 alphanumeric characters.
+                        Compulsory. Enter 17–20 alphanumeric characters from PVC.
                     </small>
                     <div id="editVinError" class="error-message" style="display:none; color:#dc2626; font-size:0.78rem; margin-top:5px;">
                         VIN is required and must be 17â€“20 letters and numbers only.
@@ -2529,7 +2529,7 @@
 
                 <div class="modal-form-group full-col">
                     <label for="regVin">
-                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN) <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">(Optional)</span>
+                        <i class="fas fa-barcode"></i> Voter Identification Number (VIN) *
                         <span id="regVinCharCount" style="color:var(--text-muted); font-weight:normal; margin-left:6px;">(0/20)</span>
                     </label>
                     <input
@@ -2537,10 +2537,10 @@
                         id="regVin"
                         class="vin-input-highlight"
                         maxlength="20"
-                        placeholder="Enter 17–20 character VIN (Optional)"
+                        placeholder="Enter 17–20 character VIN"
                     >
                     <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:3px;">
-                        Optional. If available, enter 17–20 alphanumeric characters.
+                        Compulsory. Enter 17–20 alphanumeric characters from PVC.
                     </small>
                     <div id="regVinError" class="error-message" style="display:none; color:#dc2626; font-size:0.78rem; margin-top:5px;">
                         VIN is required and must be 17–20 letters and numbers only.
@@ -3327,9 +3327,10 @@
         editVinCharCount.textContent = `(${value.length}/20)`;
 
         if (value === '') {
-            editVinError.style.display = 'none';
-            editVinInput.classList.remove('input-error');
-            return true;
+            if (showError) editVinError.textContent = 'Voter Identification Number (VIN) is compulsory.';
+            editVinError.style.display = 'block';
+            editVinInput.classList.add('input-error');
+            return false;
         }
 
         let message = '';
@@ -3809,9 +3810,12 @@
         if (regVinCharCount) regVinCharCount.textContent = `(${value.length}/20)`;
 
         if (value === '') {
-            if (regVinError) regVinError.style.display = 'none';
-            regVinInput.classList.remove('input-error');
-            return true;
+            if (showError && regVinError) {
+                regVinError.textContent = 'Voter Identification Number (VIN) is compulsory.';
+                regVinError.style.display = 'block';
+            }
+            regVinInput.classList.add('input-error');
+            return false;
         }
 
         let message = '';
