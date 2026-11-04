@@ -1160,6 +1160,10 @@
                             FCFMT
                         </option>
 
+                        <option value="COOP-COLLEGE">
+                            LASCOCO (Lagos State Cooperative College)
+                        </option>
+
                     </select>
 
                     <div
@@ -1301,6 +1305,22 @@
 
             </div>
 
+
+            <!-- =================================================
+                 DATA PRIVACY & PROTECTION CONSENT (NDPA 2023)
+            ================================================== -->
+            <div class="form-group" style="margin-top: 1.5rem; margin-bottom: 1.25rem; background: #f8fafc; padding: 14px 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.85rem; color: #1e293b; line-height: 1.45;">
+                    <input type="checkbox" id="ndpaConsent" name="ndpaConsent" required style="margin-top: 3px; accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer;">
+                    <span>
+                        <strong>Data Privacy & Protection Consent (NDPA 2023):</strong>
+                        I hereby consent to the collection and processing of my personal data, institutional affiliation, and Voter Identification Number (VIN) for the PBAT-KOH TEMA 2027 mobilization initiative, in strict compliance with the Nigeria Data Protection Act (NDPA 2023).
+                    </span>
+                </label>
+                <div class="error-message" id="ndpaConsentError" style="display: none; margin-top: 6px; color: #dc2626; font-size: 0.78rem;">
+                    You must accept the data privacy consent to submit your registration.
+                </div>
+            </div>
 
             <hr>
 
@@ -1995,6 +2015,17 @@
             clearError("vin");
         }
 
+
+        /* -----------------------------------------------------
+           NDPA 2023 CONSENT CHECK
+        ----------------------------------------------------- */
+        const ndpaConsent = document.getElementById("ndpaConsent");
+        if (ndpaConsent && !ndpaConsent.checked) {
+            showError("ndpaConsentError", true);
+            valid = false;
+        } else {
+            clearError("ndpaConsentError");
+        }
 
         return valid;
 
